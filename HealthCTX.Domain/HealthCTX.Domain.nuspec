@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>HealthCTX.Domain</id>
+    <version>0.0.1-alpha.10</version>
+    <authors>Torben M. Hagensen</authors>
+    <owners>Hagensen Software ApS</owners>
+    <description>This package helps making your internal C# records based model compliant with HL7 FHIR and generates mappers for your internal model to and from HL7 FHIR resources. The package makes it easy to build either FHIR clients or backends using your own FHIR compliant internal model</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp,Version=v8.0">
+        <dependency id="HealthCTX.Generator" version="0.0.1-alpha.1" />
+      </group>
+    </dependencies>
+    <readme>content\readme.md</readme>
+  </metadata>
+  <files>
+    <file src="bin\Debug\net8.0\HealthCTX.Domain.dll" target="lib\net8.0\" />
+    <file src="content\readme.md" target="content\" />
+  </files>
+</package>

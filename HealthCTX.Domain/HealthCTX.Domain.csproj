@@ -4,16 +4,38 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageReadmeFile>content\readme.md</PackageReadmeFile>
+    <Version>0.0.1-alpha.29</Version>
+    <Authors>Torben M. Hagensen</Authors>
+    <Owners>Hagensen Software ApS</Owners>
+    <Description>This package helps making your internal C# records based model compliant with HL7 FHIR and generates mappers for your internal model to and from HL7 FHIR resources. The package makes it easy to build FHIR clients and backends using your own FHIR compliant internal model.</Description>
+    <IncludeSymbols>True</IncludeSymbols>
+    <Copyright>Copyright Hagensen Software ApS</Copyright>
+    <Company>Hagensen Software ApS</Company>
+    <RepositoryUrl>https://github.com/hagensen-software/HealthCTX</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="HealthCTX.Domain.nuspec" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HealthCTX.FhirSupportGenerator\HealthCTX.FhirSupportGenerator.csproj"
-                      ReferenceOutputAssembly="false"
-                      OutputItemType="Analyzer"  />
+    <ProjectReference Include="..\HealthCTX.Generator\HealthCTX.Generator\HealthCTX.Generator.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="readme.md">
+      <Pack>True</Pack>
+      <PackagePath>content\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

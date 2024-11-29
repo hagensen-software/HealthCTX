@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HealthCTX.FhirSupportGenerator;
+namespace HealthCTX.Generator;
 
 public enum FhirType
 {

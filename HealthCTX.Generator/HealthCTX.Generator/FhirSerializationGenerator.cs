@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
 
-namespace HealthCTX.FhirSupportGenerator;
+namespace HealthCTX.Generator;
 
 [Generator]
 public class FhirSerializationGenerator : IIncrementalGenerator

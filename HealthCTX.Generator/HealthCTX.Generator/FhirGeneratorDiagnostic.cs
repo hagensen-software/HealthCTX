@@ -1,6 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 
-namespace HealthCTX.FhirSupportGenerator;
+namespace HealthCTX.Generator;
 
 public class FhirGeneratorDiagnostic
 {

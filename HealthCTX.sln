@@ -5,11 +5,13 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.Domain", "HealthCTX.Domain\HealthCTX.Domain.csproj", "{8E7963C9-3CE3-4F2B-A244-7A270DC2F091}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.CSharpToFhirModel.Test", "HealthCTX.CSharpToFhirModel.Test\HealthCTX.CSharpToFhirModel.Test.csproj", "{5D147232-197D-46A4-8736-3442C0E54D8F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.Domain.Test", "HealthCTX.Domain.Test\HealthCTX.Domain.Test.csproj", "{355A158E-8E9A-423F-AC42-AAF58FA00672}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.FhirSupportGenerator", "HealthCTX.FhirSupportGenerator\HealthCTX.FhirSupportGenerator.csproj", "{1BD4FFEA-8A3F-417E-98B0-B1339238CDAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.Generator", "HealthCTX.Generator\HealthCTX.Generator\HealthCTX.Generator.csproj", "{4C232F7B-F822-4C6E-883C-2148576309D1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.Generator.Package", "HealthCTX.Generator\HealthCTX.Generator.Package\HealthCTX.Generator.Package.csproj", "{2F6DDA40-2E1B-470E-85C7-4CCB49946A7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.Generator.Test", "HealthCTX.Generator\HealthCTX.Generator.Test\HealthCTX.Generator.Test.csproj", "{94ACCB9D-2870-4E1F-866A-259942A65FB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,18 +23,22 @@ Global
 		{8E7963C9-3CE3-4F2B-A244-7A270DC2F091}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E7963C9-3CE3-4F2B-A244-7A270DC2F091}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E7963C9-3CE3-4F2B-A244-7A270DC2F091}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D147232-197D-46A4-8736-3442C0E54D8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D147232-197D-46A4-8736-3442C0E54D8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D147232-197D-46A4-8736-3442C0E54D8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D147232-197D-46A4-8736-3442C0E54D8F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{355A158E-8E9A-423F-AC42-AAF58FA00672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{355A158E-8E9A-423F-AC42-AAF58FA00672}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{355A158E-8E9A-423F-AC42-AAF58FA00672}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{355A158E-8E9A-423F-AC42-AAF58FA00672}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1BD4FFEA-8A3F-417E-98B0-B1339238CDAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BD4FFEA-8A3F-417E-98B0-B1339238CDAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BD4FFEA-8A3F-417E-98B0-B1339238CDAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BD4FFEA-8A3F-417E-98B0-B1339238CDAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C232F7B-F822-4C6E-883C-2148576309D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C232F7B-F822-4C6E-883C-2148576309D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C232F7B-F822-4C6E-883C-2148576309D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C232F7B-F822-4C6E-883C-2148576309D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F6DDA40-2E1B-470E-85C7-4CCB49946A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F6DDA40-2E1B-470E-85C7-4CCB49946A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F6DDA40-2E1B-470E-85C7-4CCB49946A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F6DDA40-2E1B-470E-85C7-4CCB49946A7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94ACCB9D-2870-4E1F-866A-259942A65FB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94ACCB9D-2870-4E1F-866A-259942A65FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94ACCB9D-2870-4E1F-866A-259942A65FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94ACCB9D-2870-4E1F-866A-259942A65FB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HealthCTX.FhirSupportGenerator;
+namespace HealthCTX.Generator;
 
 public struct RecordModel(string recordName, string recordNamespace, string recordInstanceName, FhirType fhirType, PropertyModel[] properties, string? resourceName, IEnumerable<FhirGeneratorDiagnostic> diagnostics)
 {

@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
 
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,8 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HealthCTX.Domain\HealthCTX.Domain.csproj" />
-    <ProjectReference Include="..\HealthCTX.FhirSupportGenerator\HealthCTX.FhirSupportGenerator.csproj" />
+    <ProjectReference Include="..\HealthCTX.Generator\HealthCTX.Generator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,9 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using HealthCTX.FhirSupportGenerator;
+using HealthCTX.Generator;
 
-namespace HealthCTX.CSharpToFhirModel.Test;
+namespace HealthCTX.Generator.Test;
 
 public class FhirAttributesTest
 {

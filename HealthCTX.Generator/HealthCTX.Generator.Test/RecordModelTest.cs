@@ -1,4 +1,4 @@
-using HealthCTX.FhirSupportGenerator;
+using HealthCTX.Generator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

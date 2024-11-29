@@ -1,10 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <Version>0.0.1-alpha.5</Version>
+
+     <!--Avoid ID conflicts with the package project.--> 
+    <PackageId>HealthCTX.Generator</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

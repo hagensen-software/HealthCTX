@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace HealthCTX.FhirSupportGenerator;
+namespace HealthCTX.Generator;
 
 internal class CSharpFhirJsonMapperHelper
 {

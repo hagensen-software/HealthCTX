@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HealthCTX.FhirSupportGenerator;
+namespace HealthCTX.Generator;
 
 public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required)
 {

@@ -17,10 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HealthCTX.FhirSupportGenerator\HealthCTX.FhirSupportGenerator.csproj"
-                      ReferenceOutputAssembly="false"
-                      OutputItemType="Analyzer" />
     <ProjectReference Include="..\HealthCTX.Domain\HealthCTX.Domain.csproj" />
+    <ProjectReference Include="..\HealthCTX.Generator\HealthCTX.Generator\HealthCTX.Generator.csproj"  ReferenceOutputAssembly="false" OutputItemType="Analyzer"/>
   </ItemGroup>
 
   <ItemGroup>
