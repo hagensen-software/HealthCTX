@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,6 +12,12 @@ public enum FhirType
     Primitive
 }
 
+public struct PropertyInfo(string elementName, bool fhirArray)
+{
+    public string ElementName { get; } = elementName;
+    public bool FhirArray { get; } = fhirArray;
+}
+
 public class FhirAttributeHelper
 {
     private const string fhirResourceAttribute = "HealthCTX.Domain.Framework.Attributes.FhirResourceAttribute";
@@ -19,9 +26,11 @@ public class FhirAttributeHelper
     private const string fhirPropertyAttribute = "HealthCTX.Domain.Framework.Attributes.FhirPropertyAttribute";
     private const string fhirIgnoreAttribute = "HealthCTX.Domain.Framework.Attributes.FhirIgnoreAttribute";
 
-    public static Dictionary<string, string> GetApplicableProperties(IEnumerable<INamedTypeSymbol> namedTypeSymbols)
+    private const int fhirCardinalityMultiple = 1;
+
+    public static Dictionary<string, PropertyInfo> GetApplicableProperties(IEnumerable<INamedTypeSymbol> namedTypeSymbols)
     {
-        var result = new Dictionary<string, string>();
+        var result = new Dictionary<string, PropertyInfo>();
 
         foreach (var namedTypeSymbol in namedTypeSymbols)
         {
@@ -30,16 +39,17 @@ public class FhirAttributeHelper
 
             foreach (var attribute in attributeData)
             {
-                if (attribute.ConstructorArguments.Length != 2)
+                if (attribute.ConstructorArguments.Length != 3)
                     continue;
 
                 var elementName = attribute.ConstructorArguments[0].Value as string;
                 var elementInterface = (attribute.ConstructorArguments[1].Value as INamedTypeSymbol)?.ToDisplayString();
+                var fhirArray = ((int?)(attribute.ConstructorArguments[2].Value) == fhirCardinalityMultiple);
 
                 try
                 {
                     if (elementName is not null && elementInterface is not null)
-                        result.Add(elementInterface, elementName);
+                        result.Add(elementInterface, new PropertyInfo(elementName, fhirArray));
                 }
                 catch
                 {
@@ -50,21 +60,36 @@ public class FhirAttributeHelper
         return result;
     }
 
-    public static string? FindElementName(ITypeSymbol recordSymbol, Dictionary<string, string> elementNamesByInterface)
+    public static PropertyInfo? FindElementName(ITypeSymbol recordSymbol, Dictionary<string, PropertyInfo> elementNamesByInterface)
     {
-        foreach (var intf in recordSymbol.AllInterfaces)
-        {
-            var attributeData = intf.GetAttributes()
-                .FirstOrDefault(attr => (attr.AttributeClass?.ToDisplayString() == fhirElementAttribute)
-                                        || (attr.AttributeClass?.ToDisplayString() == fhirPrimitiveAttribute));
-            if (attributeData == null)
-                return null;
+        var interfaces = GetInterfacesInheritingFromIElement(recordSymbol);
 
-            return elementNamesByInterface[intf.ToDisplayString()];
-        }
-        return null;
+        // TODO: Check that only one interface is returned
+
+        var inft = interfaces.FirstOrDefault();
+        if (inft == null)
+            return null;
+
+        if (elementNamesByInterface.TryGetValue(inft.ToDisplayString(), out PropertyInfo result))
+            return result;
+        else
+            return null;
     }
 
+    private static IEnumerable<INamedTypeSymbol> GetInterfacesInheritingFromIElement(ITypeSymbol typeSymbol)
+    {
+        var baseInterfaceSymbol = typeSymbol.AllInterfaces.Where(i => i.ToDisplayString() == "HealthCTX.Domain.Framework.Interfaces.IElement").FirstOrDefault();
+        if (baseInterfaceSymbol == null)
+            return [];
+
+        var interfaces = typeSymbol.Interfaces;
+        return interfaces.Where(i => InheritsFrom(i, baseInterfaceSymbol));
+    }
+
+    private static bool InheritsFrom(INamedTypeSymbol interfaceSymbol, INamedTypeSymbol baseInterfaceSymbol)
+    {
+        return interfaceSymbol.AllInterfaces.Any(baseInterface => SymbolEqualityComparer.Default.Equals(baseInterface, baseInterfaceSymbol));
+    }
 
     public static bool IgnoreProperty(IPropertySymbol propertySymbol)
     {
@@ -82,7 +107,7 @@ public class FhirAttributeHelper
         return false;
     }
 
-public static FhirType? GetFhirType(INamedTypeSymbol recordSymbol, out string? resourceName)
+    public static FhirType? GetFhirType(INamedTypeSymbol recordSymbol, out string? resourceName)
     {
         resourceName = null;
 
@@ -94,7 +119,7 @@ public static FhirType? GetFhirType(INamedTypeSymbol recordSymbol, out string? r
                     || (attr.AttributeClass?.ToDisplayString() == fhirElementAttribute)
                     || (attr.AttributeClass?.ToDisplayString() == fhirResourceAttribute));
             if (attributeData == null)
-                return null;
+                continue;
 
             FhirType? fhirType = attributeData.AttributeClass?.ToDisplayString() switch
             {

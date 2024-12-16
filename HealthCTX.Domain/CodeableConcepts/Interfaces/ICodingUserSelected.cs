@@ -4,7 +4,7 @@ using HealthCTX.Domain.Framework.Interfaces;
 namespace HealthCTX.Domain.CodeableConcepts.Interfaces;
 
 [FhirPrimitive]
-public interface IUserSelectedBoolean : IElement
+public interface ICodingUserSelected : IElement
 {
     [FhirIgnore]
     bool Value { get; init; }

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HealthCTX.Generator;
 
-public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required)
+public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required, bool fhirArray)
 {
     private const string iEnumerableStart = "System.Collections.Generic.IEnumerable<";
 
@@ -13,17 +13,19 @@ public struct PropertyModel(string name, string type, string elementName, bool e
     public string ElementName { get; } = elementName;
     public bool Enumerable { get; } = enumerable;
     public bool Required { get; } = required;
+    public bool FhirArray { get; } = fhirArray;
 
     public string GetGetter()
     {
         return Type switch
         {
             "System.Uri" => ".OriginalString",
+            "System.DateTimeOffset" => ".ToString(\"yyyy-MM-ddTHH:mm:sszzz\")",
             _ => ""
         };
     }
 
-    internal static (PropertyModel?, IEnumerable<FhirGeneratorDiagnostic>) Create(IPropertySymbol propertySymbol, Dictionary<string, string> elementNamesByInterface)
+    internal static (PropertyModel?, IEnumerable<FhirGeneratorDiagnostic>) Create(IPropertySymbol propertySymbol, Dictionary<string, PropertyInfo> elementNamesByInterface)
     {
         var isEnumerable = propertySymbol.Type.OriginalDefinition.ToDisplayString().StartsWith(iEnumerableStart);
 
@@ -47,10 +49,10 @@ public struct PropertyModel(string name, string type, string elementName, bool e
             type = ((INamedTypeSymbol)enumerableType).TypeArguments.First();
         }
 
-        var elementName = FhirAttributeHelper.FindElementName(type, elementNamesByInterface);
+        var propertyInfo = FhirAttributeHelper.FindElementName(type, elementNamesByInterface);
 
         List<FhirGeneratorDiagnostic> diagnostics = [];
-        if ((elementName == null) && (!FhirAttributeHelper.IgnoreProperty(propertySymbol)))
+        if ((propertyInfo == null) && (!FhirAttributeHelper.IgnoreProperty(propertySymbol)))
         {
             var diagnostic = new FhirGeneratorDiagnostic(
                 "HCTX003",
@@ -63,7 +65,7 @@ public struct PropertyModel(string name, string type, string elementName, bool e
             diagnostics.Add(diagnostic);
         }
 
-        return (new PropertyModel(propertySymbol.Name, type.ToDisplayString(), elementName ?? string.Empty, enumerableType is not null, required), []);
+        return (new PropertyModel(propertySymbol.Name, type.ToDisplayString(), propertyInfo?.ElementName ?? string.Empty, enumerableType is not null, required, propertyInfo?.FhirArray ?? false), []);
     }
 }
 

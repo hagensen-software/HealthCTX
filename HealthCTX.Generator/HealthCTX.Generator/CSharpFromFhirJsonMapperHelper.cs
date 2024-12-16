@@ -94,6 +94,19 @@ $$"""
         return (new {{recordModel.RecordName}}(uriValue), []);
 """);
                     break;
+                case "System.DateTimeOffset":
+                    sb.AppendLine(
+$$"""
+        if (jsonElement.ValueKind is not JsonValueKind.String)
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected string value.")]);
+
+        var value = jsonElement.GetString();
+        if (!System.DateTimeOffset.TryParse(value, out var dateTimeValue))
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected valid datetime value.")]);
+
+        return (new {{recordModel.RecordName}}(dateTimeValue), []);
+""");
+                    break;
 
             };
         }
@@ -111,11 +124,15 @@ $$"""
     {
         foreach (var propertyModel in recordModel.Properties)
         {
-            if (propertyModel.Enumerable)
+            sb.AppendLine(
+$$"""
+
+        {{propertyModel.Type}}? {{propertyModel.Name.ToLower()}} = null;
+""");
+            if (propertyModel.FhirArray)
             {
                 sb.AppendLine(
 $$"""
-
         List<{{propertyModel.Type}}>? {{propertyModel.Type.Split('.').Last().ToLower()}}List = [];
         if (jsonElement.TryGetProperty("{{propertyModel.ElementName}}", out JsonElement {{propertyModel.ElementName}}Array))
         {
@@ -123,13 +140,34 @@ $$"""
             {
                 foreach (var arrayElement in {{propertyModel.ElementName}}Array.EnumerateArray())
                 {
-                    (var {{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}");
+""");
+                if (!propertyModel.Enumerable)
+                {
+                    sb.AppendLine(
+$$"""
+                    if ({{propertyModel.Name.ToLower()}} is not null)
+                        outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Too many elements in array."));
+
+""");
+                }
+                sb.AppendLine(
+$$"""
+                    ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}");
                     outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
+""");
+                if (propertyModel.Enumerable)
+                {
+                    sb.AppendLine(
+$$"""
 
                     if ({{propertyModel.Name.ToLower()}} is null)
                         continue;
 
                     {{propertyModel.Type.Split('.').Last().ToLower()}}List.Add({{propertyModel.Name.ToLower()}});
+""");
+                }
+                sb.AppendLine(
+$$"""
                 }
             }
             else
@@ -141,8 +179,6 @@ $$"""
             {
                 sb.AppendLine(
 $$"""
-
-        {{propertyModel.Type}}? {{propertyModel.Name.ToLower()}} = null;
         if (jsonElement.TryGetProperty("{{propertyModel.ElementName}}", out JsonElement {{propertyModel.Name.ToLower()}}Object))
         {
             ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}");

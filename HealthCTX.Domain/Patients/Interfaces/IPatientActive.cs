@@ -1,11 +1,11 @@
 ﻿using HealthCTX.Domain.Framework.Attributes;
 using HealthCTX.Domain.Framework.Interfaces;
 
-namespace HealthCTX.Domain.CodeableConcepts.Interfaces;
+namespace HealthCTX.Domain.Patients.Interfaces;
 
 [FhirPrimitive]
-public interface IVersionString : IElement
+public interface IPatientActive : IElement
 {
     [FhirIgnore]
-    string Value { get; init; }
+    bool Value { get; init; }
 }

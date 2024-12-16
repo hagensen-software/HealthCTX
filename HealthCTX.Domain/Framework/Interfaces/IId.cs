@@ -1,5 +1,10 @@
-﻿namespace HealthCTX.Domain.Framework.Interfaces;
+﻿using HealthCTX.Domain.Framework.Attributes;
 
-public interface IId
+namespace HealthCTX.Domain.Framework.Interfaces;
+
+[FhirPrimitive]
+public interface IId : IElement
 {
+    [FhirIgnore]
+    string Value { get; init; }
 }

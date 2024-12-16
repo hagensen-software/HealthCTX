@@ -90,38 +90,56 @@ $$"""
     private static void AddPropertiesForElement(RecordModel recordModel, StringBuilder sb)
     {
         foreach (var propertyModel in recordModel.Properties)
-            AppendAddToJsonBody(sb, recordModel.RecordInstanceName, propertyModel.Name, propertyModel.ElementName, propertyModel.Type, propertyModel.Enumerable, propertyModel.Required);
+            AppendAddToJsonBody(sb, recordModel.RecordInstanceName, propertyModel.Name, propertyModel.ElementName, propertyModel.Type, propertyModel.Enumerable, propertyModel.FhirArray, propertyModel.Required);
     }
 
-    private static void AppendAddToJsonBody(StringBuilder sb, string recordInstanceName, string propertyName, string elementName, string type, bool enumerable, bool required)
+    private static void AppendAddToJsonBody(StringBuilder sb, string recordInstanceName, string propertyName, string elementName, string type, bool enumerable, bool fhirArray, bool required)
     {
         if (elementName == string.Empty)
             return;
+
+        if (fhirArray)
+        {
+            sb.AppendLine(
+$$"""
+        var {{elementName}}Array = new JsonArray();
+""");
+        }
 
         if (enumerable)
         {
             sb.AppendLine(
 $$"""
-        var {{elementName}}Array = new JsonArray();
         {{recordInstanceName}}.{{propertyName}}.ForEach(p => {{elementName}}Array.Add({{type}}FhirJsonMapper.ToFhirJson(p)));
         {{recordInstanceName}}Object.Add("{{elementName}}", {{elementName}}Array);
-
 """);
         }
         else
         {
-            if (!required)
+            if (fhirArray)
             {
-                sb.Append(
+                sb.AppendLine(
+$$"""
+        {{elementName}}Array.Add({{type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyName}}));
+        {{recordInstanceName}}Object.Add("{{elementName}}", {{elementName}}Array);
+
+""");
+            }
+            else
+            {
+                if (!required)
+                {
+                    sb.Append(
 $$"""
         if ({{recordInstanceName}}.{{propertyName}} is not null)
     
 """);
-            }
-            sb.AppendLine(
+                }
+                sb.AppendLine(
 $$"""
         {{recordInstanceName}}Object.Add("{{elementName}}", {{type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyName}}));
 """);
+            }
         }
     }
 

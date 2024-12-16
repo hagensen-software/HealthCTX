@@ -1,11 +1,11 @@
 ﻿using HealthCTX.Domain.Framework.Attributes;
 using HealthCTX.Domain.Framework.Interfaces;
 
-namespace HealthCTX.Domain.CodeableConcepts.Interfaces;
+namespace HealthCTX.Domain.HumanName.Interfaces;
 
 [FhirPrimitive]
-public interface ISystemUri : IElement
+public interface IHumanNameFamily : IElement
 {
     [FhirIgnore]
-    Uri Value { get; init; }
+    string Value { get; init; }
 }
