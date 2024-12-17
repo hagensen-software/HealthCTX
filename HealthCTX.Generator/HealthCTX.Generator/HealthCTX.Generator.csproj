@@ -1,15 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
-    <IsPackable>false</IsPackable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-    <Version>0.0.1-alpha.5</Version>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
 
-     <!--Avoid ID conflicts with the package project.--> 
-    <PackageId>HealthCTX.Generator</PackageId>
+  <PropertyGroup>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>0.0.1-alpha.9</Version>
+    <Authors>Torben M. Hagensen</Authors>
+    <Owners>Hagensen Software ApS</Owners>
+    <Description>HealthCTX.Generator</Description>
+    <IncludeSymbols>True</IncludeSymbols>
+    <Copyright>Copyright Hagensen Software ApS</Copyright>
+    <Company>Hagensen Software ApS</Company>
+    <RepositoryUrl>https://github.com/hagensen-software/HealthCTX</RepositoryUrl>
+    <PackageTags>HealthCTX.Generator, analyzers</PackageTags>
+    <!--<PackageReleaseNotes>Generator for HealthCTX.Domain package</PackageReleaseNotes>-->
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +31,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
 </Project>
