@@ -19,22 +19,10 @@ public class RecordModelTest
             """);
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly", new[] { syntaxTree },
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
-        var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
-
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
-
-        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "Code");
-        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "Code");
 
         (var recordModel, _) = RecordModel.Create(recordSymbol);
 
@@ -79,24 +67,11 @@ public class RecordModelTest
             """);
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly", new[] { syntaxTree },
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
-        var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
-
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
         // Act
-        var identifierUseDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierUse");
-        var identifierUseSymbol = model.GetDeclaredSymbol(identifierUseDeclaration) as INamedTypeSymbol;
-
+        var identifierUseSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierUse");
         (var identifierUseModel, _) = RecordModel.Create(identifierUseSymbol);
 
         // Assert
@@ -105,9 +80,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Primitive, identifierUseModel?.FhirType);
 
         // Act
-        var identifierCodeDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierCode");
-        var identifierCodeSymbol = model.GetDeclaredSymbol(identifierCodeDeclaration) as INamedTypeSymbol;
-
+        var identifierCodeSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierCode");
         (var identifierCodeModel, _) = RecordModel.Create(identifierCodeSymbol);
 
         // Assert
@@ -116,9 +89,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Primitive, identifierCodeModel?.FhirType);
 
         // Act
-        var identifierCodingDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierCoding");
-        var identifierCodingSymbol = model.GetDeclaredSymbol(identifierCodingDeclaration) as INamedTypeSymbol;
-
+        var identifierCodingSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierCoding");
         (var identifierCodingModel, _) = RecordModel.Create(identifierCodingSymbol);
 
         // Assert
@@ -127,9 +98,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Element, identifierCodingModel?.FhirType);
 
         // Act
-        var identifierTextDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierText");
-        var identifierTextSymbol = model.GetDeclaredSymbol(identifierTextDeclaration) as INamedTypeSymbol;
-
+        var identifierTextSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierText");
         var identifierTextModel = RecordModel.Create(identifierTextSymbol);
 
         // Assert
@@ -138,9 +107,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Primitive, identifierTextModel.Item1?.FhirType);
 
         // Act
-        var identifierTypeDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierType");
-        var identifierTypeSymbol = model.GetDeclaredSymbol(identifierTypeDeclaration) as INamedTypeSymbol;
-
+        var identifierTypeSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierType");
         (var identifierTypeModel, _) = RecordModel.Create(identifierTypeSymbol);
 
         // Assert
@@ -149,9 +116,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Element, identifierTypeModel?.FhirType);
 
         // Act
-        var identifierSystemDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierSystem");
-        var identifierSystemSymbol = model.GetDeclaredSymbol(identifierSystemDeclaration) as INamedTypeSymbol;
-
+        var identifierSystemSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierSystem");
         (var identifierSystemModel, _) = RecordModel.Create(identifierSystemSymbol);
 
         // Assert
@@ -160,9 +125,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Primitive, identifierSystemModel?.FhirType);
 
         // Act
-        var identifierValueDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierValue");
-        var identifierValueSymbol = model.GetDeclaredSymbol(identifierValueDeclaration) as INamedTypeSymbol;
-
+        var identifierValueSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierValue");
         (var identifierValueModel, _) = RecordModel.Create(identifierValueSymbol);
 
         // Assert
@@ -171,9 +134,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Primitive, identifierValueModel?.FhirType);
 
         // Act
-        var periodStartDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "PeriodStart");
-        var periodStartSymbol = model.GetDeclaredSymbol(periodStartDeclaration) as INamedTypeSymbol;
-
+        var periodStartSymbol = GetRecordSymbol(syntaxTree, compilation, "PeriodStart");
         (var periodStartModel, _) = RecordModel.Create(periodStartSymbol);
 
         // Assert
@@ -182,9 +143,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Primitive, periodStartModel?.FhirType);
 
         // Act
-        var periodEndDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "PeriodEnd");
-        var periodEndSymbol = model.GetDeclaredSymbol(periodEndDeclaration) as INamedTypeSymbol;
-
+        var periodEndSymbol = GetRecordSymbol(syntaxTree, compilation, "PeriodEnd");
         (var periodEndModel, _) = RecordModel.Create(periodEndSymbol);
 
         // Assert
@@ -193,9 +152,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Primitive, periodEndModel?.FhirType);
 
         // Act
-        var identifierPeriodDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierPeriod");
-        var identifierPeriodSymbol = model.GetDeclaredSymbol(identifierPeriodDeclaration) as INamedTypeSymbol;
-
+        var identifierPeriodSymbol = GetRecordSymbol(syntaxTree, compilation, "IdentifierPeriod");
         (var identifierPeriodModel, _) = RecordModel.Create(identifierPeriodSymbol);
 
         // Assert
@@ -204,9 +161,7 @@ public class RecordModelTest
         Assert.Equal(FhirType.Element, identifierPeriodModel?.FhirType);
 
         // Act
-        var patientIdentifierDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "PatientIdentifier");
-        var patientIdentifierSymbol = model.GetDeclaredSymbol(patientIdentifierDeclaration) as INamedTypeSymbol;
-
+        var patientIdentifierSymbol = GetRecordSymbol(syntaxTree, compilation, "PatientIdentifier");
         (var patientIdentifierModel, _) = RecordModel.Create(patientIdentifierSymbol);
 
         // Assert
@@ -232,24 +187,10 @@ public class RecordModelTest
             """);
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly", new[] { syntaxTree },
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
-        var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
-
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
-
-        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "MaritalStatus");
-        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
-
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "MaritalStatus");
         (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("MaritalStatus", recordModel?.RecordName);
@@ -275,25 +216,10 @@ public class RecordModelTest
             """);
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly",
-            [syntaxTree],
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
-        var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
-
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
-
-        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "MaritalStatus");
-        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
-
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "MaritalStatus");
         (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("MaritalStatus", recordModel?.RecordName);
@@ -330,25 +256,10 @@ public class RecordModelTest
             """);
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly",
-            [syntaxTree],
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
-        var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
-
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
-
-        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "Patient");
-        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
-
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "Patient");
         (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("Patient", recordModel?.RecordName);
@@ -371,25 +282,10 @@ public class RecordModelTest
             """);
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly",
-            [syntaxTree],
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
-        var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
-
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
-
-        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "MaritalStatusCoding");
-        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
-
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "MaritalStatusCoding");
         (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("MaritalStatusCoding", recordModel?.RecordName);
@@ -410,26 +306,12 @@ public class RecordModelTest
                 public record OutcomeIssue(OutcomeCode Code) : IOutcomeIssue;
             }
             """);
+
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly",
-            [syntaxTree],
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
-        var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
-
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
-
-        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "OutcomeIssue");
-        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
-
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "OutcomeCode");
         (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("OutcomeIssue", recordModel?.RecordName);
@@ -438,6 +320,30 @@ public class RecordModelTest
     }
 
     #region Helpers 
+    private static void Compile(SyntaxTree syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors)
+    {
+        compilation = CSharpCompilation.Create("TestAssembly",
+            [syntaxTree],
+            [
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location)
+            ],
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        var diagnositics = compilation.GetDiagnostics();
+        compileErrors = diagnositics.Where(d => d.Severity == DiagnosticSeverity.Error);
+    }
+
+    private static INamedTypeSymbol GetRecordSymbol(SyntaxTree syntaxTree, CSharpCompilation compilation, string recordName)
+    {
+        var model = compilation.GetSemanticModel(syntaxTree);
+        var root = syntaxTree.GetRoot();
+
+        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == recordName);
+        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
+        return recordSymbol;
+    }
+
     private string WrapCode(string codeToTest) => $$"""
         using System;
 
