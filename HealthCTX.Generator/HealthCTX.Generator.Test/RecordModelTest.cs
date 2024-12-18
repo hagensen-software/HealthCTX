@@ -311,7 +311,7 @@ public class RecordModelTest
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
         Assert.Empty(compileErrors);
 
-        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "OutcomeCode");
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "OutcomeIssue");
         (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("OutcomeIssue", recordModel?.RecordName);
