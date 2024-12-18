@@ -25,7 +25,8 @@ public class PatientTest
                     identifierType,
                     new IdentifierSystem(new Uri("http://somesystem.org")),
                     new IdentifierValue("1234567890"),
-                    period
+                    period,
+                    new IdentifierAssigner(new IdentifierOrganizationReference("Organization/123"))
                     )
             }
         };
@@ -65,7 +66,17 @@ public class PatientTest
                       "coding" : [{
                         "system" : "http://terminology.hl7.org/CodeSystem/v2-0203",
                         "code" : "MR"
-                      }]
+                      }],
+                      "text" : "Medical Record Identifier"
+                    },
+                    "system" : "http://somesystem.org",
+                    "value" : "2345",
+                    "period" : {
+                        "start" : "2024-12-18T14:00:00.000+01:00",
+                        "end" : "2024-12-31T14:00:00.000+01:00"
+                    },
+                    "assigner": {
+                        "reference" : "Organization/123"
                     }
                 }],
                 "maritalStatus" : {
@@ -86,6 +97,7 @@ public class PatientTest
         (var patient, var outcomes) = PatientFhirJsonMapper.ToPatient(jsonString);
 
         Assert.NotNull(patient);
+        Assert.Empty(outcomes.Issues);
     }
 
     [Fact]

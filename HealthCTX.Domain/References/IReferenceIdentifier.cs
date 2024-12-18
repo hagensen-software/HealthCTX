@@ -2,7 +2,7 @@
 using HealthCTX.Domain.Framework.Interfaces;
 using HealthCTX.Domain.Identifiers.Interfaces;
 
-namespace HealthCTX.Domain.Patients.Interfaces;
+namespace HealthCTX.Domain.References;
 
 [FhirElement]
 [FhirProperty("use", typeof(IIdentifierUse), Cardinality.Single)]
@@ -11,4 +11,6 @@ namespace HealthCTX.Domain.Patients.Interfaces;
 [FhirProperty("value", typeof(IIdentifierValue), Cardinality.Single)]
 [FhirProperty("period", typeof(IIdentifierPeriod), Cardinality.Single)]
 [FhirProperty("assigner", typeof(IIdentifierAssigner), Cardinality.Single)]
-public interface IPatientIdentifier : IElement;
+public interface IReferenceIdentifier : IElement
+{
+}

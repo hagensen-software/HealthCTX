@@ -3,5 +3,5 @@ using HealthCTX.Domain.Framework.Interfaces;
 
 namespace HealthCTX.Domain.Organizations.Interfaces;
 
-[FhirResource("Patient")]
+[FhirResource("Organization")]
 public interface IOrganization : IResource;

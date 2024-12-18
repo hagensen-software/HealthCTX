@@ -4,6 +4,7 @@ using HealthCTX.Domain.Identifiers.Interfaces;
 using HealthCTX.Domain.Organizations.Interfaces;
 using HealthCTX.Domain.Patients.Interfaces;
 using HealthCTX.Domain.Period.Interfaces;
+using HealthCTX.Domain.References;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test;
@@ -17,6 +18,8 @@ public record IdentifierText(string Value) : ICodeableConceptText;
 public record IdentifierType(IdentifierCoding Coding, IdentifierText Text) : IIdentifierType;
 public record IdentifierSystem(Uri Value) : IIdentifierSystem;
 public record IdentifierValue(string Value) : IIdentifierValue;
+public record IdentifierOrganizationReference(string Value) : IReferenceReference;
+public record IdentifierAssigner(IdentifierOrganizationReference OrganizationReference) : IIdentifierAssigner;
 
 public record PeriodStart(DateTimeOffset Value) : IPeriodStart;
 public record PeriodEnd(DateTimeOffset Value) : IPeriodEnd;
@@ -29,9 +32,8 @@ public record PatientIdentifier(
     IdentifierType Type,
     IdentifierSystem System,
     IdentifierValue Value,
-    IdentifierPeriod Period
-    //,
-    //Organization Assigner
+    IdentifierPeriod Period,
+    IdentifierAssigner Assigner
     ) : IPatientIdentifier;
 
 public record MaritalStatusSystem(Uri Value) : ICodingSystem;

@@ -15,7 +15,7 @@ public struct PropertyModel(string name, string type, string elementName, bool e
     public bool Required { get; } = required;
     public bool FhirArray { get; } = fhirArray;
 
-    public string GetGetter()
+    public readonly string GetGetter()
     {
         return Type switch
         {
