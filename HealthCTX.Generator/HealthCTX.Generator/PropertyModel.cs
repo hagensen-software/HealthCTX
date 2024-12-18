@@ -25,7 +25,7 @@ public struct PropertyModel(string name, string type, string elementName, bool e
         };
     }
 
-    internal static (PropertyModel?, IEnumerable<FhirGeneratorDiagnostic>) Create(IPropertySymbol propertySymbol, Dictionary<string, PropertyInfo> elementNamesByInterface)
+    internal static (PropertyModel? propertyModel, IEnumerable<FhirGeneratorDiagnostic> generatorDiagnostics) Create(IPropertySymbol propertySymbol, Dictionary<string, PropertyInfo> elementNamesByInterface)
     {
         var isEnumerable = propertySymbol.Type.OriginalDefinition.ToDisplayString().StartsWith(iEnumerableStart);
 

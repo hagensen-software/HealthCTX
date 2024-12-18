@@ -64,10 +64,10 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
             .Select(m => (IPropertySymbol)m);
         var props = members.Select(m => PropertyModel.Create(m, elementNamesByInterface));
 
-        foreach (var prop in props)
-            diagnostics.AddRange(prop.Item2);
+        foreach (var (_, generatorDiagnostics) in props)
+            diagnostics.AddRange(generatorDiagnostics);
 
-        var properties = props.Select(p => p.Item1).OfType<PropertyModel>();
+        var properties = props.Select(p => p.propertyModel).OfType<PropertyModel>();
 
         return (new RecordModel(recordSymbol.Name, recordSymbol.ContainingNamespace.ToDisplayString(), recordSymbol.Name.ToLower(), fhirType.Value, properties.ToArray(), resourceName), diagnostics);
     }
