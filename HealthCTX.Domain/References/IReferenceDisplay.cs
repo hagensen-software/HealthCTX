@@ -1,10 +1,5 @@
-﻿using HealthCTX.Domain.Framework.Attributes;
+﻿using HealthCTX.Domain.Framework.Interfaces;
 
 namespace HealthCTX.Domain.References;
 
-[FhirPrimitive]
-public interface IReferenceDisplay
-{
-    [FhirIgnore]
-    string Value { get; init; }
-}
+public interface IReferenceDisplay : IStringPrimitive;

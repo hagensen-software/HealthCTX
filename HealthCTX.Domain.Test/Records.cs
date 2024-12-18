@@ -17,6 +17,7 @@ public record IdentifierCoding(IdentifierCode Code) : ICodeableConceptCoding;
 public record IdentifierText(string Value) : ICodeableConceptText;
 public record IdentifierType(IdentifierCoding Coding, IdentifierText Text) : IIdentifierType;
 public record IdentifierSystem(Uri Value) : IIdentifierSystem;
+
 public record IdentifierValue(string Value) : IIdentifierValue;
 public record IdentifierOrganizationReference(string Value) : IReferenceReference;
 public record IdentifierAssigner(IdentifierOrganizationReference OrganizationReference) : IIdentifierAssigner;
@@ -49,7 +50,7 @@ public record MaritalStatusCoding(
     MaritalStatusUserSelected? UserSelected) : ICodeableConceptCoding;
 public record MaritalStatusText(string Value) : ICodeableConceptText;
 
-public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding, MaritalStatusText Text) : IMaritalStatusCodeableConcept;
+public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding, MaritalStatusText Text) : IPatientMaritalStatus;
 
 public record Patient(PatientId PatientId, ImmutableList<PatientIdentifier> Identifiers, MaritalStatus? MaritalStatus) : IPatient;
 

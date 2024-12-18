@@ -1,5 +1,5 @@
-﻿using HealthCTX.Domain.CodeableConcepts.Interfaces;
+﻿using HealthCTX.Domain.Framework.Interfaces;
 
 namespace HealthCTX.Domain.Identifiers.Interfaces;
 
-public interface IIdentifierSystem : ICodingSystem;
+public interface IIdentifierSystem : IUriPrimitive;

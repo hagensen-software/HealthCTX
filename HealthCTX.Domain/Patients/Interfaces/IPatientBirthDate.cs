@@ -2,4 +2,4 @@
 
 namespace HealthCTX.Domain.Patients.Interfaces;
 
-public interface IPatientActive : IBooleanPrimitive;
+public interface IPatientBirthDate : IDatePrimitive;

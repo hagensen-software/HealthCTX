@@ -7,5 +7,8 @@ namespace HealthCTX.Domain.Patients.Interfaces;
 [FhirProperty("identifier", typeof(IPatientIdentifier), Cardinality.Multiple)]
 [FhirProperty("active", typeof(IPatientActive), Cardinality.Single)]
 [FhirProperty("name", typeof(IPatientHumanName), Cardinality.Multiple)]
-[FhirProperty("maritalStatus", typeof(IMaritalStatusCodeableConcept), Cardinality.Single)]
+[FhirProperty("telecom", typeof(IPatientContactPoint), Cardinality.Multiple)]
+[FhirProperty("gender", typeof(IPatientGender), Cardinality.Single)]
+[FhirProperty("birthDate", typeof(IPatientBirthDate), Cardinality.Single)]
+[FhirProperty("maritalStatus", typeof(IPatientMaritalStatus), Cardinality.Single)]
 public interface IPatient : IResource;

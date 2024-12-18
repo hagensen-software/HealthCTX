@@ -1,11 +1,5 @@
-﻿using HealthCTX.Domain.Framework.Attributes;
-using HealthCTX.Domain.Framework.Interfaces;
+﻿using HealthCTX.Domain.Framework.Interfaces;
 
 namespace HealthCTX.Domain.HumanName.Interfaces;
 
-[FhirPrimitive]
-public interface IHumanNamePrefix : IElement
-{
-    [FhirIgnore]
-    string Value { get; init; }
-}
+public interface IHumanNamePrefix : IStringPrimitive;
