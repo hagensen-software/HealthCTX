@@ -57,12 +57,14 @@ public struct PropertyModel(string name, string type, string elementName, bool e
             var diagnostic = new FhirGeneratorDiagnostic(
                 "HCTX003",
                 "Fhir Element Name not found",
-                $"No element name found for property {propertySymbol.ToDisplayString()}. No interface of the containing record has a matching FhirProperty attribute. Property is ignored.",
+                $"No element name found for property {propertySymbol.ToDisplayString()}. No interface of the containing record has a matching FhirProperty attribute.",
                 "FhirGenerator",
-                DiagnosticSeverity.Warning,
+                DiagnosticSeverity.Error,
                 propertySymbol.Locations.FirstOrDefault() ?? Location.None
                 );
             diagnostics.Add(diagnostic);
+
+            return (null, diagnostics);
         }
 
         return (new PropertyModel(propertySymbol.Name, type.ToDisplayString(), propertyInfo?.ElementName ?? string.Empty, enumerableType is not null, required, propertyInfo?.FhirArray ?? false), []);

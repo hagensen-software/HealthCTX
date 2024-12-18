@@ -36,7 +36,7 @@ public class RecordModelTest
         var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "Code");
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
 
-        var recordModel = RecordModel.Create(recordSymbol);
+        (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.NotNull(recordModel);
         Assert.Equal("Code", recordModel?.RecordName);
@@ -97,7 +97,7 @@ public class RecordModelTest
         var identifierUseDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierUse");
         var identifierUseSymbol = model.GetDeclaredSymbol(identifierUseDeclaration) as INamedTypeSymbol;
 
-        var identifierUseModel = RecordModel.Create(identifierUseSymbol);
+        (var identifierUseModel, _) = RecordModel.Create(identifierUseSymbol);
 
         // Assert
         Assert.NotNull(identifierUseModel);
@@ -108,7 +108,7 @@ public class RecordModelTest
         var identifierCodeDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierCode");
         var identifierCodeSymbol = model.GetDeclaredSymbol(identifierCodeDeclaration) as INamedTypeSymbol;
 
-        var identifierCodeModel = RecordModel.Create(identifierCodeSymbol);
+        (var identifierCodeModel, _) = RecordModel.Create(identifierCodeSymbol);
 
         // Assert
         Assert.NotNull(identifierCodeModel);
@@ -119,7 +119,7 @@ public class RecordModelTest
         var identifierCodingDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierCoding");
         var identifierCodingSymbol = model.GetDeclaredSymbol(identifierCodingDeclaration) as INamedTypeSymbol;
 
-        var identifierCodingModel = RecordModel.Create(identifierCodingSymbol);
+        (var identifierCodingModel, _) = RecordModel.Create(identifierCodingSymbol);
 
         // Assert
         Assert.NotNull(identifierCodingModel);
@@ -133,15 +133,15 @@ public class RecordModelTest
         var identifierTextModel = RecordModel.Create(identifierTextSymbol);
 
         // Assert
-        Assert.NotNull(identifierTextModel);
-        Assert.Equal("IdentifierText", identifierTextModel?.RecordName);
-        Assert.Equal(FhirType.Primitive, identifierTextModel?.FhirType);
+        Assert.NotNull(identifierTextModel.Item1);
+        Assert.Equal("IdentifierText", identifierTextModel.Item1?.RecordName);
+        Assert.Equal(FhirType.Primitive, identifierTextModel.Item1?.FhirType);
 
         // Act
         var identifierTypeDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierType");
         var identifierTypeSymbol = model.GetDeclaredSymbol(identifierTypeDeclaration) as INamedTypeSymbol;
 
-        var identifierTypeModel = RecordModel.Create(identifierTypeSymbol);
+        (var identifierTypeModel, _) = RecordModel.Create(identifierTypeSymbol);
 
         // Assert
         Assert.NotNull(identifierTypeModel);
@@ -152,7 +152,7 @@ public class RecordModelTest
         var identifierSystemDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierSystem");
         var identifierSystemSymbol = model.GetDeclaredSymbol(identifierSystemDeclaration) as INamedTypeSymbol;
 
-        var identifierSystemModel = RecordModel.Create(identifierSystemSymbol);
+        (var identifierSystemModel, _) = RecordModel.Create(identifierSystemSymbol);
 
         // Assert
         Assert.NotNull(identifierSystemModel);
@@ -163,7 +163,7 @@ public class RecordModelTest
         var identifierValueDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierValue");
         var identifierValueSymbol = model.GetDeclaredSymbol(identifierValueDeclaration) as INamedTypeSymbol;
 
-        var identifierValueModel = RecordModel.Create(identifierValueSymbol);
+        (var identifierValueModel, _) = RecordModel.Create(identifierValueSymbol);
 
         // Assert
         Assert.NotNull(identifierValueModel);
@@ -174,7 +174,7 @@ public class RecordModelTest
         var periodStartDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "PeriodStart");
         var periodStartSymbol = model.GetDeclaredSymbol(periodStartDeclaration) as INamedTypeSymbol;
 
-        var periodStartModel = RecordModel.Create(periodStartSymbol);
+        (var periodStartModel, _) = RecordModel.Create(periodStartSymbol);
 
         // Assert
         Assert.NotNull(periodStartModel);
@@ -185,7 +185,7 @@ public class RecordModelTest
         var periodEndDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "PeriodEnd");
         var periodEndSymbol = model.GetDeclaredSymbol(periodEndDeclaration) as INamedTypeSymbol;
 
-        var periodEndModel = RecordModel.Create(periodEndSymbol);
+        (var periodEndModel, _) = RecordModel.Create(periodEndSymbol);
 
         // Assert
         Assert.NotNull(periodEndModel);
@@ -196,7 +196,7 @@ public class RecordModelTest
         var identifierPeriodDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "IdentifierPeriod");
         var identifierPeriodSymbol = model.GetDeclaredSymbol(identifierPeriodDeclaration) as INamedTypeSymbol;
 
-        var identifierPeriodModel = RecordModel.Create(identifierPeriodSymbol);
+        (var identifierPeriodModel, _) = RecordModel.Create(identifierPeriodSymbol);
 
         // Assert
         Assert.NotNull(identifierPeriodModel);
@@ -207,7 +207,7 @@ public class RecordModelTest
         var patientIdentifierDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "PatientIdentifier");
         var patientIdentifierSymbol = model.GetDeclaredSymbol(patientIdentifierDeclaration) as INamedTypeSymbol;
 
-        var patientIdentifierModel = RecordModel.Create(patientIdentifierSymbol);
+        (var patientIdentifierModel, _) = RecordModel.Create(patientIdentifierSymbol);
 
         // Assert
         Assert.NotNull(patientIdentifierModel);
@@ -250,7 +250,7 @@ public class RecordModelTest
         var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "MaritalStatus");
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
 
-        var recordModel = RecordModel.Create(recordSymbol);
+        (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("MaritalStatus", recordModel?.RecordName);
         Assert.Equal(FhirType.Element, recordModel?.FhirType);
@@ -294,7 +294,7 @@ public class RecordModelTest
         var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "MaritalStatus");
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
 
-        var recordModel = RecordModel.Create(recordSymbol);
+        (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("MaritalStatus", recordModel?.RecordName);
         Assert.Equal(FhirType.Element, recordModel?.FhirType);
@@ -349,7 +349,7 @@ public class RecordModelTest
         var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "Patient");
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
 
-        var recordModel = RecordModel.Create(recordSymbol);
+        (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("Patient", recordModel?.RecordName);
         Assert.Equal(FhirType.Resource, recordModel?.FhirType);
@@ -390,12 +390,13 @@ public class RecordModelTest
         var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "MaritalStatusCoding");
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
 
-        var recordModel = RecordModel.Create(recordSymbol);
+        (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("MaritalStatusCoding", recordModel?.RecordName);
         Assert.Equal(FhirType.Element, recordModel?.FhirType);
         Assert.Equal("TestAssembly.MaritalStatusUserSelected", recordModel?.Properties[0].Type);
     }
+
     [Fact]
     public void HandleOutcomeIssue()
     {
@@ -429,7 +430,7 @@ public class RecordModelTest
         var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "OutcomeIssue");
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
 
-        var recordModel = RecordModel.Create(recordSymbol);
+        (var recordModel, _) = RecordModel.Create(recordSymbol);
 
         Assert.Equal("OutcomeIssue", recordModel?.RecordName);
         Assert.Equal(FhirType.Element, recordModel?.FhirType);

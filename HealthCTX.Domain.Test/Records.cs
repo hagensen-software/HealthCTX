@@ -1,6 +1,7 @@
 ﻿using HealthCTX.Domain.CodeableConcepts.Interfaces;
 using HealthCTX.Domain.Framework.Interfaces;
 using HealthCTX.Domain.Identifiers.Interfaces;
+using HealthCTX.Domain.Organizations.Interfaces;
 using HealthCTX.Domain.Patients.Interfaces;
 using HealthCTX.Domain.Period.Interfaces;
 using System.Collections.Immutable;
@@ -29,6 +30,8 @@ public record PatientIdentifier(
     IdentifierSystem System,
     IdentifierValue Value,
     IdentifierPeriod Period
+    //,
+    //Organization Assigner
     ) : IPatientIdentifier;
 
 public record MaritalStatusSystem(Uri Value) : ICodingSystem;
@@ -47,3 +50,6 @@ public record MaritalStatusText(string Value) : ICodeableConceptText;
 public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding, MaritalStatusText Text) : IMaritalStatusCodeableConcept;
 
 public record Patient(PatientId PatientId, ImmutableList<PatientIdentifier> Identifiers, MaritalStatus? MaritalStatus) : IPatient;
+
+public record OrganizationId(string Value) : IId;
+public record Organization(OrganizationId Id) : IOrganization;

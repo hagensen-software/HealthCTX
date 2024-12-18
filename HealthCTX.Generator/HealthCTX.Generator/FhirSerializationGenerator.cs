@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
+using System.Collections.Generic;
 
 namespace HealthCTX.Generator;
 
@@ -12,18 +13,18 @@ public class FhirSerializationGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        IncrementalValuesProvider<RecordModel?> provider = context.SyntaxProvider.CreateSyntaxProvider(
+        IncrementalValuesProvider<(RecordModel?, IEnumerable<FhirGeneratorDiagnostic>)> provider = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: static (node, _) => node is RecordDeclarationSyntax,
-                transform: static (context, _) => RecordModel.Create(context.SemanticModel.GetDeclaredSymbol((RecordDeclarationSyntax)context.Node)))
-            .Where(r => r is not null);
+                transform: static (context, _) => RecordModel.Create(context.SemanticModel.GetDeclaredSymbol((RecordDeclarationSyntax)context.Node)));
 
         context.RegisterSourceOutput(provider, (context, model) =>
         {
-            if (model is null)
+            ReportDiagnostics(context, model.Item2);
+
+            if (model.Item1 is null)
                 return;
 
-            RecordModel recordModel = (RecordModel)model;
-            ReportDiagnostics(context, recordModel);
+            RecordModel recordModel = (RecordModel)model.Item1;
 
             var sb = new StringBuilder();
 
@@ -36,9 +37,9 @@ public class FhirSerializationGenerator : IIncrementalGenerator
         });
     }
 
-    private static void ReportDiagnostics(SourceProductionContext context, RecordModel recordModel)
+    private static void ReportDiagnostics(SourceProductionContext context, IEnumerable<FhirGeneratorDiagnostic> diagnostics)
     {
-        foreach (var fhirDiagnositic in recordModel.Diagnostics)
+        foreach (var fhirDiagnositic in diagnostics)
         {
             context.ReportDiagnostic(Diagnostic.Create(new DiagnosticDescriptor(
                 fhirDiagnositic.Id,
