@@ -12,5 +12,6 @@ namespace HealthCTX.Domain.Patients.Interfaces;
 [FhirProperty("birthDate", typeof(IPatientBirthDate), Cardinality.Single)]
 [FhirProperty("deceased[Boolean]", typeof(IPatientDeceasedBoolean), Cardinality.Single)]
 [FhirProperty("deceased[DateTime]", typeof(IPatientDeceasedDateTime), Cardinality.Single)]
+[FhirProperty("address", typeof(IPatientAddress), Cardinality.Multiple)]
 [FhirProperty("maritalStatus", typeof(IPatientMaritalStatus), Cardinality.Single)]
 public interface IPatient : IResource;
