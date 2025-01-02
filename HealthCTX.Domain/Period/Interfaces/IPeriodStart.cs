@@ -2,4 +2,4 @@
 
 namespace HealthCTX.Domain.Period.Interfaces;
 
-public interface IPeriodStart : IDatePrimitive;
+public interface IPeriodStart : IDateTimePrimitive;

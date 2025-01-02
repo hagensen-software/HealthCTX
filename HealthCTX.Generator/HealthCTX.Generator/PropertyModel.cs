@@ -21,6 +21,7 @@ public struct PropertyModel(string name, string type, string elementName, bool e
         {
             "System.Uri" => ".OriginalString",
             "System.DateTimeOffset" => ".ToString(\"yyyy-MM-ddTHH:mm:sszzz\")",
+            "System.DateTime" => ".ToString(\"yyyy-MM-dd\")",
             _ => ""
         };
     }
@@ -54,16 +55,7 @@ public struct PropertyModel(string name, string type, string elementName, bool e
         List<FhirGeneratorDiagnostic> diagnostics = [];
         if ((propertyInfo == null) && (!FhirAttributeHelper.IgnoreProperty(propertySymbol)))
         {
-            var diagnostic = new FhirGeneratorDiagnostic(
-                "HCTX003",
-                "Fhir Element Name not found",
-                $"No element name found for property {propertySymbol.ToDisplayString()}. No interface of the containing record has a matching FhirProperty attribute.",
-                "FhirGenerator",
-                DiagnosticSeverity.Error,
-                propertySymbol.Locations.FirstOrDefault() ?? Location.None
-                );
-            diagnostics.Add(diagnostic);
-
+            diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX003(propertySymbol));
             return (null, diagnostics);
         }
 

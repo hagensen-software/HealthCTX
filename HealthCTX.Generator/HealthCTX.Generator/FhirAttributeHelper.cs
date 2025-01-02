@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace HealthCTX.Generator;
 
@@ -42,7 +42,7 @@ public class FhirAttributeHelper
                 if (attribute.ConstructorArguments.Length != 3)
                     continue;
 
-                var elementName = attribute.ConstructorArguments[0].Value as string;
+                var elementName = ResolveChoiceDatatype(attribute.ConstructorArguments[0].Value as string);
                 var elementInterface = (attribute.ConstructorArguments[1].Value as INamedTypeSymbol)?.ToDisplayString();
                 var fhirArray = ((int?)(attribute.ConstructorArguments[2].Value) == fhirCardinalityMultiple);
 
@@ -58,6 +58,15 @@ public class FhirAttributeHelper
             }
         }
         return result;
+    }
+
+    private static string? ResolveChoiceDatatype(string? elementName)
+    {
+        string pattern = @"(\w+)\[(\w+)\]";
+        Match match = Regex.Match(elementName, pattern);
+        if (match.Success)
+            elementName = Regex.Replace(elementName, pattern, "$1$2");
+        return elementName;
     }
 
     public static PropertyInfo? FindElementName(ITypeSymbol recordSymbol, Dictionary<string, PropertyInfo> elementNamesByInterface)
@@ -107,8 +116,10 @@ public class FhirAttributeHelper
         return false;
     }
 
-    public static FhirType? GetFhirType(INamedTypeSymbol recordSymbol, out string? resourceName)
+    public static FhirType? GetFhirType(INamedTypeSymbol recordSymbol, List<FhirGeneratorDiagnostic> diagnostics, out string? resourceName)
     {
+        List<FhirType> fhirTypes = [];
+
         resourceName = null;
 
         foreach (var intf in recordSymbol.AllInterfaces)
@@ -129,13 +140,26 @@ public class FhirAttributeHelper
                 _ => null
             };
 
-            if (fhirType.HasValue && (fhirType.Value == FhirType.Resource))
+            if (fhirType.HasValue)
             {
-                resourceName = attributeData.ConstructorArguments[0].Value as string;
-            }
+                if (fhirType.Value == FhirType.Resource)
+                    resourceName = attributeData.ConstructorArguments[0].Value as string;
 
-            return fhirType;
+                fhirTypes.Add(fhirType.Value);
+            }
         }
-        return null;
+
+        var fhirTypesCount = fhirTypes.Count;
+        switch (fhirTypes.Count)
+        {
+            case 0:
+                diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX002(recordSymbol));
+                return null;
+            case 1:
+                return fhirTypes.FirstOrDefault();
+            default:
+                diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX004(recordSymbol));
+                return null;
+        }
     }
 }

@@ -33,7 +33,8 @@ public class FhirSerializationGenerator : IIncrementalGenerator
             CSharpFromFhirJsonMapperHelper.AddFromFhirJsonMapper(recordModel, sb);
             CSharpFhirJsonMapperHelper.EndClass(sb);
 
-            context.AddSource($"{recordModel.RecordName}FhirJsonMapper_g.cs", SourceText.From(sb.ToString(), Encoding.UTF8));
+            var fileName = $"{recordModel.RecordNamespace.Replace('.', '_')}_{recordModel.RecordName}FhirJsonMapper_g.cs";
+            context.AddSource(fileName, SourceText.From(sb.ToString(), Encoding.UTF8));
         });
     }
 

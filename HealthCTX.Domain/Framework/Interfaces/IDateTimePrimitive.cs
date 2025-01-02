@@ -3,8 +3,8 @@
 namespace HealthCTX.Domain.Framework.Interfaces;
 
 [FhirPrimitive]
-public interface IDatePrimitive : IElement
+public interface IDateTimePrimitive : IElement
 {
     [FhirIgnore]
-    DateOnly Value { get; init; }
+    DateTimeOffset Value { get; init; }
 }
