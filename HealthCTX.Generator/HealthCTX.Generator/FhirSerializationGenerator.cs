@@ -1,7 +1,6 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Linq;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
 using System.Collections.Generic;
@@ -15,7 +14,15 @@ public class FhirSerializationGenerator : IIncrementalGenerator
     {
         IncrementalValuesProvider<(RecordModel?, IEnumerable<FhirGeneratorDiagnostic>)> provider = context.SyntaxProvider.CreateSyntaxProvider(
                 predicate: static (node, _) => node is RecordDeclarationSyntax,
-                transform: static (context, _) => RecordModel.Create(context.SemanticModel.GetDeclaredSymbol((RecordDeclarationSyntax)context.Node)));
+                transform: static (context, _) =>
+                {
+                    var symbol = context.SemanticModel.GetDeclaredSymbol((RecordDeclarationSyntax)context.Node);
+                    if (symbol == null)
+                        return (null, []);
+                    else
+                        return RecordModel.Create(symbol);
+                });
+    
 
         context.RegisterSourceOutput(provider, (context, model) =>
         {

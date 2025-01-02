@@ -20,8 +20,8 @@ public struct PropertyModel(string name, string type, string elementName, bool e
         return Type switch
         {
             "System.Uri" => ".OriginalString",
-            "System.DateTimeOffset" => ".ToString(\"yyyy-MM-ddTHH:mm:sszzz\")",
-            "System.DateTime" => ".ToString(\"yyyy-MM-dd\")",
+            "System.DateTimeOffset" => ".ToString(\"yyyy-MM-ddTHH:mm:sszzz\", System.Globalization.CultureInfo.InvariantCulture)",
+            "System.DateTime" => ".ToString(\"yyyy-MM-dd\", System.Globalization.CultureInfo.InvariantCulture)",
             _ => ""
         };
     }
