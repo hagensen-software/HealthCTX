@@ -17,14 +17,10 @@ public class FhirModelTest
                 using HealthCTX.Domain.Framework.Attributes;
                 using HealthCTX.Domain.Framework.Interfaces;
 
-                [FhirElement]
                 public interface ISomeBoolean : IBooleanPrimitive;
-
-                public interface ISomeDateTime : IDateTimePrimitive;
             
                 [FhirResource("SomeResource")]
-                [FhirProperty("deceased[Boolean]", typeof(ISomeBoolean), Cardinality.Single)]
-                [FhirProperty("deceased[DateTime]", typeof(ISomeDateTime), Cardinality.Single)]
+                [FhirProperty("value[Boolean]", typeof(ISomeBoolean), Cardinality.Single)]
                 public interface ISomeResource : IResource;
 
                 public record SomeBoolean(bool Value) : ISomeBoolean;
@@ -37,13 +33,19 @@ public class FhirModelTest
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
         Assert.Empty(compileErrors);
 
+        var booleanSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeBoolean");
+        (var boolean, var booleanDiagnostics) = RecordModel.Create(booleanSymbol);
+
         var resourceSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeResource");
         (var resource, var resourceDiagnostics) = RecordModel.Create(resourceSymbol);
+
+        Assert.Empty(booleanDiagnostics);
+        Assert.Equal(FhirType.Primitive, boolean?.FhirType);
 
         Assert.Empty(resourceDiagnostics);
         Assert.Equal(FhirType.Resource, resource?.FhirType);
         var resourceProperty = Assert.Single(resource?.Properties);
-        Assert.Equal("deceasedBoolean", resourceProperty.ElementName);
+        Assert.Equal("valueBoolean", resourceProperty.ElementName);
     }
 
     [Fact]
@@ -73,6 +75,32 @@ public class FhirModelTest
         var issue = Assert.Single(propertyDiagnostics);
         Assert.Equal(DiagnosticSeverity.Error, issue.Severity);
         Assert.Null(property);
+    }
+
+    [Fact]
+    public void PropertyOfDateType_ShouldCreateRecordModel()
+    {
+        var code = WrapCode(
+            """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain.Framework.Interfaces;
+
+                public interface ISomeDate : IDatePrimitive;
+            
+                public record SomeDate(DateOnly Value) : ISomeDate;
+            }
+            """);
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var dateSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeDate");
+        (var date, var dateDiagnostics) = RecordModel.Create(dateSymbol);
+
+        Assert.Empty(dateDiagnostics);
+        Assert.Equal(FhirType.Primitive, date?.FhirType);
     }
 
     #region Helpers
@@ -145,7 +173,14 @@ public class FhirModelTest
                 [FhirIgnore]
                 bool Value { get; init; }
             }
-        
+
+            [FhirPrimitive]
+            public interface IDatePrimitive : IElement
+            {
+                [FhirIgnore]
+                DateOnly Value { get; init; }
+            }
+                
             [FhirPrimitive]
             public interface IDateTimePrimitive : IElement
             {

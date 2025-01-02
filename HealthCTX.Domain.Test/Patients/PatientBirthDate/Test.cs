@@ -1,16 +1,16 @@
 ﻿using System.Text.Json;
 
-namespace HealthCTX.Domain.Test.Patients.PatientDeceasedDateTime;
+namespace HealthCTX.Domain.Test.Patients.PatientBirthDate;
 
 public class Test
 {
-    private readonly DateTimeOffset testDate = new(2024, 2, 14, 13, 42, 0, new TimeSpan(1, 0, 0));
-    private readonly string testDateString = "2024-02-14T13:42:00+01:00";
+    private readonly DateOnly testDate = new(2024, 2, 14);
+    private readonly string testDateString = "2024-02-14";
 
     [Fact]
     public void Patient_ToFhirJsonGeneratesJsonString()
     {
-        var patientDeceasedDateTime = new PatientDeceasedDateTime(testDate);
+        var patientDeceasedDateTime = new PatientBirthDate(testDate);
         var patient = new Patient(patientDeceasedDateTime);
 
         var jsonString = PatientFhirJsonMapper.ToFhirJson(patient);
@@ -19,7 +19,7 @@ public class Test
         using (var document = JsonDocument.Parse(jsonString))
         {
             JsonElement root = document.RootElement;
-            deceased = root.GetProperty("deceasedDateTime").GetString();
+            deceased = root.GetProperty("birthDate").GetString();
         }
 
         Assert.Equal(testDateString, deceased);
@@ -31,13 +31,13 @@ public class Test
         var jsonString = $$"""
             {
                 "resourceType" : "Patient",
-                "deceasedDateTime" : "{{testDateString}}"
+                "birthDate" : "{{testDateString}}"
             }
             """;
 
         (var patient, var outcomes) = PatientFhirJsonMapper.ToPatient(jsonString);
 
         Assert.Empty(outcomes.Issues);
-        Assert.Equal(testDate, patient?.Deceased.Value);
+        Assert.Equal(testDate, patient?.BirthDate.Value);
     }
 }

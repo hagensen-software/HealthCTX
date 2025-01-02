@@ -107,6 +107,19 @@ $$"""
         return (new {{recordModel.RecordName}}(dateTimeValue), []);
 """);
                     break;
+                case "System.DateOnly":
+                    sb.AppendLine(
+$$"""
+        if (jsonElement.ValueKind is not JsonValueKind.String)
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected string value.")]);
+
+        var value = jsonElement.GetString();
+        if (!System.DateOnly.TryParse(value, out var dateValue))
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected valid date value.")]);
+
+        return (new {{recordModel.RecordName}}(dateValue), []);
+""");
+                    break;
 
             };
         }
