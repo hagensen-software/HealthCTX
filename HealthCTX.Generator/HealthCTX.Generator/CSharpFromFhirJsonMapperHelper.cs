@@ -120,6 +120,17 @@ $$"""
         return (new {{recordModel.RecordName}}(dateValue), []);
 """);
                     break;
+                case "int":
+                    sb.AppendLine(
+$$"""
+        if (jsonElement.ValueKind is not JsonValueKind.Number)
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected integer value.")]);
+
+        var value = jsonElement.GetInt32();
+
+        return (new {{recordModel.RecordName}}(value), []);
+""");
+                    break;
 
             };
         }
