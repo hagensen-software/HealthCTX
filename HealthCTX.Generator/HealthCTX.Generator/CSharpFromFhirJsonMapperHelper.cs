@@ -131,6 +131,17 @@ $$"""
         return (new {{recordModel.RecordName}}(value), []);
 """);
                     break;
+                case "long":
+                    sb.AppendLine(
+$$"""
+        if (jsonElement.ValueKind is not JsonValueKind.Number)
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected integer value.")]);
+
+        var value = jsonElement.GetInt64();
+
+        return (new {{recordModel.RecordName}}(value), []);
+""");
+                    break;
 
             };
         }

@@ -16,4 +16,5 @@ namespace HealthCTX.Domain.Patients.Interfaces;
 [FhirProperty("maritalStatus", typeof(IPatientMaritalStatus), Cardinality.Single)]
 [FhirProperty("multipleBirth[Boolean]", typeof(IPatientMultipleBirthBoolean), Cardinality.Single)]
 [FhirProperty("multipleBirth[Integer]", typeof(IPatientMultipleBirthInteger), Cardinality.Single)]
+[FhirProperty("photo", typeof(IPatientPhoto), Cardinality.Multiple)]
 public interface IPatient : IResource;
