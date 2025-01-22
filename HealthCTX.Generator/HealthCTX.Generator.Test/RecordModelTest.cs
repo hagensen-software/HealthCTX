@@ -351,7 +351,8 @@ public class RecordModelTest
         {
             public enum Cardinality
             {
-                Single,
+                Mandatory,
+                Optional,
                 Multiple
             }
 
@@ -403,7 +404,7 @@ public class RecordModelTest
             }
                 
             [FhirElement]
-            [FhirProperty("code", typeof(IOutcomeCode), Cardinality.Single)]
+            [FhirProperty("code", typeof(IOutcomeCode), Cardinality.Optional)]
             public interface IOutcomeIssue : IElement
             {
             }
@@ -451,11 +452,11 @@ public class RecordModelTest
             }
                 
             [FhirElement]
-            [FhirProperty("system", typeof(ICodingSystem), Cardinality.Single)]
-            [FhirProperty("version", typeof(ICodingVersion), Cardinality.Single)]
-            [FhirProperty("code", typeof(ICodingCode), Cardinality.Single)]
-            [FhirProperty("display", typeof(ICodingDisplay), Cardinality.Single)]
-            [FhirProperty("userSelected", typeof(ICodingUserSelected), Cardinality.Single)]
+            [FhirProperty("system", typeof(ICodingSystem), Cardinality.Optional)]
+            [FhirProperty("version", typeof(ICodingVersion), Cardinality.Optional)]
+            [FhirProperty("code", typeof(ICodingCode), Cardinality.Optional)]
+            [FhirProperty("display", typeof(ICodingDisplay), Cardinality.Optional)]
+            [FhirProperty("userSelected", typeof(ICodingUserSelected), Cardinality.Optional)]
             public interface ICodeableConceptCoding : IElement;
 
             [FhirPrimitive]
@@ -497,7 +498,7 @@ public class RecordModelTest
 
             [FhirElement]
             [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple)]
-            [FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Single)]
+            [FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Optional)]
             public interface IIdentifierType : IElement;
 
             public interface IIdentifierSystem : ICodingSystem;
@@ -510,8 +511,8 @@ public class RecordModelTest
             }
 
             [FhirElement]
-            [FhirProperty("start", typeof(IPeriodStart), Cardinality.Single)]
-            [FhirProperty("end", typeof(IPeriodEnd), Cardinality.Single)]
+            [FhirProperty("start", typeof(IPeriodStart), Cardinality.Optional)]
+            [FhirProperty("end", typeof(IPeriodEnd), Cardinality.Optional)]
             public interface IIdentifierPeriod : IElement;
         }
 
@@ -523,20 +524,20 @@ public class RecordModelTest
             using HealthCTX.Domain.Framework.Interfaces;
 
             [FhirElement]
-            [FhirProperty("use", typeof(IIdentifierUse), Cardinality.Single)]
-            [FhirProperty("type", typeof(IIdentifierType), Cardinality.Single)]
-            [FhirProperty("system", typeof(IIdentifierSystem), Cardinality.Single)]
-            [FhirProperty("value", typeof(IIdentifierValue), Cardinality.Single)]
-            [FhirProperty("period", typeof(IIdentifierPeriod), Cardinality.Single)]
+            [FhirProperty("use", typeof(IIdentifierUse), Cardinality.Optional)]
+            [FhirProperty("type", typeof(IIdentifierType), Cardinality.Optional)]
+            [FhirProperty("system", typeof(IIdentifierSystem), Cardinality.Optional)]
+            [FhirProperty("value", typeof(IIdentifierValue), Cardinality.Optional)]
+            [FhirProperty("period", typeof(IIdentifierPeriod), Cardinality.Optional)]
             public interface IPatientIdentifier : IElement;
         
             [FhirElement]
             [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple)]
-            [FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Single)]
+            [FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Optional)]
             public interface IMaritalStatusCodeableConcept : IElement;
         
             [FhirResource("Patient")]
-            [FhirProperty("maritalStatus", typeof(IMaritalStatusCodeableConcept), Cardinality.Single)]
+            [FhirProperty("maritalStatus", typeof(IMaritalStatusCodeableConcept), Cardinality.Optional)]
             public interface IPatient : IResource;
         }
 

@@ -24,7 +24,8 @@ public class FhirAttributesTest
             {
                 public enum Cardinality
                 {
-                    Single,
+                    Mandatory,
+                    Optional,
                     Multiple
                 }
 
@@ -39,7 +40,7 @@ public class FhirAttributesTest
                 using HealthCTX.Domain.Framework.Interfaces;
                 using HealthCTX.Domain.Framework.Attributes;
 
-                [FhirProperty("id", typeof(IId), Cardinality.Single)]
+                [FhirProperty("id", typeof(IId), Cardinality.Optional)]
                 public interface IElement
                 {
                 }
@@ -47,7 +48,7 @@ public class FhirAttributesTest
             """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly", new[] { syntaxTree },
+        var compilation = CSharpCompilation.Create("TestAssembly", [syntaxTree],
             [
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Attribute).Assembly.Location)
@@ -60,7 +61,7 @@ public class FhirAttributesTest
         var interfaceDeclaration = root.DescendantNodes().OfType<InterfaceDeclarationSyntax>().First(t => t.Identifier.Text == "IElement");
         var interfaceSymbol = model.GetDeclaredSymbol(interfaceDeclaration) as INamedTypeSymbol;
 
-        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties([interfaceSymbol!]);
+        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties([interfaceSymbol!], []);
 
         Assert.Single(propertiesByElementName);
         Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.Framework.Interfaces.IId"].ElementName);
@@ -92,7 +93,8 @@ public class FhirAttributesTest
 
                 public enum Cardinality
                 {
-                    Single,
+                    Mandatory,
+                    Optional,
                     Multiple
                 }
 
@@ -106,7 +108,7 @@ public class FhirAttributesTest
             {
                 using HealthCTX.Domain.Framework.Attributes;
 
-                [FhirProperty("id", typeof(IId), Cardinality.Single)]
+                [FhirProperty("id", typeof(IId), Cardinality.Optional)]
                 public interface IElement
                 {
                 }
@@ -140,7 +142,7 @@ public class FhirAttributesTest
                 using HealthCTX.Domain.Identifiers.Interfaces;
 
                 [FhirElement]
-                [FhirProperty("use", typeof(IIdentifierUse), Cardinality.Single)]
+                [FhirProperty("use", typeof(IIdentifierUse), Cardinality.Optional)]
                 public interface IPatientIdentifier : IElement;
             }
 
@@ -156,7 +158,7 @@ public class FhirAttributesTest
             """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly", new[] { syntaxTree },
+        var compilation = CSharpCompilation.Create("TestAssembly", [syntaxTree],
             [
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Attribute).Assembly.Location)
@@ -173,7 +175,7 @@ public class FhirAttributesTest
         var interfaceDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "TestRecord");
         var interfaceSymbol = model.GetDeclaredSymbol(interfaceDeclaration) as INamedTypeSymbol;
 
-        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbol?.AllInterfaces);
+        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbol?.AllInterfaces, []);
 
         //Assert.Single(propertiesByElementName);
         //Assert.Equal("use", propertiesByElementName["HealthCTX.Domain.Identifiers.Interfaces.IIdentifierUse"]);

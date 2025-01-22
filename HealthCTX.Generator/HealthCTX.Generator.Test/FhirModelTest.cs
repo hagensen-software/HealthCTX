@@ -20,7 +20,7 @@ public class FhirModelTest
                 public interface ISomeBoolean : IBooleanPrimitive;
             
                 [FhirResource("SomeResource")]
-                [FhirProperty("value[Boolean]", typeof(ISomeBoolean), Cardinality.Single)]
+                [FhirProperty("value[Boolean]", typeof(ISomeBoolean), Cardinality.Optional)]
                 public interface ISomeResource : IResource;
 
                 public record SomeBoolean(bool Value) : ISomeBoolean;
@@ -136,7 +136,8 @@ public class FhirModelTest
         {
             public enum Cardinality
             {
-                Single,
+                Mandatory,
+                Optional,
                 Multiple
             }
 
@@ -188,7 +189,7 @@ public class FhirModelTest
                 DateTimeOffset Value { get; init; }
             }
                 
-            [FhirProperty("id", typeof(IId), Cardinality.Single)]
+            [FhirProperty("id", typeof(IId), Cardinality.Optional)]
             public interface IElement;
 
             public interface IResource : IElement;

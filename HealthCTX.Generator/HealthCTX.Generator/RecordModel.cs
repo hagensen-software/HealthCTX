@@ -28,7 +28,7 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
         if (!fhirType.HasValue || !implementsIElement)
             return (null, diagnostics);
 
-        var elementNamesByInterface = FhirAttributeHelper.GetApplicableProperties(recordSymbol.AllInterfaces);
+        var elementNamesByInterface = FhirAttributeHelper.GetApplicableProperties(recordSymbol.AllInterfaces, diagnostics);
 
         var members = recordSymbol.GetMembers()
             .Where(m => m.Kind == SymbolKind.Property)
@@ -36,10 +36,20 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
             .Select(m => (IPropertySymbol)m);
         var props = members.Select(m => PropertyModel.Create(m, elementNamesByInterface));
 
+        var properties = props.Select(p => p.propertyModel).OfType<PropertyModel>();
+
+        // Check if all mandatory interfaces are implemented
+        IEnumerable<string> missingMandatoryInterfaces = elementNamesByInterface.Values
+                    .Where(p => p.Cardinality is FhirCardinality.Mandatory)
+                    .Select(p => p.ElementInterface)
+                    .Except(properties
+                        .Where(p => p.Required)
+                        .Select(p => p.ElementInterface));
+        if (missingMandatoryInterfaces.Any())
+            diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX007(recordSymbol, missingMandatoryInterfaces));
+
         foreach (var (_, generatorDiagnostics) in props)
             diagnostics.AddRange(generatorDiagnostics);
-
-        var properties = props.Select(p => p.propertyModel).OfType<PropertyModel>();
 
         return (new RecordModel(recordSymbol.Name, recordSymbol.ContainingNamespace.ToDisplayString(), recordSymbol.Name.ToLower(), fhirType.Value, properties.ToArray(), resourceName), diagnostics);
     }

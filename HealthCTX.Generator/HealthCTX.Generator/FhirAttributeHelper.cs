@@ -12,10 +12,18 @@ public enum FhirType
     Primitive
 }
 
-public struct PropertyInfo(string elementName, bool fhirArray)
+public enum FhirCardinality
+{
+    Mandatory,
+    Optional,
+    Multiple
+}
+
+public readonly struct PropertyInfo(string elementName, FhirCardinality fhirCardinality, string elementInterface)
 {
     public string ElementName { get; } = elementName;
-    public bool FhirArray { get; } = fhirArray;
+    public FhirCardinality Cardinality { get; } = fhirCardinality;
+    public string ElementInterface { get; } = elementInterface;
 }
 
 public class FhirAttributeHelper
@@ -26,9 +34,11 @@ public class FhirAttributeHelper
     private const string fhirPropertyAttribute = "HealthCTX.Domain.Framework.Attributes.FhirPropertyAttribute";
     private const string fhirIgnoreAttribute = "HealthCTX.Domain.Framework.Attributes.FhirIgnoreAttribute";
 
-    private const int fhirCardinalityMultiple = 1;
+    private const int fhirCardinalityMandatory = 0;
+    private const int fhirCardinalityOptional = 1;
+    private const int fhirCardinalityMultiple = 2;
 
-    public static Dictionary<string, PropertyInfo> GetApplicableProperties(IEnumerable<INamedTypeSymbol> namedTypeSymbols)
+    public static Dictionary<string, PropertyInfo> GetApplicableProperties(IEnumerable<INamedTypeSymbol> namedTypeSymbols, List<FhirGeneratorDiagnostic> diagnostics)
     {
         var result = new Dictionary<string, PropertyInfo>();
 
@@ -44,16 +54,23 @@ public class FhirAttributeHelper
 
                 var elementName = ResolveChoiceDatatype(attribute.ConstructorArguments[0].Value as string);
                 var elementInterface = (attribute.ConstructorArguments[1].Value as INamedTypeSymbol)?.ToDisplayString();
-                var fhirArray = ((int?)(attribute.ConstructorArguments[2].Value) == fhirCardinalityMultiple);
+
+                var cardinality = attribute.ConstructorArguments[2].Value switch
+                {
+                    fhirCardinalityMandatory => FhirCardinality.Mandatory,
+                    fhirCardinalityOptional => FhirCardinality.Optional,
+                    fhirCardinalityMultiple => FhirCardinality.Multiple,
+                    _ => FhirCardinality.Mandatory
+                };
 
                 try
                 {
                     if (elementName is not null && elementInterface is not null)
-                        result.Add(elementInterface, new PropertyInfo(elementName, fhirArray));
+                        result.Add(elementInterface, new PropertyInfo(elementName, cardinality, elementInterface));
                 }
                 catch
                 {
-                    throw new System.InvalidOperationException($"Trying to add elementName '{elementName}' for interface '{elementInterface}'. Interface is already added.");
+                    diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX005(namedTypeSymbol, elementInterface!, elementName!));
                 }
             }
         }

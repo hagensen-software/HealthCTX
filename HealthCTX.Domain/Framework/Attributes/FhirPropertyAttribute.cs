@@ -2,7 +2,8 @@
 
 public enum Cardinality
 {
-    Single,
+    Mandatory,
+    Optional,
     Multiple
 }
 

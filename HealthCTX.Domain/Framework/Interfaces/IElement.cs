@@ -2,7 +2,7 @@
 
 namespace HealthCTX.Domain.Framework.Interfaces;
 
-[FhirProperty("id", typeof(IId), Cardinality.Single)]
+[FhirProperty("id", typeof(IId), Cardinality.Optional)]
 public interface IElement
 {
 }

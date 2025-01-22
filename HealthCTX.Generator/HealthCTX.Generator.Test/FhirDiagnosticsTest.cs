@@ -134,7 +134,8 @@ public class FhirDiagnosticsTest
         {
             public enum Cardinality
             {
-                Single,
+                Mandatory,
+                Optional,
                 Multiple
             }
 
@@ -165,7 +166,7 @@ public class FhirDiagnosticsTest
                 string Value { get; init; }
             }
         
-            [FhirProperty("id", typeof(IId), Cardinality.Single)]
+            [FhirProperty("id", typeof(IId), Cardinality.Optional)]
             public interface IElement;
 
             public interface IResource : IElement;

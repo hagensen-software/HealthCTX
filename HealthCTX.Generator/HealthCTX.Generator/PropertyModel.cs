@@ -1,10 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HealthCTX.Generator;
 
-public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required, bool fhirArray)
+public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required, bool fhirArray, string elementInterface)
 {
     private const string iEnumerableStart = "System.Collections.Generic.IEnumerable<";
 
@@ -14,6 +15,7 @@ public struct PropertyModel(string name, string type, string elementName, bool e
     public bool Enumerable { get; } = enumerable;
     public bool Required { get; } = required;
     public bool FhirArray { get; } = fhirArray;
+    public string ElementInterface { get; } = elementInterface;
 
     public readonly string GetGetter()
     {
@@ -49,8 +51,11 @@ public struct PropertyModel(string name, string type, string elementName, bool e
         {
             type = ((INamedTypeSymbol)enumerableType).TypeArguments.First();
         }
+        bool enumerable = enumerableType is not null;
 
         var propertyInfo = FhirAttributeHelper.FindElementName(type, elementNamesByInterface);
+        var fhirArray = propertyInfo?.Cardinality == FhirCardinality.Multiple;
+        var mandatory = propertyInfo?.Cardinality == FhirCardinality.Mandatory;
 
         List<FhirGeneratorDiagnostic> diagnostics = [];
         if ((propertyInfo == null) && (!FhirAttributeHelper.IgnoreProperty(propertySymbol)))
@@ -58,8 +63,18 @@ public struct PropertyModel(string name, string type, string elementName, bool e
             diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX003(propertySymbol));
             return (null, diagnostics);
         }
+        if (!required && mandatory)
+        {
+            diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX006(propertySymbol));
+            return (null, diagnostics);
+        }
+        if (enumerable && !fhirArray)
+        {
+            diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX008(propertySymbol));
+            return (null, diagnostics);
+        }
 
-        return (new PropertyModel(propertySymbol.Name, type.ToDisplayString(), propertyInfo?.ElementName ?? string.Empty, enumerableType is not null, required, propertyInfo?.FhirArray ?? false), []);
+        return (new PropertyModel(propertySymbol.Name, type.ToDisplayString(), propertyInfo?.ElementName ?? string.Empty, enumerable, required, fhirArray, propertyInfo?.ElementInterface ?? string.Empty), []);
     }
 }
 

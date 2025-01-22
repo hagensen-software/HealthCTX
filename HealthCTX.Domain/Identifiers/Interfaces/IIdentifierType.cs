@@ -6,5 +6,5 @@ namespace HealthCTX.Domain.Identifiers.Interfaces;
 
 [FhirElement]
 [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple)]
-[FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Single)]
+[FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Optional)]
 public interface IIdentifierType : IElement;

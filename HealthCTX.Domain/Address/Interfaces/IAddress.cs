@@ -4,14 +4,14 @@ using HealthCTX.Domain.Framework.Interfaces;
 namespace HealthCTX.Domain.Address.Interfaces;
 
 [FhirElement]
-[FhirProperty("use", typeof(IAddressUse), Cardinality.Single)]
-[FhirProperty("type", typeof(IAddressType), Cardinality.Single)]
-[FhirProperty("text", typeof(IAddressText), Cardinality.Single)]
+[FhirProperty("use", typeof(IAddressUse), Cardinality.Optional)]
+[FhirProperty("type", typeof(IAddressType), Cardinality.Optional)]
+[FhirProperty("text", typeof(IAddressText), Cardinality.Optional)]
 [FhirProperty("line", typeof(IAddressLine), Cardinality.Multiple)]
-[FhirProperty("city", typeof(IAddressCity), Cardinality.Single)]
-[FhirProperty("district", typeof(IAddressDistrict), Cardinality.Single)]
-[FhirProperty("state", typeof(IAddressState), Cardinality.Single)]
-[FhirProperty("postalCode", typeof(IAddressPostalCode), Cardinality.Single)]
-[FhirProperty("country", typeof(IAddressCountry), Cardinality.Single)]
-[FhirProperty("period", typeof(IAddressPeriod), Cardinality.Single)]
+[FhirProperty("city", typeof(IAddressCity), Cardinality.Optional)]
+[FhirProperty("district", typeof(IAddressDistrict), Cardinality.Optional)]
+[FhirProperty("state", typeof(IAddressState), Cardinality.Optional)]
+[FhirProperty("postalCode", typeof(IAddressPostalCode), Cardinality.Optional)]
+[FhirProperty("country", typeof(IAddressCountry), Cardinality.Optional)]
+[FhirProperty("period", typeof(IAddressPeriod), Cardinality.Optional)]
 public interface IAddress : IElement;
