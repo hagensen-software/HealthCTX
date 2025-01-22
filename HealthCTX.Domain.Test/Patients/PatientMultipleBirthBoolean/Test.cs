@@ -1,5 +1,4 @@
-﻿using HealthCTX.Domain.Test.Patients.PatientDeseasedBoolean;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace HealthCTX.Domain.Test.Patients.PatientMultipleBirthBoolean;
 

@@ -19,4 +19,7 @@ namespace HealthCTX.Domain.Patients.Interfaces;
 [FhirProperty("photo", typeof(IPatientPhoto), Cardinality.Multiple)]
 [FhirProperty("contact", typeof(IPatientContact), Cardinality.Multiple)]
 [FhirProperty("communication", typeof(IPatientCommunication), Cardinality.Multiple)]
+[FhirProperty("generalPractitioner", typeof(IPatientGeneralPractitioner), Cardinality.Multiple)]
+[FhirProperty("managingOrganization", typeof(IPatientManagingOrganization), Cardinality.Optional)]
+[FhirProperty("link", typeof(IPatientLink), Cardinality.Multiple)]
 public interface IPatient : IResource;
