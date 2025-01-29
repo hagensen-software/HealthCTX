@@ -52,7 +52,7 @@ public class FhirAttributeHelper
                 if (attribute.ConstructorArguments.Length != 3)
                     continue;
 
-                var elementName = ResolveChoiceDatatype(attribute.ConstructorArguments[0].Value as string);
+                var elementName = ResolveElementName(attribute.ConstructorArguments[0].Value as string);
                 var elementInterface = (attribute.ConstructorArguments[1].Value as INamedTypeSymbol)?.ToDisplayString();
 
                 var cardinality = attribute.ConstructorArguments[2].Value switch
@@ -77,12 +77,19 @@ public class FhirAttributeHelper
         return result;
     }
 
-    private static string? ResolveChoiceDatatype(string? elementName)
+    private static string? ResolveElementName(string? elementName)
     {
-        string pattern = @"(\w+)\[(\w+)\]";
-        Match match = Regex.Match(elementName, pattern);
-        if (match.Success)
-            elementName = Regex.Replace(elementName, pattern, "$1$2");
+        string choicePattern = @"(\w+)\[(\w+)\]";
+        Match choiceMatch = Regex.Match(elementName, choicePattern);
+        if (choiceMatch.Success)
+            elementName = $"{choiceMatch.Groups[1].Value}{choiceMatch.Groups[2].Value}";
+        else
+        {
+            string referencePattern = @"(\w+)\((\w+)\)";
+            Match referenceMatch = Regex.Match(elementName, referencePattern);
+            if (referenceMatch.Success)
+                elementName = referenceMatch.Groups[1].Value;
+        }
         return elementName;
     }
 

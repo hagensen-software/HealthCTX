@@ -103,6 +103,46 @@ public class FhirModelTest
         Assert.Equal(FhirType.Primitive, date?.FhirType);
     }
 
+    [Fact]
+    public void TypeSpecificReference_ShouldCreateRecordModel()
+    {
+        var code = WrapCode(
+            """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Framework.Attributes;
+                using HealthCTX.Domain.References;
+
+                public interface IOtherResourceReference : IReferenceReference;
+                public interface IThirdResourceReference : IReferenceReference;
+                                    
+                [FhirResource("SomeResource")]
+                [FhirProperty("otherReference(OtherResource)", typeof(IOtherResourceReference), Cardinality.Multiple)]
+                [FhirProperty("otherReference(ThirdResource)", typeof(IThirdResourceReference), Cardinality.Multiple)]
+                public interface ISomeResource : IResource;
+
+                public record OtherResourceReference(string Value) : IOtherResourceReference;
+                public record ThirdResourceReference(string Value) : IThirdResourceReference;
+                        
+                public record SomeRecord(OtherResourceReference Other, ThirdResourceReference Third) : ISomeResource;
+            }
+            """);
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var someRecordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeRecord");
+        (var someRecord, var dateDiagnostics) = RecordModel.Create(someRecordSymbol);
+
+        Assert.Empty(dateDiagnostics);
+        Assert.Equal("otherReference", someRecord?.Properties.First().ElementName);
+        Assert.Equal("TestAssembly.IOtherResourceReference", someRecord?.Properties.First().ElementInterface);
+        Assert.Equal("otherReference", someRecord?.Properties.Last().ElementName);
+        Assert.Equal("TestAssembly.IThirdResourceReference", someRecord?.Properties.Last().ElementInterface);
+    }
+
     #region Helpers
     private static void Compile(SyntaxTree syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors)
     {
@@ -194,6 +234,19 @@ public class FhirModelTest
 
             public interface IResource : IElement;
         }
+
+        namespace HealthCTX.Domain.References
+        {
+            using HealthCTX.Domain.Framework.Attributes;
+            using HealthCTX.Domain.Framework.Interfaces;
+
+            [FhirPrimitive]
+            public interface IReferenceReference : IElement
+            {
+                [FhirIgnore]
+                string Value { get; init; }
+            }
+        }        
         
         {{codeToTest}}
         """;

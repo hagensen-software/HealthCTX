@@ -62,6 +62,13 @@ public class FhirGeneratorDiagnostic(string id, string title, string message, st
         "FhirGenerator",
         DiagnosticSeverity.Error,
         propertySymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX009(INamedTypeSymbol recordSymbol, IEnumerable<string> duplicateInterfaces) => new(
+        "HCTX009",
+        "Duplicate implementation of property interfaces",
+        $"FHIR record {recordSymbol.ToDisplayString()} has multiple properties implementing the same FHIR interface. The following interfaces are duplicated: {string.Join(", ", duplicateInterfaces)}",
+        "FhirGenerator",
+        DiagnosticSeverity.Error,
+        recordSymbol.Locations.FirstOrDefault() ?? Location.None);
 
     public string Id { get; } = id;
     public string Title { get; } = title;

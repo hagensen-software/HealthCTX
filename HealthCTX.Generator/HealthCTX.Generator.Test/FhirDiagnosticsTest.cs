@@ -101,6 +101,38 @@ public class FhirDiagnosticsTest
         Assert.Equal("HCTX003", d.Id);
     }
 
+    [Fact]
+    public void MultiplePropertiesWithSameInterface_ShouldEmitError()
+    {
+        var code = WrapCode(
+            """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain.Framework.Attributes;
+                using HealthCTX.Domain.Framework.Interfaces;
+
+                [FhirResource("SomeResource")]
+                public interface ISomeResource : IElement;
+
+                public record SomeId(string Value) : IId;
+                public record SomeOtherId(string Value) : IId;
+            
+                public record SomeResource(SomeId Id, SomeOtherId OtherId) : ISomeResource;
+            }
+            """);
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeResource");
+
+        (_, var diagnostics) = RecordModel.Create(recordSymbol);
+
+        var d = Assert.Single(diagnostics);
+        Assert.Equal("HCTX009", d.Id);
+    }
+
 
     private static void Compile(SyntaxTree syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors)
     {

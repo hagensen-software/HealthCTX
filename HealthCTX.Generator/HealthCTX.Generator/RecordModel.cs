@@ -38,6 +38,14 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
 
         var properties = props.Select(p => p.propertyModel).OfType<PropertyModel>();
 
+        // Check if same interface has been implemented multiple times
+        var duplicateInterfaces = properties
+            .GroupBy(p => p.ElementInterface)
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key);
+        if (duplicateInterfaces.Any())
+            diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX009(recordSymbol, duplicateInterfaces));
+
         // Check if all mandatory interfaces are implemented
         IEnumerable<string> missingMandatoryInterfaces = elementNamesByInterface.Values
                     .Where(p => p.Cardinality is FhirCardinality.Mandatory)
