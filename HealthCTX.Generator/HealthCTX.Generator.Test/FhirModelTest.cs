@@ -2,6 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
+using HealthCTX.Domain.Framework.Interfaces;
+using System.Reflection;
 
 namespace HealthCTX.Generator.Test;
 
@@ -10,7 +12,7 @@ public class FhirModelTest
     [Fact]
     public void PropertyWithChoiceOfBooleanType_ShouldAppearInRecordModel()
     {
-        var code = WrapCode(
+        var code = 
             """
             namespace TestAssembly
             {
@@ -27,7 +29,7 @@ public class FhirModelTest
 
                 public record SomeResource(SomeBoolean Bool) : ISomeResource;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -51,7 +53,7 @@ public class FhirModelTest
     [Fact]
     public void PropertyWithMulitpleFhirTypes_ShouldGenerateErrorIssue()
     {
-        var code = WrapCode(
+        var code = 
             """
             namespace TestAssembly
             {
@@ -63,7 +65,7 @@ public class FhirModelTest
 
                 public record SomeBoolean(bool Value) : IInvalidBoolean;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -80,17 +82,18 @@ public class FhirModelTest
     [Fact]
     public void PropertyOfDateType_ShouldCreateRecordModel()
     {
-        var code = WrapCode(
+        var code = 
             """
             namespace TestAssembly
             {
+                using System;
                 using HealthCTX.Domain.Framework.Interfaces;
 
                 public interface ISomeDate : IDatePrimitive;
             
                 public record SomeDate(DateOnly Value) : ISomeDate;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -106,7 +109,7 @@ public class FhirModelTest
     [Fact]
     public void TypeSpecificReference_ShouldCreateRecordModel()
     {
-        var code = WrapCode(
+        var code = 
             """
             namespace TestAssembly
             {
@@ -127,7 +130,7 @@ public class FhirModelTest
                         
                 public record SomeRecord(OtherResourceReference Other, ThirdResourceReference Third) : ISomeResource;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -143,7 +146,7 @@ public class FhirModelTest
         Assert.Equal("TestAssembly.IThirdResourceReference", someRecord?.Properties.Last().ElementInterface);
     }
 
-    #region Helpers
+    #region Helpers 
     private static void Compile(SyntaxTree syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors)
     {
         compilation = CSharpCompilation.Create("TestAssembly",
@@ -151,7 +154,9 @@ public class FhirModelTest
             [
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location),
+                MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
+                MetadataReference.CreateFromFile(typeof(IElement).Assembly.Location)
             ],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         var diagnositics = compilation.GetDiagnostics();
@@ -167,88 +172,5 @@ public class FhirModelTest
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
         return recordSymbol;
     }
-
-    private static string WrapCode(string codeToTest) =>
-        $$"""
-        using System;
-
-        namespace HealthCTX.Domain.Framework.Attributes
-        {
-            public enum Cardinality
-            {
-                Mandatory,
-                Optional,
-                Multiple
-            }
-
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = true)] 
-            public class FhirPropertyAttribute(string Name, Type InterfaceType, Cardinality Cardinality) : Attribute;
-        
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)] 
-            public class FhirElementAttribute() : Attribute;
-
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)] 
-            public class FhirPrimitiveAttribute() : Attribute;
-        
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)] 
-            public class FhirResourceAttribute(string ResourceType) : Attribute;
-        
-            [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
-            public class FhirIgnoreAttribute : Attribute;
-        }
-
-        namespace HealthCTX.Domain.Framework.Interfaces
-        {
-            using HealthCTX.Domain.Framework.Attributes;
-
-            [FhirPrimitive]
-            public interface IId : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-
-            [FhirPrimitive]
-            public interface IBooleanPrimitive : IElement
-            {
-                [FhirIgnore]
-                bool Value { get; init; }
-            }
-
-            [FhirPrimitive]
-            public interface IDatePrimitive : IElement
-            {
-                [FhirIgnore]
-                DateOnly Value { get; init; }
-            }
-                
-            [FhirPrimitive]
-            public interface IDateTimePrimitive : IElement
-            {
-                [FhirIgnore]
-                DateTimeOffset Value { get; init; }
-            }
-                
-            [FhirProperty("id", typeof(IId), Cardinality.Optional)]
-            public interface IElement;
-
-            public interface IResource : IElement;
-        }
-
-        namespace HealthCTX.Domain.References
-        {
-            using HealthCTX.Domain.Framework.Attributes;
-            using HealthCTX.Domain.Framework.Interfaces;
-
-            [FhirPrimitive]
-            public interface IReferenceReference : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-        }        
-        
-        {{codeToTest}}
-        """;
-#endregion
+    #endregion
 }

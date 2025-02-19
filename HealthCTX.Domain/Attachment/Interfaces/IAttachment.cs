@@ -3,6 +3,7 @@ using HealthCTX.Domain.Framework.Interfaces;
 
 namespace HealthCTX.Domain.Attachment.Interfaces;
 
+// TODO: Add R5 properties
 [FhirElement]
 [FhirProperty("contentType", typeof(IAttachmentContentType), Cardinality.Optional)]
 [FhirProperty("language", typeof(IAttachmentLanguage), Cardinality.Optional)]

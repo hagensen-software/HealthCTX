@@ -28,13 +28,13 @@ internal class CSharpFromFhirJsonMapperHelper
         {
             sb.AppendLine(
 $$"""
-    public static ({{recordModel.RecordName}}?, OperationOutcome) To{{recordModel.RecordName}}(string jsonString)
+    public static ({{recordModel.RecordName}}?, OperationOutcome) To{{recordModel.RecordName}}(string jsonString, HealthCTX.Domain.Framework.FhirVersion fhirVersion = HealthCTX.Domain.Framework.FhirVersion.R4)
     {
         try
         {
             var document = JsonDocument.Parse(jsonString);
 
-            (var resource, var issues) = To{{recordModel.RecordName}}(document.RootElement, "{{recordModel.ResourceName}}");
+            (var resource, var issues) = To{{recordModel.RecordName}}(document.RootElement, "{{recordModel.ResourceName}}", fhirVersion);
             return (resource, new OperationOutcome([..issues]));
         }
         catch (Exception ex)
@@ -47,7 +47,7 @@ $$"""
         }
         sb.AppendLine(
 $$"""
-    public static ({{recordModel.RecordName}}?, List<OutcomeIssue>) To{{recordModel.RecordName}}(JsonElement jsonElement, string elementName)
+    public static ({{recordModel.RecordName}}?, List<OutcomeIssue>) To{{recordModel.RecordName}}(JsonElement jsonElement, string elementName, HealthCTX.Domain.Framework.FhirVersion fhirVersion)
     {
 """);
     }
@@ -56,6 +56,16 @@ $$"""
     {
         foreach (var propertyModel in recordModel.Properties) // Doesn't look right ;-)
         {
+            if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+            {
+                sb.Append(
+$$"""
+        if (fhirVersion is < HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+            return (null, [OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Property '{{propertyModel.ElementName}}' not supported in FHIR version {fhirVersion}.")]);
+
+""");
+            }
+
             switch (propertyModel.Type)
             {
                 case "bool":
@@ -171,6 +181,22 @@ $$"""
         List<{{propertyModel.Type}}>? {{propertyModel.Type.Split('.').Last().ToLower()}}List = [];
         if (jsonElement.TryGetProperty("{{propertyModel.ElementName}}", out JsonElement {{propertyModel.ElementName}}Array))
         {
+""");
+                if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+                {
+                    sb.AppendLine(
+$$"""
+            if (fhirVersion is < HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+            {
+                outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Property '{{propertyModel.ElementName}}' not supported in FHIR version {fhirVersion}."));
+            }
+            else
+            {
+""");
+                }
+
+                    sb.AppendLine(
+$$"""
             if ({{propertyModel.ElementName}}Array.ValueKind == JsonValueKind.Array)
             {
                 foreach (var arrayElement in {{propertyModel.ElementName}}Array.EnumerateArray())
@@ -187,7 +213,7 @@ $$"""
                 }
                 sb.AppendLine(
 $$"""
-                    ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}");
+                    ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}", fhirVersion);
                     outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
 """);
                 if (propertyModel.Enumerable)
@@ -207,8 +233,20 @@ $$"""
             }
             else
                 outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Expected an array."));
+""");
+                    sb.AppendLine(
+"""
+            }
+""");
+
+                if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+                {
+                    sb.AppendLine(
+$$"""
         }
 """);
+                }
+
             }
             else
             {
@@ -216,10 +254,36 @@ $$"""
 $$"""
         if (jsonElement.TryGetProperty("{{propertyModel.ElementName}}", out JsonElement {{propertyModel.Name.ToLower()}}Object))
         {
-            ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}");
+""");
+                if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+                {
+                    sb.AppendLine(
+$$"""
+            if (fhirVersion is < HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+            {
+                outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Property '{{propertyModel.ElementName}}' not supported in FHIR version {fhirVersion}."));
+            }
+            else
+            {
+""");
+                }
+                sb.AppendLine(
+$$"""
+            ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}", fhirVersion);
             outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
+""");
+                if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+                {
+                    sb.AppendLine(
+$$"""
+            }
+""");
+                }
+                sb.AppendLine(
+$$"""
         }
 """);
+
             }
         }
     }

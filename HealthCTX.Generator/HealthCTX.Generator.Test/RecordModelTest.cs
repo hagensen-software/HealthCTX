@@ -1,22 +1,23 @@
-using HealthCTX.Generator;
+using HealthCTX.Domain.Framework.Interfaces;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
+using System.Reflection;
 
-namespace HealthCTX.CSharpToFhirModel.Test;
+namespace HealthCTX.Generator.Test;
 
 public class RecordModelTest
 {
     [Fact]
     public void FindRecord()
     {
-        var code = WrapCode("""
+        var code = """
             namespace TestAssembly
             {
                 public record Code(string Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingCode;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -35,12 +36,12 @@ public class RecordModelTest
     public void HandleIdentifierType()
     {
         // Arrange
-        var code = WrapCode("""
+        var code = """
             namespace TestAssembly
             {
+                using System;
                 using HealthCTX.Domain.CodeableConcepts.Interfaces;
                 using HealthCTX.Domain.Identifiers.Interfaces;
-                using HealthCTX.Domain.Patients.Interfaces;
                 using HealthCTX.Domain.Period.Interfaces;
 
                 public record IdentifierUse(string Value) : IIdentifierUse;
@@ -62,9 +63,9 @@ public class RecordModelTest
                     IdentifierType Type,
                     IdentifierSystem System,
                     IdentifierValue Value,
-                    IdentifierPeriod Period) : IPatientIdentifier;
+                    IdentifierPeriod Period) : IIdentifier;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -173,18 +174,17 @@ public class RecordModelTest
     [Fact]
     public void HandleEnumerableType()
     {
-        var code = WrapCode("""
+        var code = """
             namespace TestAssembly
             {
                 using HealthCTX.Domain.CodeableConcepts.Interfaces;
-                using HealthCTX.Domain.Patients.Interfaces;
                 using System.Collections.Generic;
 
                 public record MaritalStatusCode(string Value) : ICodingCode;
                 public record MaritalStatusCoding(MaritalStatusCode Code) : ICodeableConceptCoding;
-                public record MaritalStatus(IEnumerable<MaritalStatusCoding> Coding) : IMaritalStatusCodeableConcept;
+                public record MaritalStatus(IEnumerable<MaritalStatusCoding> Coding) : ICodeableConcept;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -202,18 +202,17 @@ public class RecordModelTest
     [Fact]
     public void HandleImmutableListType()
     {
-        var code = WrapCode("""
+        var code = """
             namespace TestAssembly
             {
                 using HealthCTX.Domain.CodeableConcepts.Interfaces;
-                using HealthCTX.Domain.Patients.Interfaces;
                 using System.Collections.Immutable;
 
                 public record MaritalStatusCode(string Value) : ICodingCode;
                 public record MaritalStatusCoding(MaritalStatusCode Code) : ICodeableConceptCoding;
-                public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding) : IMaritalStatusCodeableConcept;
+                public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding) : ICodeableConcept;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -231,9 +230,28 @@ public class RecordModelTest
     [Fact]
     public void HandleResourceType()
     {
-        var code = WrapCode("""
+        var code = """
+            namespace HealthCTX.Domain.Patients.Interfaces
+            {
+                using HealthCTX.Domain.CodeableConcepts.Interfaces;
+                using HealthCTX.Domain.Identifiers.Interfaces;
+                using HealthCTX.Domain.Framework.Attributes;
+                using HealthCTX.Domain.Framework.Interfaces;
+            
+                [FhirElement]
+                [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple)]
+                [FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Optional)]
+                public interface IMaritalStatusCodeableConcept : IElement;
+            
+                [FhirResource("Patient")]
+                [FhirProperty("maritalStatus", typeof(IMaritalStatusCodeableConcept), Cardinality.Optional)]
+                public interface IPatient : IResource;
+            }
+            
             namespace TestAssembly
             {
+                using System;
+                using HealthCTX.Domain.CodeableConcepts.Interfaces;
                 using System.Collections.Immutable;
 
                 public record MaritalStatusSystem(Uri Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingSystem;
@@ -247,13 +265,13 @@ public class RecordModelTest
                     MaritalStatusVersion Version,
                     MaritalStatusCode Code,
                     MaritalStatusDisplay Display,
-                    MaritalStatusUserSelected UserSelected) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodeableConceptCoding;
+                    MaritalStatusUserSelected UserSelected) : ICodeableConceptCoding;
 
                 public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding) : HealthCTX.Domain.Patients.Interfaces.IMaritalStatusCodeableConcept;
 
                 public record Patient(MaritalStatus MaritalStatus) : HealthCTX.Domain.Patients.Interfaces.IPatient;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -271,7 +289,7 @@ public class RecordModelTest
     [Fact]
     public void HandleNullableType()
     {
-        var code = WrapCode("""
+        var code = """
             namespace TestAssembly
             {
                 public record MaritalStatusUserSelected(bool Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingUserSelected;
@@ -279,7 +297,7 @@ public class RecordModelTest
                 public record MaritalStatusCoding(
                     MaritalStatusUserSelected? UserSelected) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodeableConceptCoding;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -296,7 +314,7 @@ public class RecordModelTest
     [Fact]
     public void HandleOutcomeIssue()
     {
-        var code = WrapCode("""
+        var code = """
             namespace TestAssembly
             {
                 using HealthCTX.Domain.OperationOutcomes.Interfaces;
@@ -305,7 +323,7 @@ public class RecordModelTest
                 public record OutcomeCode(string Value) : IOutcomeCode;
                 public record OutcomeIssue(OutcomeCode Code) : IOutcomeIssue;
             }
-            """);
+            """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
@@ -327,7 +345,9 @@ public class RecordModelTest
             [
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location),
+                MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
+                MetadataReference.CreateFromFile(typeof(IElement).Assembly.Location)
             ],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         var diagnositics = compilation.GetDiagnostics();
@@ -343,205 +363,5 @@ public class RecordModelTest
         var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
         return recordSymbol;
     }
-
-    private string WrapCode(string codeToTest) => $$"""
-        using System;
-
-        namespace HealthCTX.Domain.Framework.Attributes
-        {
-            public enum Cardinality
-            {
-                Mandatory,
-                Optional,
-                Multiple
-            }
-
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = true)] 
-            public class FhirPropertyAttribute(string Name, Type InterfaceType, Cardinality Cardinality) : Attribute;
-        
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)] 
-            public class FhirElementAttribute() : Attribute;
-
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)] 
-            public class FhirPrimitiveAttribute() : Attribute;
-        
-            [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)] 
-            public class FhirResourceAttribute(string ResourceType) : Attribute;
-        
-            [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
-            public class FhirIgnoreAttribute : Attribute;
-        }
-
-        namespace HealthCTX.Domain.Framework.Interfaces
-        {
-            using HealthCTX.Domain.Framework.Attributes;
-
-            [FhirPrimitive]
-            public interface IId : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-        
-            public interface IElement
-            {
-            }
-            public interface IResource : IElement
-            {
-            }
-        }
-
-        namespace HealthCTX.Domain.OperationOutcomes.Interfaces
-        {
-            using HealthCTX.Domain.Framework.Attributes;
-            using HealthCTX.Domain.Framework.Interfaces;
-        
-            [FhirPrimitive]
-            public interface IOutcomeCode : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-                
-            [FhirElement]
-            [FhirProperty("code", typeof(IOutcomeCode), Cardinality.Optional)]
-            public interface IOutcomeIssue : IElement
-            {
-            }
-        }
-        
-        namespace HealthCTX.Domain.CodeableConcepts.Interfaces
-        {
-            using System;
-            using HealthCTX.Domain.Framework.Interfaces;
-            using HealthCTX.Domain.Framework.Attributes;
-
-            [FhirPrimitive]
-            public interface ICodingSystem : IElement
-            {
-                [FhirIgnore]
-                Uri Value { get; init; }
-            }
-
-            [FhirPrimitive]
-            public interface ICodingVersion : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-                
-            [FhirPrimitive]
-            public interface ICodingCode : IElement
-            {
-                [FhirIgnore]                
-                string Value { get; init; }
-            }
-
-            [FhirPrimitive]
-            public interface ICodingDisplay : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-
-            [FhirPrimitive]
-            public interface ICodingUserSelected : IElement
-            {
-                [FhirIgnore]
-                bool Value { get; init; }
-            }
-                
-            [FhirElement]
-            [FhirProperty("system", typeof(ICodingSystem), Cardinality.Optional)]
-            [FhirProperty("version", typeof(ICodingVersion), Cardinality.Optional)]
-            [FhirProperty("code", typeof(ICodingCode), Cardinality.Optional)]
-            [FhirProperty("display", typeof(ICodingDisplay), Cardinality.Optional)]
-            [FhirProperty("userSelected", typeof(ICodingUserSelected), Cardinality.Optional)]
-            public interface ICodeableConceptCoding : IElement;
-
-            [FhirPrimitive]
-            public interface ICodeableConceptText : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-        }
-
-        namespace HealthCTX.Domain.Period.Interfaces
-        {
-            using HealthCTX.Domain.Framework.Attributes;
-            using HealthCTX.Domain.Framework.Interfaces;
-
-            [FhirPrimitive]
-            public interface IPeriodStart : IElement
-            {
-                [FhirIgnore]
-                DateTimeOffset Value { get; init; }
-            }
-
-            [FhirPrimitive]
-            public interface IPeriodEnd : IElement
-            {
-                [FhirIgnore]
-                DateTimeOffset Value { get; init; }
-            }
-        }
-        
-        namespace HealthCTX.Domain.Identifiers.Interfaces
-        {
-            using HealthCTX.Domain.CodeableConcepts.Interfaces;
-            using HealthCTX.Domain.Framework.Attributes;
-            using HealthCTX.Domain.Framework.Interfaces;
-            using HealthCTX.Domain.Period.Interfaces;
-                
-            public interface IIdentifierUse : ICodingCode;
-
-            [FhirElement]
-            [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple)]
-            [FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Optional)]
-            public interface IIdentifierType : IElement;
-
-            public interface IIdentifierSystem : ICodingSystem;
-
-            [FhirPrimitive]
-            public interface IIdentifierValue : IElement
-            {
-                [FhirIgnore]
-                string Value { get; init; }
-            }
-
-            [FhirElement]
-            [FhirProperty("start", typeof(IPeriodStart), Cardinality.Optional)]
-            [FhirProperty("end", typeof(IPeriodEnd), Cardinality.Optional)]
-            public interface IIdentifierPeriod : IElement;
-        }
-
-        namespace HealthCTX.Domain.Patients.Interfaces
-        {
-            using HealthCTX.Domain.CodeableConcepts.Interfaces;
-            using HealthCTX.Domain.Identifiers.Interfaces;
-            using HealthCTX.Domain.Framework.Attributes;
-            using HealthCTX.Domain.Framework.Interfaces;
-
-            [FhirElement]
-            [FhirProperty("use", typeof(IIdentifierUse), Cardinality.Optional)]
-            [FhirProperty("type", typeof(IIdentifierType), Cardinality.Optional)]
-            [FhirProperty("system", typeof(IIdentifierSystem), Cardinality.Optional)]
-            [FhirProperty("value", typeof(IIdentifierValue), Cardinality.Optional)]
-            [FhirProperty("period", typeof(IIdentifierPeriod), Cardinality.Optional)]
-            public interface IPatientIdentifier : IElement;
-        
-            [FhirElement]
-            [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple)]
-            [FhirProperty("text", typeof(ICodeableConceptText), Cardinality.Optional)]
-            public interface IMaritalStatusCodeableConcept : IElement;
-        
-            [FhirResource("Patient")]
-            [FhirProperty("maritalStatus", typeof(IMaritalStatusCodeableConcept), Cardinality.Optional)]
-            public interface IPatient : IResource;
-        }
-
-        {{codeToTest}}
-        """;
     #endregion
 }

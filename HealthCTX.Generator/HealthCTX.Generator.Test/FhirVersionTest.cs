@@ -1,125 +1,32 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using HealthCTX.Domain.Framework.Interfaces;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using HealthCTX.Domain.Framework.Interfaces;
 using System.Reflection;
 
 namespace HealthCTX.Generator.Test;
 
-public class FhirDiagnosticsTest
+public class FhirVersionTest
 {
     [Fact]
-    public void FhirAttributeOnNonIElement_ShouldEmitError()
+    public void PropertyWithNoVersions_ShouldHaveVersionFromR4ToR5()
     {
-        var code = 
+        var code =
             """
             namespace TestAssembly
             {
                 using HealthCTX.Domain.Framework.Attributes;
                 using HealthCTX.Domain.Framework.Interfaces;
 
-                [FhirResource("SomeResource")]
-                public interface ISomeResource;
-
-                public record SomeId(string Value) : IId;
-
-                public record SomeResource(SomeId Id) : ISomeResource;
-            }
-            """;
-
-        var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
-        Assert.Empty(compileErrors);
-
-        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeResource");
-
-        (_, var diagnostics) = RecordModel.Create(recordSymbol);
-
-        var d = Assert.Single(diagnostics);
-        Assert.Equal("HCTX001", d.Id);
-    }
-
-    [Fact]
-    public void FhirAttributeMissing_ShouldEmitError()
-    {
-        var code = 
-            """
-            namespace TestAssembly
-            {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
-
-                public interface ISomeResource : IResource;
-
-                public record SomeId(string Value) : IId;
-
-                public record SomeResource(SomeId Id) : ISomeResource;
-            }
-            """;
-
-        var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
-        Assert.Empty(compileErrors);
-
-        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeResource");
-
-        (_, var diagnostics) = RecordModel.Create(recordSymbol);
-
-        var d = Assert.Single(diagnostics);
-        Assert.Equal("HCTX002", d.Id);
-    }
-
-    [Fact]
-    public void PropertyNotMatchingAttributeInterface_ShouldEmitError()
-    {
-        var code = 
-            """
-            namespace TestAssembly
-            {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
-
-                [FhirResource("SomeResource")]
-                public interface ISomeResource : IResource;
-
-                public record SomeId(string Value) : IId;
-
-                public record NotMatching : IElement;
-
-                public record SomeResource(SomeId Id, NotMatching NM) : ISomeResource;
-            }
-            """;
-
-        var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
-        Assert.Empty(compileErrors);
-
-        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeResource");
-
-        (_, var diagnostics) = RecordModel.Create(recordSymbol);
-
-        var d = Assert.Single(diagnostics);
-        Assert.Equal("HCTX003", d.Id);
-    }
-
-    [Fact]
-    public void MultiplePropertiesWithSameInterface_ShouldEmitError()
-    {
-        var code = 
-            """
-            namespace TestAssembly
-            {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
-
-                [FhirResource("SomeResource")]
-                public interface ISomeResource : IElement;
-
-                public record SomeId(string Value) : IId;
-                public record SomeOtherId(string Value) : IId;
+                public interface ISomeBoolean : IBooleanPrimitive;
             
-                public record SomeResource(SomeId Id, SomeOtherId OtherId) : ISomeResource;
+                [FhirElement]
+                [FhirProperty("IsSomething", typeof(ISomeBoolean), Cardinality.Optional)]
+                public interface ISomeElement : IElement;
+
+                public record SomeBoolean(bool Value) : ISomeBoolean;
+                public record SomeElement(SomeBoolean Bool) : ISomeElement;
             }
             """;
 
@@ -127,14 +34,78 @@ public class FhirDiagnosticsTest
         Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
         Assert.Empty(compileErrors);
 
-        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeResource");
+        var elementSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeElement");
+        (var element, var diagnostics) = RecordModel.Create(elementSymbol);
 
-        (_, var diagnostics) = RecordModel.Create(recordSymbol);
-
-        var d = Assert.Single(diagnostics);
-        Assert.Equal("HCTX009", d.Id);
+        Assert.Equal(FhirVersion.R4, element.Value.Properties.First().FromVersion);
+        Assert.Equal(FhirVersion.R5, element.Value.Properties.First().ToVersion);
     }
 
+    [Fact]
+    public void PropertyWithR5FromVersion_ShouldHaveVersionFromR5ToR5()
+    {
+        var code =
+            """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain.Framework.Attributes;
+                using HealthCTX.Domain.Framework;
+                using HealthCTX.Domain.Framework.Interfaces;
+
+                public interface ISomeBoolean : IBooleanPrimitive;
+            
+                [FhirElement]
+                [FhirProperty("IsSomething", typeof(ISomeBoolean), Cardinality.Optional, FhirVersion.R5)]
+                public interface ISomeElement : IElement;
+
+                public record SomeBoolean(bool Value) : ISomeBoolean;
+                public record SomeElement(SomeBoolean Bool) : ISomeElement;
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var elementSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeElement");
+        (var element, var diagnostics) = RecordModel.Create(elementSymbol);
+
+        Assert.Equal(FhirVersion.R5, element.Value.Properties.First().FromVersion);
+        Assert.Equal(FhirVersion.R5, element.Value.Properties.First().ToVersion);
+    }
+
+    [Fact]
+    public void PropertyWithR4FromVersionAndR4ToVersion_ShouldHaveVersionFromR4ToR4()
+    {
+        var code =
+            """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain.Framework.Attributes;
+                using HealthCTX.Domain.Framework;
+                using HealthCTX.Domain.Framework.Interfaces;
+
+                public interface ISomeBoolean : IBooleanPrimitive;
+            
+                [FhirElement]
+                [FhirProperty("IsSomething", typeof(ISomeBoolean), Cardinality.Optional, FhirVersion.R4, FhirVersion.R4)]
+                public interface ISomeElement : IElement;
+
+                public record SomeBoolean(bool Value) : ISomeBoolean;
+                public record SomeElement(SomeBoolean Bool) : ISomeElement;
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var elementSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeElement");
+        (var element, var diagnostics) = RecordModel.Create(elementSymbol);
+
+        Assert.Equal(FhirVersion.R4, element.Value.Properties.First().FromVersion);
+        Assert.Equal(FhirVersion.R4, element.Value.Properties.First().ToVersion);
+    }
 
     #region Helpers 
     private static void Compile(SyntaxTree syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors)

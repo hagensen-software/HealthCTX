@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HealthCTX.Core\HealthCTX.Domain.Core.csproj" />
     <ProjectReference Include="..\HealthCTX.Generator\HealthCTX.Generator\HealthCTX.Generator.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
   </ItemGroup>
 

@@ -1,7 +1,9 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using HealthCTX.Generator;
+using HealthCTX.Domain.Framework.Interfaces;
+using System.Collections.Immutable;
+using System.Reflection;
 
 namespace HealthCTX.Generator.Test;
 
@@ -11,57 +13,21 @@ public class FhirAttributesTest
     public void RetriveFhirAttributes()
     {
         var code = """
-            using System;
-
-            namespace HealthCTX.Domain.Framework.Interfaces
-            {
-                public interface IId
-                {
-                }
-            }
-
-            namespace HealthCTX.Domain.Framework.Attributes
-            {
-                public enum Cardinality
-                {
-                    Mandatory,
-                    Optional,
-                    Multiple
-                }
-
-                [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = true)]
-                #pragma warning disable CS9113 // Parameter is unread.
-                public class FhirPropertyAttribute(string Name, Type InterfaceType, Cardinality Cardinality) : Attribute;
-                #pragma warning restore CS9113 // Parameter is unread.
-            }
-
-            namespace HealthCTX.Domain.CodeableConcepts.Interfaces
+            namespace TestAssembly
             {
                 using HealthCTX.Domain.Framework.Interfaces;
-                using HealthCTX.Domain.Framework.Attributes;
 
-                [FhirProperty("id", typeof(IId), Cardinality.Optional)]
-                public interface IElement
-                {
-                }
+                public record SomeElement : IElement;
             }
             """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly", [syntaxTree],
-            [
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Attribute).Assembly.Location)
-            ],
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
 
-        var model = compilation.GetSemanticModel(syntaxTree);
-        var root = syntaxTree.GetRoot();
+        var interfaceSymbols = GetRecordSymbol(syntaxTree, compilation, "SomeElement").AllInterfaces;
 
-        var interfaceDeclaration = root.DescendantNodes().OfType<InterfaceDeclarationSyntax>().First(t => t.Identifier.Text == "IElement");
-        var interfaceSymbol = model.GetDeclaredSymbol(interfaceDeclaration) as INamedTypeSymbol;
-
-        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties([interfaceSymbol!], []);
+        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbols, []);
 
         Assert.Single(propertiesByElementName);
         Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.Framework.Interfaces.IId"].ElementName);
@@ -71,113 +37,62 @@ public class FhirAttributesTest
     public void RetriveIndirectFhirAttributes()
     {
         var code = """
-            using System;
-
-            namespace HealthCTX.Domain.Framework.Interfaces
-            {
-                public interface IId
-                {
-                }
-            }
-
-            namespace HealthCTX.Domain.Framework.Attributes
-            {
-                [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)]
-                public class FhirElementAttribute() : Attribute;
-
-                [AttributeUsage(AttributeTargets.Property, Inherited = true, AllowMultiple = false)]
-                public class FhirIgnoreAttribute : Attribute;
-
-                [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)]
-                public class FhirPrimitiveAttribute() : Attribute;
-
-                public enum Cardinality
-                {
-                    Mandatory,
-                    Optional,
-                    Multiple
-                }
-
-                [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = true)]
-                #pragma warning disable CS9113 // Parameter is unread.
-                public class FhirPropertyAttribute(string Name, Type InterfaceType, Cardinality Cardinality) : Attribute;
-                #pragma warning restore CS9113 // Parameter is unread.
-            }
-
-            namespace HealthCTX.Domain.Framework.Interfaces
-            {
-                using HealthCTX.Domain.Framework.Attributes;
-
-                [FhirProperty("id", typeof(IId), Cardinality.Optional)]
-                public interface IElement
-                {
-                }
-            }
-
-            namespace HealthCTX.Domain.CodeableConcepts.Interfaces
-            {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
-
-
-                [FhirPrimitive]
-                public interface ICodingCode : IElement
-                {
-                    [FhirIgnore]
-                    string Value { get; init; }
-                }
-            }
-            
-            namespace HealthCTX.Domain.Identifiers.Interfaces
-            {
-                using HealthCTX.Domain.CodeableConcepts.Interfaces;
-            
-                public interface IIdentifierUse : ICodingCode;
-            }
-
-            namespace HealthCTX.Domain.Patients.Interfaces
-            {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
-                using HealthCTX.Domain.Identifiers.Interfaces;
-
-                [FhirElement]
-                [FhirProperty("use", typeof(IIdentifierUse), Cardinality.Optional)]
-                public interface IPatientIdentifier : IElement;
-            }
-
             namespace TestNamespace
             {
                 using HealthCTX.Domain.Identifiers.Interfaces;
-                using HealthCTX.Domain.Patients.Interfaces;
 
-                public record TestUse(string Value) : IIdentifierUse;
-
-                public record TestRecord(TestUse Use) : IPatientIdentifier;
+                public record TestRecord : IIdentifier;
             }
             """;
 
         var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("TestAssembly", [syntaxTree],
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var interfaceSymbols = GetRecordSymbol(syntaxTree, compilation, "TestRecord").AllInterfaces;
+
+        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbols, []);
+
+        Assert.True(propertiesByElementName.Keys.All(name => name.StartsWith("HealthCTX.Domain.Identifiers.Interfaces") || name.StartsWith("HealthCTX.Domain.Framework.Interfaces")));
+        Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.Framework.Interfaces.IId"].ElementName);
+        Assert.Equal("use", propertiesByElementName["HealthCTX.Domain.Identifiers.Interfaces.IIdentifierUse"].ElementName);
+    }
+
+    #region Helpers 
+    private static void Compile(SyntaxTree syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors)
+    {
+        compilation = CSharpCompilation.Create("TestAssembly",
+            [syntaxTree],
             [
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Attribute).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(ImmutableList<>).Assembly.Location),
+                MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location),
+                MetadataReference.CreateFromFile(typeof(IElement).Assembly.Location)
             ],
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
         var diagnositics = compilation.GetDiagnostics();
-        var compileErrors = diagnositics.Count(d => d.Severity == DiagnosticSeverity.Error);
-        Assert.Equal(0, compileErrors);
+        compileErrors = diagnositics.Where(d => d.Severity == DiagnosticSeverity.Error);
+    }
 
+    private static INamedTypeSymbol GetRecordSymbol(SyntaxTree syntaxTree, CSharpCompilation compilation, string recordName)
+    {
         var model = compilation.GetSemanticModel(syntaxTree);
         var root = syntaxTree.GetRoot();
 
-        var interfaceDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == "TestRecord");
-        var interfaceSymbol = model.GetDeclaredSymbol(interfaceDeclaration) as INamedTypeSymbol;
-
-        var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbol?.AllInterfaces, []);
-
-        //Assert.Single(propertiesByElementName);
-        //Assert.Equal("use", propertiesByElementName["HealthCTX.Domain.Identifiers.Interfaces.IIdentifierUse"]);
+        var recordDeclaration = root.DescendantNodes().OfType<RecordDeclarationSyntax>().First(t => t.Identifier.Text == recordName);
+        var recordSymbol = model.GetDeclaredSymbol(recordDeclaration) as INamedTypeSymbol;
+        return recordSymbol;
     }
+
+    private static INamedTypeSymbol GetInterfaceSymbol(SyntaxTree syntaxTree, CSharpCompilation compilation, string recordName)
+    {
+        var model = compilation.GetSemanticModel(syntaxTree);
+        var root = syntaxTree.GetRoot();
+
+        var interfaceDeclaration = root.DescendantNodes().OfType<InterfaceDeclarationSyntax>().First(t => t.Identifier.Text == recordName);
+        var interfaceSymbol = model.GetDeclaredSymbol(interfaceDeclaration) as INamedTypeSymbol;
+        return interfaceSymbol;
+    }
+    #endregion
 }

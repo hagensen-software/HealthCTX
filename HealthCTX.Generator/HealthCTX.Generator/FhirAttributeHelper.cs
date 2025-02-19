@@ -19,11 +19,13 @@ public enum FhirCardinality
     Multiple
 }
 
-public readonly struct PropertyInfo(string elementName, FhirCardinality fhirCardinality, string elementInterface)
+public readonly struct PropertyInfo(string elementName, FhirCardinality fhirCardinality, string elementInterface, FhirVersion fromVersion, FhirVersion toVersion)
 {
     public string ElementName { get; } = elementName;
     public FhirCardinality Cardinality { get; } = fhirCardinality;
     public string ElementInterface { get; } = elementInterface;
+    public FhirVersion FromVersion { get; } = fromVersion;
+    public FhirVersion ToVersion { get; } = toVersion;
 }
 
 public class FhirAttributeHelper
@@ -38,6 +40,9 @@ public class FhirAttributeHelper
     private const int fhirCardinalityOptional = 1;
     private const int fhirCardinalityMultiple = 2;
 
+    private const int fhirR4 = 0;
+    private const int fhirR5 = 1;
+
     public static Dictionary<string, PropertyInfo> GetApplicableProperties(IEnumerable<INamedTypeSymbol> namedTypeSymbols, List<FhirGeneratorDiagnostic> diagnostics)
     {
         var result = new Dictionary<string, PropertyInfo>();
@@ -49,7 +54,7 @@ public class FhirAttributeHelper
 
             foreach (var attribute in attributeData)
             {
-                if (attribute.ConstructorArguments.Length != 3)
+                if (attribute.ConstructorArguments.Length is <3 or >5)
                     continue;
 
                 var elementName = ResolveElementName(attribute.ConstructorArguments[0].Value as string);
@@ -63,10 +68,31 @@ public class FhirAttributeHelper
                     _ => FhirCardinality.Mandatory
                 };
 
+                var fromVersion = FhirVersion.R4;
+                if (attribute.ConstructorArguments.Length > 3)
+                {
+                    fromVersion = attribute.ConstructorArguments[3].Value switch
+                    {
+                        fhirR4 => FhirVersion.R4,
+                        fhirR5 => FhirVersion.R5,
+                        _ => FhirVersion.R4
+                    };
+                }
+                var toVersion = FhirVersion.R5;
+                if (attribute.ConstructorArguments.Length > 4)
+                {
+                    toVersion = attribute.ConstructorArguments[4].Value switch
+                    {
+                        fhirR4 => FhirVersion.R4,
+                        fhirR5 => FhirVersion.R5,
+                        _ => FhirVersion.R5
+                    };
+                }
+
                 try
                 {
                     if (elementName is not null && elementInterface is not null)
-                        result.Add(elementInterface, new PropertyInfo(elementName, cardinality, elementInterface));
+                        result.Add(elementInterface, new PropertyInfo(elementName, cardinality, elementInterface, fromVersion, toVersion));
                 }
                 catch
                 {

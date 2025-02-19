@@ -1,11 +1,16 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace HealthCTX.Generator;
 
-public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required, bool fhirArray, string elementInterface)
+public enum FhirVersion
+{
+    R4,
+    R5
+}
+
+public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required, bool fhirArray, string elementInterface, FhirVersion fromVersion, FhirVersion toVersion)
 {
     private const string iEnumerableStart = "System.Collections.Generic.IEnumerable<";
 
@@ -16,6 +21,8 @@ public struct PropertyModel(string name, string type, string elementName, bool e
     public bool Required { get; } = required;
     public bool FhirArray { get; } = fhirArray;
     public string ElementInterface { get; } = elementInterface;
+    public FhirVersion FromVersion { get; } = fromVersion;
+    public FhirVersion ToVersion { get; } = toVersion;
 
     public readonly string GetGetter()
     {
@@ -74,7 +81,18 @@ public struct PropertyModel(string name, string type, string elementName, bool e
             return (null, diagnostics);
         }
 
-        return (new PropertyModel(propertySymbol.Name, type.ToDisplayString(), propertyInfo?.ElementName ?? string.Empty, enumerable, required, fhirArray, propertyInfo?.ElementInterface ?? string.Empty), []);
+        return
+            (new PropertyModel(
+                propertySymbol.Name,
+                type.ToDisplayString(),
+                propertyInfo?.ElementName ?? string.Empty,
+                enumerable,
+                required,
+                fhirArray,
+                propertyInfo?.ElementInterface ?? string.Empty,
+                propertyInfo?.FromVersion ?? FhirVersion.R4,
+                propertyInfo?.ToVersion ?? FhirVersion.R5),
+            []);
     }
 }
 

@@ -32,7 +32,7 @@ internal class CSharpToFhirJsonMapperHelper
         {
             sb.AppendLine(
 $$"""
-    public static string ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}})
+    public static string ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Framework.FhirVersion fhirVersion = HealthCTX.Domain.Framework.FhirVersion.R4)
     {
 """);
         }
@@ -40,7 +40,7 @@ $$"""
         {
             sb.AppendLine(
 $$"""
-    public static JsonNode ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}})
+    public static JsonNode ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Framework.FhirVersion fhirVersion)
     {
 """);
         }
@@ -90,74 +90,92 @@ $$"""
     private static void AddPropertiesForElement(RecordModel recordModel, StringBuilder sb)
     {
         foreach (var propertyModel in recordModel.Properties)
-            AppendAddToJsonDeclaration(sb, propertyModel.ElementName, propertyModel.FhirArray);
+            AppendAddToJsonDeclaration(sb, propertyModel);
         foreach (var propertyModel in recordModel.Properties)
-            AppendAddToJsonBody(sb, recordModel.RecordInstanceName, propertyModel.Name, propertyModel.ElementName, propertyModel.Type, propertyModel.Enumerable, propertyModel.FhirArray, propertyModel.Required);
+            AppendAddToJsonBody(sb, recordModel.RecordInstanceName, propertyModel);
         foreach (var propertyModel in recordModel.Properties)
-            AppendAddToJsonAssignmentOfDeclared(sb, recordModel.RecordInstanceName, propertyModel.ElementName, propertyModel.FhirArray);
+            AppendAddToJsonAssignmentOfDeclared(sb, recordModel.RecordInstanceName, propertyModel);
     }
 
-    private static void AppendAddToJsonDeclaration(StringBuilder sb, string elementName, bool fhirArray)
+    private static void AppendAddToJsonDeclaration(StringBuilder sb, PropertyModel propertyModel)
     {
-        if (elementName == string.Empty)
+        if (propertyModel.ElementName == string.Empty)
             return;
 
-        if (fhirArray)
+        if (propertyModel.FhirArray)
         {
             sb.AppendLine(
 $$"""
-        var {{elementName}}Array = new JsonArray();
+        var {{propertyModel.ElementName}}Array = new JsonArray();
 """);
         }
     }
 
-    private static void AppendAddToJsonBody(StringBuilder sb, string recordInstanceName, string propertyName, string elementName, string type, bool enumerable, bool fhirArray, bool required)
+    private static void AppendAddToJsonBody(StringBuilder sb, string recordInstanceName, PropertyModel propertyModel)
     {
-        if (elementName == string.Empty)
+        if (propertyModel.ElementName == string.Empty)
             return;
 
-        if (enumerable)
+        if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+        {
+            sb.Append(
+$$"""
+        if (fhirVersion is >= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+     
+""");
+        }
+
+        if (propertyModel.Enumerable)
         {
             sb.AppendLine(
 $$"""
-        {{recordInstanceName}}.{{propertyName}}.ForEach(p => {{elementName}}Array.Add({{type}}FhirJsonMapper.ToFhirJson(p)));
+        {{recordInstanceName}}.{{propertyModel.Name}}.ForEach(p => {{propertyModel.ElementName}}Array.Add({{propertyModel.Type}}FhirJsonMapper.ToFhirJson(p, fhirVersion)));
 """);
         }
         else
         {
-            if (fhirArray)
+            if (propertyModel.FhirArray)
             {
                 sb.AppendLine(
 $$"""
-        {{elementName}}Array.Add({{type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyName}}));
+        {{propertyModel.ElementName}}Array.Add({{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion));
 
 """);
             }
             else
             {
-                if (!required)
+                if (!propertyModel.Required)
                 {
                     sb.Append(
 $$"""
-        if ({{recordInstanceName}}.{{propertyName}} is not null)
+        if ({{recordInstanceName}}.{{propertyModel.Name}} is not null)
     
 """);
                 }
                 sb.AppendLine(
 $$"""
-        {{recordInstanceName}}Object.Add("{{elementName}}", {{type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyName}}));
+        {{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion));
 """);
             }
         }
     }
 
-    public static void AppendAddToJsonAssignmentOfDeclared(StringBuilder sb, string recordInstanceName, string elementName, bool fhirArray)
+    public static void AppendAddToJsonAssignmentOfDeclared(StringBuilder sb, string recordInstanceName, PropertyModel propertyModel)
     {
-        if (fhirArray)
+        if (propertyModel.FhirArray)
         {
+            if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+            {
+                sb.Append(
+    $$"""
+        if (fhirVersion is >= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+     
+""");
+            }
+
             sb.AppendLine(
 $$"""
-        {{recordInstanceName}}Object.Add("{{elementName}}", {{elementName}}Array);
+        {{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{propertyModel.ElementName}}Array);
 """);
         }
     }
