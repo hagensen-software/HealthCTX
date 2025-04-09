@@ -12,7 +12,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageReadmeFile>content\readme.md</PackageReadmeFile>
-    <Version>0.0.1-alpha.33</Version>
+    <Version>0.0.1-alpha.40</Version>
     <Authors>Torben M. Hagensen</Authors>
     <Owners>Hagensen Software ApS</Owners>
     <Description>This package helps making your internal C# records based model compliant with HL7 FHIR and generates mappers for your internal model to and from HL7 FHIR resources. The package makes it easy to build FHIR clients and backends using your own FHIR compliant internal model.</Description>
@@ -27,19 +27,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="readme.md">
+      <Pack>True</Pack>
+      <PackagePath>content\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HealthCTX.Core\HealthCTX.Domain.Core.csproj" />
     <ProjectReference Include="..\HealthCTX.Generator\HealthCTX.Generator\HealthCTX.Generator.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="readme.md">
-      <Pack>True</Pack>
-      <PackagePath>content\</PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>

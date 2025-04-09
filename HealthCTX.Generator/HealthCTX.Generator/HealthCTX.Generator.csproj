@@ -11,7 +11,7 @@
   <PropertyGroup>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.0.1-alpha.9</Version>
+    <Version>0.0.1-alpha.11</Version>
     <Authors>Torben M. Hagensen</Authors>
     <Owners>Hagensen Software ApS</Owners>
     <Description>HealthCTX.Generator</Description>
