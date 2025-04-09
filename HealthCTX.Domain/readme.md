@@ -5,7 +5,7 @@ The purpose of the HealthCTX.Domain project is to provide a set of interfaces an
 These HL7 Fhir representation can be used to implement standardized interoperability with other healthcare application using the HL7 Fhir standard.
 The package provides a set of interfaces that represent the resources defined in the HL7 Fhir standard and a code generator that allow for easy serialization and deserialization to and from FHIR JSON format.
 
-The intension is to provide a set of interfaces that can be used to create your own healthcare FHIR compliant domain model based on C# records with only the attributes needed for your application.
+The intension is to provide a set of interfaces that can be used to create your own healthcare FHIR compliant domain model based on C# records with only the properties needed for your application.
 
 If you want to learn more about the HL7 Fhir standard you can visit the [HL7 Fhir website](https://www.hl7.org/fhir/).
 
@@ -71,12 +71,12 @@ If you want to inspect the generated code, you can find it in your project under
 ## Defining the Fhir Domain Model
 The Fhir domain model is defined by creating interfaces that represent the resources and elements in the Fhir standard.
 The interfaces are used to define the properties of the resource or element and to specify the types of the properties.
-The way it is done is by decorating the interfaces with attributes that specify the name of the resource or element and the properties of the resource or element.
+This is done by decorating the interfaces with attributes that specify the name of the resource and the properties of the resource or element.
 
-The interfaces does not contain any properties, but only attributes that specify the properties of the resource or element.
+The interfaces does not contain any properties, but only attributes that specify the potential properties of the resource or element.
 The generator will use these attributes to check that the records implementing the interface only contains properties that comply with the definition and generate the correct mapper class.
 
-The most relevant resources are defined in the HealthCTX.Domain project, but you can also create your own resources and elements by creating interfaces that represent the resources and elements in the Fhir standard.
+The most commonly used resources are defined in the HealthCTX.Domain project, but you can also create your own resources and elements by creating interfaces that represent the resources and elements in the Fhir standard.
 
 ### Defining Resources
 
@@ -112,9 +112,9 @@ namespace HealthCTX.Domain.Patients.Interfaces;
 public interface IPatient : IResource;
 ```
 
-First of all the interface extends the IResource interface, which means that it is a Fhir resource and has the FhirResource attribute to specify the name of the resource type.
+First of all the interface extends the IResource interface, which means that it is a Fhir resource and it has the FhirResource attribute to specify the name of the resource type.
 
-The FhirProperty attribute is used to specify each of the properties of the resource.
+The FhirProperty attribute is used to specify each of the potential properties of the resource.
    
 - The first parameter is the name of the property, which is the same as the name of the property in the Fhir standard.
 - The second parameter is the type of the property, which is the interface that represents the property type. This interface must inherit from IElement.
@@ -141,7 +141,7 @@ The syntax with the brackets is used to specify the type of the property in the 
 This means that the property is a choice of two types, which is represented as a union type in the Fhir standard.
 You can implement both properties in the record, but only one of them can be set at a time.
 
-Beware, that the interface types of the properties are used to identify the properties in the Fhir standard, so the interface types of the properties must be unique within a resource (and elements in general).
+Beware, that the interface type of a property is used to identify the properties in the Fhir standard, so the interface types of the properties must be unique within a resource (and elements in general).
 
 #### Take IOrganization as another example.
 
@@ -198,7 +198,7 @@ namespace HealthCTX.Domain.HumanName.Interfaces;
 public interface IHumanName : IElement;
 ```
 
-As you can see, most of the attributes are the same as for the resources, but the FhirResource attribute is replace by a FhirElement attribute and it extends the IElement interface instead of the IResource interface.
+As you can see, most of the attributes are the same as for the resources, but the FhirResource attribute is replaced by a FhirElement attribute, and it extends the IElement interface instead of the IResource interface.
 This specifies that the interface represents an element from the Fhir standard that can be used in one or more resources.
 
 ### Defining Primitive Types
