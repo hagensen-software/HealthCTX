@@ -10,9 +10,9 @@ public class Test
         var organization = new Organization(
             new OrganizationAlias("Mine"));
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         var names = root.GetProperty("alias");

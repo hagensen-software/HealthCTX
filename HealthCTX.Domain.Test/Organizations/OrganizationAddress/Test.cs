@@ -12,9 +12,9 @@ public class Test
             [new OrganizationAddress(
                 new OrganizationAddressText("some address"))]);
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
         var addresses = root.GetProperty("address");
         var address = addresses.EnumerateArray().GetEnumerator().First();
@@ -30,9 +30,9 @@ public class Test
             [new OrganizationAddress(
                 new OrganizationAddressText("some address"))]);
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         Assert.ThrowsAny<Exception>(() => root.GetProperty("text"));

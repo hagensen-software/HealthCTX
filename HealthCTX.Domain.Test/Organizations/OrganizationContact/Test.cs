@@ -26,9 +26,9 @@ public class Test
                     new ContactDetailPeriod(
                         new ContactDetailPeriodStart(DateTimeOffset.Parse("2022-01-01T00:00:00Z")))));
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         var contacts = root.GetProperty("contact");
@@ -63,9 +63,9 @@ public class Test
                     new ContactDetailPeriod(
                         new ContactDetailPeriodStart(DateTimeOffset.Parse("2022-01-01T00:00:00Z")))));
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         var contacts = root.GetProperty("contact");

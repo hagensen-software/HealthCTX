@@ -11,9 +11,9 @@ public class Test
             new PatientGeneralPractitioner(
                 new GeneralPractitionerReference("Organization/123")));
 
-        var jsonString = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         var generalPractitioners = root.GetProperty("generalPractitioner");

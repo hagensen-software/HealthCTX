@@ -10,9 +10,9 @@ public class Test
         var patient = new Patient(
             new PatientGender("male"));
 
-        var jsonString = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         var gender = root.GetProperty("gender");

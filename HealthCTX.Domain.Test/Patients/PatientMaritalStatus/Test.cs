@@ -15,9 +15,9 @@ public class Test
                     new PatientMaritalStatusDisplay("Married")),
                 new PatientMaritalStatusText("Married")));
 
-        var jsonString = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         var maritalStatus = root.GetProperty("maritalStatus");

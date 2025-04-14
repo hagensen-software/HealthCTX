@@ -6,76 +6,88 @@ internal class CSharpToFhirJsonMapperHelper
 {
     internal static void AddToFhirJsonMapper(RecordModel recordModel, StringBuilder sb)
     {
-        StartToFhirJsonMethod(recordModel, sb);
+        var spaces = StartToFhirJsonMethod(recordModel, sb);
         if (recordModel.FhirType == FhirType.Primitive)
-            AddPropertiesForPrimitive(recordModel, sb);
+            spaces = AddPropertiesForPrimitive(recordModel, sb, spaces);
         else
         {
             if (recordModel.FhirType == FhirType.Resource)
-                AddNewJsonObjectForResource(recordModel, sb);
+                spaces = AddNewJsonObjectForResource(recordModel, sb, spaces);
             else
-                AddNewJsonObjectForElement(recordModel, sb);
+                spaces = AddNewJsonObjectForElement(recordModel, sb, spaces);
 
-            AddPropertiesForElement(recordModel, sb);
+            spaces = AddPropertiesForElement(recordModel, sb, spaces);
             if (recordModel.FhirType != FhirType.Resource)
                 AddJsonObjectToParentObject(recordModel, sb);
+
+            if (recordModel.FhirType == FhirType.Resource)
+                ReturnJsonObjectForElement(recordModel, sb, spaces);
         }
-        if (recordModel.FhirType == FhirType.Resource)
-            ReturnJsonObjectForElement(recordModel, sb);
 
         EndMethod(sb);
     }
 
-    private static void StartToFhirJsonMethod(RecordModel recordModel, StringBuilder sb)
+    private static int StartToFhirJsonMethod(RecordModel recordModel, StringBuilder sb)
     {
         if (recordModel.FhirType == FhirType.Resource)
         {
             sb.AppendLine(
 $$"""
-    public static string ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
+    public static (string?, OperationOutcome) ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
     {
+        try
+        {
 """);
+            return 12;
         }
         else
         {
             sb.AppendLine(
 $$"""
-    public static JsonNode ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
+    public static (JsonNode, List<OutcomeIssue>) ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
     {
+        List<OutcomeIssue> outcomes = [];
+
 """);
+            return 8;
         }
     }
 
-    private static void AddPropertiesForPrimitive(RecordModel recordModel, StringBuilder sb)
+    private static int AddPropertiesForPrimitive(RecordModel recordModel, StringBuilder sb, int spaces)
     {
         foreach (var propertyModel in recordModel.Properties) // Doesn't look right ;-)
         {
             sb.AppendLine(
 $$"""
-        return {{recordModel.RecordInstanceName}}.{{propertyModel.Name}}{{propertyModel.GetGetter()}};
+{{Indent(spaces)}}return ({{recordModel.RecordInstanceName}}.{{propertyModel.Name}}{{propertyModel.GetGetter()}}, outcomes);
 """);
         }
+        return spaces - 4;
     }
 
-    private static void AddNewJsonObjectForResource(RecordModel recordModel, StringBuilder sb)
+    private static int AddNewJsonObjectForResource(RecordModel recordModel, StringBuilder sb, int spaces)
     {
         sb.AppendLine(
 $$"""
-        var {{recordModel.RecordInstanceName}}Object = new JsonObject
-        {
-            { "resourceType", "{{recordModel.ResourceName}}" }
-        };
+{{Indent(spaces)}}var {{recordModel.RecordInstanceName}}Object = new JsonObject
+{{Indent(spaces)}}{
+{{Indent(spaces)}}    { "resourceType", "{{recordModel.ResourceName}}" }
+{{Indent(spaces)}}};
+
+{{Indent(spaces)}}List<OutcomeIssue> outcomes = [];
 
 """);
+        return spaces;
     }
 
-    private static void AddNewJsonObjectForElement(RecordModel recordModel, StringBuilder sb)
+    private static int AddNewJsonObjectForElement(RecordModel recordModel, StringBuilder sb, int spaces)
     {
         sb.AppendLine(
 $$"""
-        var {{recordModel.RecordInstanceName}}Object = new JsonObject();
+{{Indent(spaces)}}var {{recordModel.RecordInstanceName}}Object = new JsonObject();
 
 """);
+        return spaces;
     }
 
     private static void AddJsonObjectToParentObject(RecordModel recordModel, StringBuilder sb)
@@ -83,53 +95,63 @@ $$"""
         sb.AppendLine(
 $$"""
 
-        return {{recordModel.RecordInstanceName}}Object;
+        return ({{recordModel.RecordInstanceName}}Object, outcomes);
 """);
     }
 
-    private static void AddPropertiesForElement(RecordModel recordModel, StringBuilder sb)
+    private static int AddPropertiesForElement(RecordModel recordModel, StringBuilder sb, int spaces)
     {
         foreach (var propertyModel in recordModel.Properties)
-            AppendAddToJsonDeclaration(sb, propertyModel);
+            AppendAddToJsonDeclaration(sb, propertyModel, spaces);
         foreach (var propertyModel in recordModel.Properties)
-            AppendAddToJsonBody(sb, recordModel.RecordInstanceName, propertyModel);
+            AppendAddToJsonBody(sb, recordModel.RecordInstanceName, propertyModel, spaces);
         foreach (var propertyModel in recordModel.Properties)
-            AppendAddToJsonAssignmentOfDeclared(sb, recordModel.RecordInstanceName, propertyModel);
+            AppendAddToJsonAssignmentOfDeclared(sb, recordModel.RecordInstanceName, propertyModel, spaces);
+
+        return spaces;
     }
 
-    private static void AppendAddToJsonDeclaration(StringBuilder sb, PropertyModel propertyModel)
+    private static int AppendAddToJsonDeclaration(StringBuilder sb, PropertyModel propertyModel, int spaces)
     {
         if (propertyModel.ElementName == string.Empty)
-            return;
+            return spaces;
 
         if (propertyModel.FhirArray)
         {
             sb.AppendLine(
 $$"""
-        var {{propertyModel.ElementName}}Array = new JsonArray();
+{{Indent(spaces)}}var {{propertyModel.ElementName}}Array = new JsonArray();
 """);
         }
+
+        return spaces;
     }
 
-    private static void AppendAddToJsonBody(StringBuilder sb, string recordInstanceName, PropertyModel propertyModel)
+    private static void AppendAddToJsonBody(StringBuilder sb, string recordInstanceName, PropertyModel propertyModel, int spaces)
     {
         if (propertyModel.ElementName == string.Empty)
             return;
 
         if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
         {
-            sb.Append(
+            sb.AppendLine(
 $$"""
-        if (fhirVersion is >= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
-     
+{{Indent(spaces)}}if (fhirVersion is >= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
+{{Indent(spaces)}}{
 """);
+            spaces += 4;
         }
 
         if (propertyModel.Enumerable)
         {
             sb.AppendLine(
 $$"""
-        {{recordInstanceName}}.{{propertyModel.Name}}.ForEach(p => {{propertyModel.ElementName}}Array.Add({{propertyModel.Type}}FhirJsonMapper.ToFhirJson(p, fhirVersion)));
+{{Indent(spaces)}}{{recordInstanceName}}.{{propertyModel.Name}}.ForEach(p =>
+{{Indent(spaces)}}{
+{{Indent(spaces)}}    (var elementNode, var elementOutcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson(p, fhirVersion);
+{{Indent(spaces)}}    outcomes.AddRange(elementOutcomes);
+{{Indent(spaces)}}    {{propertyModel.ElementName}}Array.Add(elementNode);
+{{Indent(spaces)}}});
 """);
         }
         else
@@ -138,7 +160,9 @@ $$"""
             {
                 sb.AppendLine(
 $$"""
-        {{propertyModel.ElementName}}Array.Add({{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion));
+{{Indent(spaces)}}(var {{propertyModel.ElementName}}Node, var {{propertyModel.ElementName}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion);
+{{Indent(spaces)}}outcomes.AddRange({{propertyModel.ElementName}}Outcomes);
+{{Indent(spaces)}}{{propertyModel.ElementName}}Array.Add({{propertyModel.ElementName}}Node);
 
 """);
             }
@@ -146,46 +170,84 @@ $$"""
             {
                 if (!propertyModel.Required)
                 {
-                    sb.Append(
+                    sb.AppendLine(
 $$"""
-        if ({{recordInstanceName}}.{{propertyModel.Name}} is not null)
-    
+{{Indent(spaces)}}if ({{recordInstanceName}}.{{propertyModel.Name}} is not null)
+{{Indent(spaces)}}{
 """);
+                    spaces += 4;
                 }
+                var instanceName = propertyModel.Name.ToLower();
                 sb.AppendLine(
 $$"""
-        {{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion));
+{{Indent(spaces)}}(var {{instanceName}}Node, var {{instanceName}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion);
+{{Indent(spaces)}}outcomes.AddRange({{instanceName}}Outcomes);
+{{Indent(spaces)}}{{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{instanceName}}Node);
 """);
+
+                if (!propertyModel.Required)
+                {
+                    spaces -= 4;
+                    sb.AppendLine(
+$$"""
+{{Indent(spaces)}}}
+""");
+                }
             }
+        }
+
+        if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+        {
+            spaces -= 4;
+            sb.AppendLine(
+$$"""
+{{Indent(spaces)}}}
+""");
         }
     }
 
-    public static void AppendAddToJsonAssignmentOfDeclared(StringBuilder sb, string recordInstanceName, PropertyModel propertyModel)
+    public static void AppendAddToJsonAssignmentOfDeclared(StringBuilder sb, string recordInstanceName, PropertyModel propertyModel, int spaces)
     {
         if (propertyModel.FhirArray)
         {
             if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
             {
-                sb.Append(
-    $$"""
-        if (fhirVersion is >= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
-     
+                sb.AppendLine(
+$$"""
+{{Indent(spaces)}}if (fhirVersion is >= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
+{{Indent(spaces)}}{
 """);
+                spaces += 4;
             }
 
             sb.AppendLine(
 $$"""
-        {{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{propertyModel.ElementName}}Array);
+{{Indent(spaces)}}{{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{propertyModel.ElementName}}Array);
 """);
+
+            if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
+            {
+                spaces -= 4;
+                sb.AppendLine(
+$$"""
+{{Indent(spaces)}}}
+""");
+            }
         }
     }
 
-    private static void ReturnJsonObjectForElement(RecordModel recordModel, StringBuilder sb)
+    private static void ReturnJsonObjectForElement(RecordModel recordModel, StringBuilder sb, int spaces)
     {
+        spaces = spaces - 4;
         sb.AppendLine(
 $$"""
 
-        return {{recordModel.RecordInstanceName}}Object.ToJsonString();
+{{Indent(spaces)}}    return ({{recordModel.RecordInstanceName}}Object.ToJsonString(), new OperationOutcome([..outcomes]));
+{{Indent(spaces)}}}
+{{Indent(spaces)}}catch (Exception ex)
+{{Indent(spaces)}}{
+{{Indent(spaces)}}    return (null, new OperationOutcome([OutcomeIssue.CreateStructureError(ex.Message)]));
+{{Indent(spaces)}}}
 """);
     }
 
@@ -194,6 +256,9 @@ $$"""
         sb.AppendLine(
 $$"""
     }
+
 """);
     }
+
+    private static string Indent(int spaces) => new string(' ', spaces);
 }

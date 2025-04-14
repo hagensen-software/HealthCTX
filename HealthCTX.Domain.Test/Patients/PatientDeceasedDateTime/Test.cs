@@ -13,10 +13,10 @@ public class Test
         var patientDeceasedDateTime = new PatientDeceasedDateTime(testDate);
         var patient = new Patient(patientDeceasedDateTime);
 
-        var jsonString = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
 
         var deceased = string.Empty;
-        using (var document = JsonDocument.Parse(jsonString))
+        using (var document = JsonDocument.Parse(jsonString!))
         {
             JsonElement root = document.RootElement;
             deceased = root.GetProperty("deceasedDateTime").GetString();

@@ -13,9 +13,9 @@ public class Test
                 new OrganizationTelecomSystem("phone"),
                 new OrganizationTelecomValue("+4555555555")));
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         var telecoms = root.GetProperty("telecom");
@@ -35,9 +35,9 @@ public class Test
                 new OrganizationTelecomSystem("phone"),
                 new OrganizationTelecomValue("+4555555555")));
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
 
-        using var document = JsonDocument.Parse(jsonString);
+        using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
 
         Assert.ThrowsAny<Exception>(() => root.GetProperty("telecom"));

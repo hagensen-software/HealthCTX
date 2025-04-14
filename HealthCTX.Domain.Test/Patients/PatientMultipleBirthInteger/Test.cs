@@ -10,10 +10,10 @@ public class Test
         var patientMultipleBirthInteger = new PatientMultipleBirthInteger(1);
         var patient = new Patient(patientMultipleBirthInteger);
 
-        var jsonString = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
 
         int multipleBirthInteger = 0;
-        using (var document = JsonDocument.Parse(jsonString))
+        using (var document = JsonDocument.Parse(jsonString!))
         {
             JsonElement root = document.RootElement;
             multipleBirthInteger = root.GetProperty("multipleBirthInteger").GetInt32();

@@ -10,10 +10,10 @@ public class Test
         var patientDeceasedBoolean = new PatientDeceasedBoolean(true);
         var patient = new Patient(patientDeceasedBoolean);
 
-        var jsonString = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
 
         bool deceased = false;
-        using (var document = JsonDocument.Parse(jsonString))
+        using (var document = JsonDocument.Parse(jsonString!))
         {
             JsonElement root = document.RootElement;
             deceased = root.GetProperty("deceasedBoolean").GetBoolean();
