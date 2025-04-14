@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.Address;
 using HealthCTX.Domain.Period;
-using HealthCTX.Domain.Practitioner;
+using HealthCTX.Domain.Practitioners;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Practitioner.PractitionerAddress;

@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
 
-namespace HealthCTX.Domain.Practitioner;
+namespace HealthCTX.Domain.Practitioners;
 
 public interface IPractitionerGender : ICodingCode;

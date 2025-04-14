@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.Identifiers;
 
-namespace HealthCTX.Domain.Practitioner;
+namespace HealthCTX.Domain.Practitioners;
 
 public interface IPractitionerIdentifier : IIdentifier;

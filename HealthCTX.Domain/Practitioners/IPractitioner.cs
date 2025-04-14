@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.Attributes;
 
-namespace HealthCTX.Domain.Practitioner;
+namespace HealthCTX.Domain.Practitioners;
 
 [FhirResource("Practitioner")]
 [FhirProperty("identifier",typeof(IPractitionerIdentifier), Cardinality.Multiple)]

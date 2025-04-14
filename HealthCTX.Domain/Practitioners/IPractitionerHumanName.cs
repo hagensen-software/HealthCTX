@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.HumanName;
 
-namespace HealthCTX.Domain.Practitioner;
+namespace HealthCTX.Domain.Practitioners;
 
 public interface IPractitionerHumanName : IHumanName;

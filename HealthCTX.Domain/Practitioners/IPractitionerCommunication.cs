@@ -1,7 +1,7 @@
 ﻿using HealthCTX.Domain.Attributes;
 using HealthCTX.Domain.CodeableConcepts;
 
-namespace HealthCTX.Domain.Practitioner;
+namespace HealthCTX.Domain.Practitioners;
 
 [FhirElement]
 [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple, ToVersion: FhirVersion.R4)]

@@ -1,3 +1,3 @@
-﻿namespace HealthCTX.Domain.Practitioner;
+﻿namespace HealthCTX.Domain.Practitioners;
 
 public interface IPractitionerLanguagePreferred : IBooleanPrimitive;

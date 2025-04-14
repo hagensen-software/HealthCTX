@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.HumanName;
-using HealthCTX.Domain.Practitioner;
+using HealthCTX.Domain.Practitioners;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Practitioner.PractitionerName;

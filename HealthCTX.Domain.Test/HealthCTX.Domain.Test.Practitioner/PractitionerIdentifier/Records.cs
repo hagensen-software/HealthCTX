@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.Identifiers;
-using HealthCTX.Domain.Practitioner;
+using HealthCTX.Domain.Practitioners;
 
 namespace HealthCTX.Domain.Test.Practitioner.PractitionerIdentifier;
 
