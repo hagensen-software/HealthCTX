@@ -24,9 +24,9 @@ Resources are created by implementing the interface of the resource type.
 The following snippet shows how to create a Patient resource with an id and a name:
 
 ```csharp
-using HealthCTX.Domain.Framework.Interfaces;
-using HealthCTX.Domain.HumanName.Interfaces;
-using HealthCTX.Domain.Patients.Interfaces;
+using HealthCTX.Domain;
+using HealthCTX.Domain.HumanName;
+using HealthCTX.Domain.Patients;
 using System.Collections.Immutable;
 
 // Define a PatientId record that inherits from IPatientId to allow it to be used as a property in the Patient record.
@@ -85,8 +85,8 @@ Resources are created by implementing the interface of the resource type.
 #### Take IPatient as an example.
 
 ```csharp
-using HealthCTX.Domain.Framework.Attributes;
-using HealthCTX.Domain.Framework.Interfaces;
+using HealthCTX.Domain.Attributes;
+using HealthCTX.Domain;
 
 namespace HealthCTX.Domain.Patients.Interfaces;
 
@@ -146,9 +146,8 @@ Beware, that the interface type of a property is used to identify the properties
 #### Take IOrganization as another example.
 
 ```csharp
-using HealthCTX.Domain.Framework;
-using HealthCTX.Domain.Framework.Attributes;
-using HealthCTX.Domain.Framework.Interfaces;
+using HealthCTX.Domain.Attributes;
+using HealthCTX.Domain;
 
 namespace HealthCTX.Domain.Organizations;
 
@@ -182,10 +181,10 @@ Elements are created by implementing the interface of the element type.
 #### Take IHumanName as an example.
 
 ```csharp
-using HealthCTX.Domain.Framework.Attributes;
-using HealthCTX.Domain.Framework.Interfaces;
+using HealthCTX.Domain.Attributes;
+using HealthCTX.Domain;
 
-namespace HealthCTX.Domain.HumanName.Interfaces;
+namespace HealthCTX.Domain.HumanName;
 
 [FhirElement]
 [FhirProperty("use", typeof(IHumanNameUse), Cardinality.Optional)]
@@ -210,9 +209,9 @@ The IHumanNameText interface is a primitive type that represents the text of a h
 The interface extends the IStringPrimitive interface, which means that it is a string type and can be used as a property in the Fhir standard.
 
 ```csharp
-using HealthCTX.Domain.Framework.Interfaces;
+using HealthCTX.Domain;
 
-namespace HealthCTX.Domain.HumanName.Interfaces;
+namespace HealthCTX.Domain.HumanName;
 
 public interface IHumanNameText : IStringPrimitive;
 ```
@@ -221,9 +220,9 @@ The IStringPrimitive interface is not used directly as this would often break th
 It is defined like this:
 
 ```csharp
-using HealthCTX.Domain.Framework.Attributes;
+using HealthCTX.Domain.Attributes;
 
-namespace HealthCTX.Domain.Framework.Interfaces;
+namespace HealthCTX.Domain;
 
 [FhirPrimitive]
 public interface IStringPrimitive : IElement

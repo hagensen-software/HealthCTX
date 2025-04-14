@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.CodeableConcepts.Interfaces;
+﻿using HealthCTX.Domain.CodeableConcepts;
 using HealthCTX.Domain.Organizations;
 
 namespace HealthCTX.Domain.Test.Organizations.OrganizationType;

@@ -1,5 +1,4 @@
-﻿using HealthCTX.Domain.Framework.Attributes;
-using HealthCTX.Domain.Framework.Interfaces;
+﻿using HealthCTX.Domain.Attributes;
 
 namespace HealthCTX.Domain.ExtendedContactDetails;
 
@@ -8,6 +7,6 @@ namespace HealthCTX.Domain.ExtendedContactDetails;
 [FhirProperty("name", typeof(IExtendedContactDetailName), Cardinality.Multiple)]
 [FhirProperty("telecom", typeof(IExtendedContactDetailTelecom), Cardinality.Multiple)]
 [FhirProperty("address", typeof(IExtendedContactDetailAddress), Cardinality.Optional)]
-[FhirProperty("organization", typeof(IExtendedContactDetailOrganization), Cardinality.Optional, Framework.FhirVersion.R5)]
-[FhirProperty("period", typeof(IExtendedContactDetailPeriod), Cardinality.Optional, Framework.FhirVersion.R5)]
+[FhirProperty("organization", typeof(IExtendedContactDetailOrganization), Cardinality.Optional, FhirVersion.R5)]
+[FhirProperty("period", typeof(IExtendedContactDetailPeriod), Cardinality.Optional, FhirVersion.R5)]
 public interface IExtendedContactDetail : IElement;

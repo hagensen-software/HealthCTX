@@ -1,4 +1,4 @@
-using HealthCTX.Domain.Framework.Interfaces;
+using HealthCTX.Domain;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -15,7 +15,7 @@ public class RecordModelTest
         var code = """
             namespace TestAssembly
             {
-                public record Code(string Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingCode;
+                public record Code(string Value) : HealthCTX.Domain.CodeableConcepts.ICodingCode;
             }
             """;
 
@@ -40,9 +40,9 @@ public class RecordModelTest
             namespace TestAssembly
             {
                 using System;
-                using HealthCTX.Domain.CodeableConcepts.Interfaces;
-                using HealthCTX.Domain.Identifiers.Interfaces;
-                using HealthCTX.Domain.Period.Interfaces;
+                using HealthCTX.Domain.CodeableConcepts;
+                using HealthCTX.Domain.Identifiers;
+                using HealthCTX.Domain.Period;
 
                 public record IdentifierUse(string Value) : IIdentifierUse;
                 public record IdentifierCode(string Value) : ICodingCode;
@@ -177,7 +177,7 @@ public class RecordModelTest
         var code = """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.CodeableConcepts.Interfaces;
+                using HealthCTX.Domain.CodeableConcepts;
                 using System.Collections.Generic;
 
                 public record MaritalStatusCode(string Value) : ICodingCode;
@@ -205,7 +205,7 @@ public class RecordModelTest
         var code = """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.CodeableConcepts.Interfaces;
+                using HealthCTX.Domain.CodeableConcepts;
                 using System.Collections.Immutable;
 
                 public record MaritalStatusCode(string Value) : ICodingCode;
@@ -231,12 +231,12 @@ public class RecordModelTest
     public void HandleResourceType()
     {
         var code = """
-            namespace HealthCTX.Domain.Patients.Interfaces
+            namespace HealthCTX.Domain.Patients
             {
-                using HealthCTX.Domain.CodeableConcepts.Interfaces;
-                using HealthCTX.Domain.Identifiers.Interfaces;
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.CodeableConcepts;
+                using HealthCTX.Domain.Identifiers;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
             
                 [FhirElement]
                 [FhirProperty("coding", typeof(ICodeableConceptCoding), Cardinality.Multiple)]
@@ -251,14 +251,14 @@ public class RecordModelTest
             namespace TestAssembly
             {
                 using System;
-                using HealthCTX.Domain.CodeableConcepts.Interfaces;
+                using HealthCTX.Domain.CodeableConcepts;
                 using System.Collections.Immutable;
 
-                public record MaritalStatusSystem(Uri Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingSystem;
-                public record MaritalStatusVersion(string Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingVersion;
-                public record MaritalStatusCode(string Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingCode;
-                public record MaritalStatusDisplay(string Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingDisplay;
-                public record MaritalStatusUserSelected(bool Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingUserSelected;
+                public record MaritalStatusSystem(Uri Value) : HealthCTX.Domain.CodeableConcepts.ICodingSystem;
+                public record MaritalStatusVersion(string Value) : HealthCTX.Domain.CodeableConcepts.ICodingVersion;
+                public record MaritalStatusCode(string Value) : HealthCTX.Domain.CodeableConcepts.ICodingCode;
+                public record MaritalStatusDisplay(string Value) : HealthCTX.Domain.CodeableConcepts.ICodingDisplay;
+                public record MaritalStatusUserSelected(bool Value) : HealthCTX.Domain.CodeableConcepts.ICodingUserSelected;
 
                 public record MaritalStatusCoding(
                     MaritalStatusSystem System,
@@ -267,9 +267,9 @@ public class RecordModelTest
                     MaritalStatusDisplay Display,
                     MaritalStatusUserSelected UserSelected) : ICodeableConceptCoding;
 
-                public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding) : HealthCTX.Domain.Patients.Interfaces.IMaritalStatusCodeableConcept;
+                public record MaritalStatus(ImmutableList<MaritalStatusCoding> Coding) : HealthCTX.Domain.Patients.IMaritalStatusCodeableConcept;
 
-                public record Patient(MaritalStatus MaritalStatus) : HealthCTX.Domain.Patients.Interfaces.IPatient;
+                public record Patient(MaritalStatus MaritalStatus) : HealthCTX.Domain.Patients.IPatient;
             }
             """;
 
@@ -292,10 +292,10 @@ public class RecordModelTest
         var code = """
             namespace TestAssembly
             {
-                public record MaritalStatusUserSelected(bool Value) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodingUserSelected;
+                public record MaritalStatusUserSelected(bool Value) : HealthCTX.Domain.CodeableConcepts.ICodingUserSelected;
 
                 public record MaritalStatusCoding(
-                    MaritalStatusUserSelected? UserSelected) : HealthCTX.Domain.CodeableConcepts.Interfaces.ICodeableConceptCoding;
+                    MaritalStatusUserSelected? UserSelected) : HealthCTX.Domain.CodeableConcepts.ICodeableConceptCoding;
             }
             """;
 
@@ -317,7 +317,7 @@ public class RecordModelTest
         var code = """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.OperationOutcomes.Interfaces;
+                using HealthCTX.Domain.OperationOutcomes;
                 using System.Collections.Immutable;
 
                 public record OutcomeCode(string Value) : IOutcomeCode;

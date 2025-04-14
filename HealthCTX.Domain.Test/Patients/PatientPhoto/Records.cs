@@ -1,5 +1,5 @@
-﻿using HealthCTX.Domain.Attachment.Interfaces;
-using HealthCTX.Domain.Patients.Interfaces;
+﻿using HealthCTX.Domain.Attachment;
+using HealthCTX.Domain.Patients;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Patients.PatientPhoto;

@@ -1,5 +1,4 @@
-﻿using HealthCTX.Domain.OperationOutcomes.Interfaces;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.OperationOutcomes;
 

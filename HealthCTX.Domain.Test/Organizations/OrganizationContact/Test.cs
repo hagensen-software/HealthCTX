@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using HealthCTX.Domain.Attributes;
+using System.Text.Json;
 
 namespace HealthCTX.Domain.Test.Organizations.OrganizationContact;
 
@@ -62,7 +63,7 @@ public class Test
                     new ContactDetailPeriod(
                         new ContactDetailPeriodStart(DateTimeOffset.Parse("2022-01-01T00:00:00Z")))));
 
-        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization, Framework.FhirVersion.R5);
+        var jsonString = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString);
         JsonElement root = document.RootElement;
@@ -144,7 +145,7 @@ public class Test
             }
             """;
 
-        (var organization, var outcomes) = OrganizationFhirJsonMapper.ToOrganization(jsonString, Framework.FhirVersion.R5);
+        (var organization, var outcomes) = OrganizationFhirJsonMapper.ToOrganization(jsonString, FhirVersion.R5);
 
         Assert.Empty(outcomes.Issues);
         Assert.Equal("Hagensen", organization?.Contact.Name.FamilyName.Value);

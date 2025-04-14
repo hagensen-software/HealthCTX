@@ -1,10 +1,10 @@
-﻿using HealthCTX.Domain.Address.Interfaces;
-using HealthCTX.Domain.CodeableConcepts.Interfaces;
+﻿using HealthCTX.Domain.Address;
+using HealthCTX.Domain.CodeableConcepts;
 using HealthCTX.Domain.ContactPoints;
 using HealthCTX.Domain.ExtendedContactDetails;
-using HealthCTX.Domain.HumanName.Interfaces;
+using HealthCTX.Domain.HumanName;
 using HealthCTX.Domain.Organizations;
-using HealthCTX.Domain.Period.Interfaces;
+using HealthCTX.Domain.Period;
 using HealthCTX.Domain.References;
 
 namespace HealthCTX.Domain.Test.Organizations.OrganizationContact;

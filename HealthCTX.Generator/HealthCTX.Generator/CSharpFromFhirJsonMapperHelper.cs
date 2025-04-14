@@ -28,7 +28,7 @@ internal class CSharpFromFhirJsonMapperHelper
         {
             sb.AppendLine(
 $$"""
-    public static ({{recordModel.RecordName}}?, OperationOutcome) To{{recordModel.RecordName}}(string jsonString, HealthCTX.Domain.Framework.FhirVersion fhirVersion = HealthCTX.Domain.Framework.FhirVersion.R4)
+    public static ({{recordModel.RecordName}}?, OperationOutcome) To{{recordModel.RecordName}}(string jsonString, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
     {
         try
         {
@@ -47,7 +47,7 @@ $$"""
         }
         sb.AppendLine(
 $$"""
-    public static ({{recordModel.RecordName}}?, List<OutcomeIssue>) To{{recordModel.RecordName}}(JsonElement jsonElement, string elementName, HealthCTX.Domain.Framework.FhirVersion fhirVersion)
+    public static ({{recordModel.RecordName}}?, List<OutcomeIssue>) To{{recordModel.RecordName}}(JsonElement jsonElement, string elementName, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
     {
 """);
     }
@@ -60,7 +60,7 @@ $$"""
             {
                 sb.Append(
 $$"""
-        if (fhirVersion is < HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+        if (fhirVersion is < HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
             return (null, [OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Property '{{propertyModel.ElementName}}' not supported in FHIR version {fhirVersion}.")]);
 
 """);
@@ -186,7 +186,7 @@ $$"""
                 {
                     sb.AppendLine(
 $$"""
-            if (fhirVersion is < HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+            if (fhirVersion is < HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
             {
                 outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Property '{{propertyModel.ElementName}}' not supported in FHIR version {fhirVersion}."));
             }
@@ -259,7 +259,7 @@ $$"""
                 {
                     sb.AppendLine(
 $$"""
-            if (fhirVersion is < HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+            if (fhirVersion is < HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} or > HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
             {
                 outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Property '{{propertyModel.ElementName}}' not supported in FHIR version {fhirVersion}."));
             }

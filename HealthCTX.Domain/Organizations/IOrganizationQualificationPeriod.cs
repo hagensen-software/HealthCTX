@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Period.Interfaces;
+﻿using HealthCTX.Domain.Period;
 
 namespace HealthCTX.Domain.Organizations;
 

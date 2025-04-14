@@ -1,9 +1,9 @@
-﻿using HealthCTX.Domain.Framework.Interfaces;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using System.Reflection;
+using HealthCTX.Domain;
 
 namespace HealthCTX.Generator.Test;
 
@@ -16,8 +16,8 @@ public class FhirVersionTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 public interface ISomeBoolean : IBooleanPrimitive;
             
@@ -48,9 +48,8 @@ public class FhirVersionTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 public interface ISomeBoolean : IBooleanPrimitive;
             
@@ -81,9 +80,8 @@ public class FhirVersionTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 public interface ISomeBoolean : IBooleanPrimitive;
             

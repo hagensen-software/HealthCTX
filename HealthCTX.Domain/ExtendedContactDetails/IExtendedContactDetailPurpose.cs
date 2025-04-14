@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.CodeableConcepts.Interfaces;
+﻿using HealthCTX.Domain.CodeableConcepts;
 
 namespace HealthCTX.Domain.ExtendedContactDetails;
 

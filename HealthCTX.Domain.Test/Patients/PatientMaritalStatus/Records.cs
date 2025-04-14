@@ -1,5 +1,5 @@
-﻿using HealthCTX.Domain.CodeableConcepts.Interfaces;
-using HealthCTX.Domain.Patients.Interfaces;
+﻿using HealthCTX.Domain.CodeableConcepts;
+using HealthCTX.Domain.Patients;
 
 namespace HealthCTX.Domain.Test.Patients.PatientMaritalStatus;
 

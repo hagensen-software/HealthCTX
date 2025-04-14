@@ -1,7 +1,7 @@
-﻿using HealthCTX.Domain.CodeableConcepts.Interfaces;
-using HealthCTX.Domain.Identifiers.Interfaces;
+﻿using HealthCTX.Domain.CodeableConcepts;
+using HealthCTX.Domain.Identifiers;
 using HealthCTX.Domain.Organizations;
-using HealthCTX.Domain.Period.Interfaces;
+using HealthCTX.Domain.Period;
 using HealthCTX.Domain.References;
 using System.Collections.Immutable;
 

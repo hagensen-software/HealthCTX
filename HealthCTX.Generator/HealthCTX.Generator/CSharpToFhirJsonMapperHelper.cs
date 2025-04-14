@@ -32,7 +32,7 @@ internal class CSharpToFhirJsonMapperHelper
         {
             sb.AppendLine(
 $$"""
-    public static string ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Framework.FhirVersion fhirVersion = HealthCTX.Domain.Framework.FhirVersion.R4)
+    public static string ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
     {
 """);
         }
@@ -40,7 +40,7 @@ $$"""
         {
             sb.AppendLine(
 $$"""
-    public static JsonNode ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Framework.FhirVersion fhirVersion)
+    public static JsonNode ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
     {
 """);
         }
@@ -120,7 +120,7 @@ $$"""
         {
             sb.Append(
 $$"""
-        if (fhirVersion is >= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+        if (fhirVersion is >= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
      
 """);
         }
@@ -168,7 +168,7 @@ $$"""
             {
                 sb.Append(
     $$"""
-        if (fhirVersion is >= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Framework.FhirVersion.{{propertyModel.ToVersion}})
+        if (fhirVersion is >= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.FromVersion}} and <= HealthCTX.Domain.Attributes.FhirVersion.{{propertyModel.ToVersion}})
      
 """);
             }

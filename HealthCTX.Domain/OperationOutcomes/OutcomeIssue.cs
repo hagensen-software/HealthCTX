@@ -1,6 +1,4 @@
-﻿using HealthCTX.Domain.OperationOutcomes.Interfaces;
-
-namespace HealthCTX.Domain.OperationOutcomes;
+﻿namespace HealthCTX.Domain.OperationOutcomes;
 
 public record OutcomeIssue(OutcomeCode Code, OutcomeDetails Details) : IOutcomeIssue
 {

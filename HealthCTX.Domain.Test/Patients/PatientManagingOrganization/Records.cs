@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Patients.Interfaces;
+﻿using HealthCTX.Domain.Patients;
 using HealthCTX.Domain.References;
 
 namespace HealthCTX.Domain.Test.Patients.PatientManagingOrganization;

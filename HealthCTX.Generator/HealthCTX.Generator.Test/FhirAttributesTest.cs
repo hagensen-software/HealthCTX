@@ -1,9 +1,9 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using HealthCTX.Domain.Framework.Interfaces;
 using System.Collections.Immutable;
 using System.Reflection;
+using HealthCTX.Domain;
 
 namespace HealthCTX.Generator.Test;
 
@@ -15,7 +15,7 @@ public class FhirAttributesTest
         var code = """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain;
 
                 public record SomeElement : IElement;
             }
@@ -30,7 +30,7 @@ public class FhirAttributesTest
         var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbols, []);
 
         Assert.Single(propertiesByElementName);
-        Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.Framework.Interfaces.IId"].ElementName);
+        Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.IId"].ElementName);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public class FhirAttributesTest
         var code = """
             namespace TestNamespace
             {
-                using HealthCTX.Domain.Identifiers.Interfaces;
+                using HealthCTX.Domain.Identifiers;
 
                 public record TestRecord : IIdentifier;
             }
@@ -53,9 +53,9 @@ public class FhirAttributesTest
 
         var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbols, []);
 
-        Assert.True(propertiesByElementName.Keys.All(name => name.StartsWith("HealthCTX.Domain.Identifiers.Interfaces") || name.StartsWith("HealthCTX.Domain.Framework.Interfaces")));
-        Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.Framework.Interfaces.IId"].ElementName);
-        Assert.Equal("use", propertiesByElementName["HealthCTX.Domain.Identifiers.Interfaces.IIdentifierUse"].ElementName);
+        Assert.True(propertiesByElementName.Keys.All(name => name.StartsWith("HealthCTX.Domain.Identifiers") || name.StartsWith("HealthCTX.Domain")));
+        Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.IId"].ElementName);
+        Assert.Equal("use", propertiesByElementName["HealthCTX.Domain.Identifiers.IIdentifierUse"].ElementName);
     }
 
     #region Helpers 

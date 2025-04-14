@@ -6,7 +6,7 @@ namespace HealthCTX.Generator;
 
 public struct RecordModel(string recordName, string recordNamespace, string recordInstanceName, FhirType fhirType, PropertyModel[] properties, string? resourceName)
 {
-    private const string iElementInterface = "HealthCTX.Domain.Framework.Interfaces.IElement";
+    private const string iElementInterface = "HealthCTX.Domain.IElement";
 
     public string RecordName { get; } = recordName;
     public string RecordNamespace { get; } = recordNamespace;

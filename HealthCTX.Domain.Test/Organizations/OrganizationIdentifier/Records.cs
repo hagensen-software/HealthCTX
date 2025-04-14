@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Identifiers.Interfaces;
+﻿using HealthCTX.Domain.Identifiers;
 using HealthCTX.Domain.Organizations;
 
 namespace HealthCTX.Domain.Test.Organizations.OrganizationIdentifier;

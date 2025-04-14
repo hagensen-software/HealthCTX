@@ -1,5 +1,5 @@
-﻿using HealthCTX.Domain.HumanName.Interfaces;
-using HealthCTX.Domain.Patients.Interfaces;
+﻿using HealthCTX.Domain.HumanName;
+using HealthCTX.Domain.Patients;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Patients.PatientName;

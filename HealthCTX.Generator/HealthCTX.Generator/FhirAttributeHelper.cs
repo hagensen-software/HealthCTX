@@ -30,11 +30,13 @@ public readonly struct PropertyInfo(string elementName, FhirCardinality fhirCard
 
 public class FhirAttributeHelper
 {
-    private const string fhirResourceAttribute = "HealthCTX.Domain.Framework.Attributes.FhirResourceAttribute";
-    private const string fhirElementAttribute = "HealthCTX.Domain.Framework.Attributes.FhirElementAttribute";
-    private const string fhirPrimitiveAttribute = "HealthCTX.Domain.Framework.Attributes.FhirPrimitiveAttribute";
-    private const string fhirPropertyAttribute = "HealthCTX.Domain.Framework.Attributes.FhirPropertyAttribute";
-    private const string fhirIgnoreAttribute = "HealthCTX.Domain.Framework.Attributes.FhirIgnoreAttribute";
+    private const string fhirIElement = "HealthCTX.Domain.IElement";
+
+    private const string fhirResourceAttribute = "HealthCTX.Domain.Attributes.FhirResourceAttribute";
+    private const string fhirElementAttribute = "HealthCTX.Domain.Attributes.FhirElementAttribute";
+    private const string fhirPrimitiveAttribute = "HealthCTX.Domain.Attributes.FhirPrimitiveAttribute";
+    private const string fhirPropertyAttribute = "HealthCTX.Domain.Attributes.FhirPropertyAttribute";
+    private const string fhirIgnoreAttribute = "HealthCTX.Domain.Attributes.FhirIgnoreAttribute";
 
     private const int fhirCardinalityMandatory = 0;
     private const int fhirCardinalityOptional = 1;
@@ -137,7 +139,7 @@ public class FhirAttributeHelper
 
     private static IEnumerable<INamedTypeSymbol> GetInterfacesInheritingFromIElement(ITypeSymbol typeSymbol)
     {
-        var baseInterfaceSymbol = typeSymbol.AllInterfaces.Where(i => i.ToDisplayString() == "HealthCTX.Domain.Framework.Interfaces.IElement").FirstOrDefault();
+        var baseInterfaceSymbol = typeSymbol.AllInterfaces.Where(i => i.ToDisplayString() == fhirIElement).FirstOrDefault();
         if (baseInterfaceSymbol == null)
             return [];
 

@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Framework;
+﻿using HealthCTX.Domain.Attributes;
 using System.Text.Json;
 
 namespace HealthCTX.Domain.Test.Organizations.OrganizationTelecom;

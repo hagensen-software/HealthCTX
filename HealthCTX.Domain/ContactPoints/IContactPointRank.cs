@@ -1,5 +1,4 @@
-﻿using HealthCTX.Domain.Framework.Attributes;
-using HealthCTX.Domain.Framework.Interfaces;
+﻿using HealthCTX.Domain.Attributes;
 
 namespace HealthCTX.Domain.ContactPoints;
 

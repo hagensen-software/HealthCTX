@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Patients.Interfaces;
+﻿using HealthCTX.Domain.Patients;
 
 namespace HealthCTX.Domain.Test.Patients.PatientMultipleBirthInteger;
 

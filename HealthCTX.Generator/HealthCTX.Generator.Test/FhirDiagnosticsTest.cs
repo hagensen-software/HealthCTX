@@ -2,8 +2,8 @@
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using HealthCTX.Domain.Framework.Interfaces;
 using System.Reflection;
+using HealthCTX.Domain;
 
 namespace HealthCTX.Generator.Test;
 
@@ -16,8 +16,8 @@ public class FhirDiagnosticsTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 [FhirResource("SomeResource")]
                 public interface ISomeResource;
@@ -47,8 +47,8 @@ public class FhirDiagnosticsTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 public interface ISomeResource : IResource;
 
@@ -77,8 +77,8 @@ public class FhirDiagnosticsTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 [FhirResource("SomeResource")]
                 public interface ISomeResource : IResource;
@@ -110,8 +110,8 @@ public class FhirDiagnosticsTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 [FhirResource("SomeResource")]
                 public interface ISomeResource : IElement;

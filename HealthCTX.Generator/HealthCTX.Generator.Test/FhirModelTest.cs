@@ -2,8 +2,8 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
-using HealthCTX.Domain.Framework.Interfaces;
 using System.Reflection;
+using HealthCTX.Domain;
 
 namespace HealthCTX.Generator.Test;
 
@@ -16,8 +16,8 @@ public class FhirModelTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 public interface ISomeBoolean : IBooleanPrimitive;
             
@@ -57,8 +57,8 @@ public class FhirModelTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Attributes;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
 
                 [FhirElement] // Not allowed - inherits FhirPrimitive
                 public interface IInvalidBoolean : IBooleanPrimitive;
@@ -87,7 +87,7 @@ public class FhirModelTest
             namespace TestAssembly
             {
                 using System;
-                using HealthCTX.Domain.Framework.Interfaces;
+                using HealthCTX.Domain;
 
                 public interface ISomeDate : IDatePrimitive;
             
@@ -113,8 +113,8 @@ public class FhirModelTest
             """
             namespace TestAssembly
             {
-                using HealthCTX.Domain.Framework.Interfaces;
-                using HealthCTX.Domain.Framework.Attributes;
+                using HealthCTX.Domain;
+                using HealthCTX.Domain.Attributes;
                 using HealthCTX.Domain.References;
 
                 public interface IOtherResourceReference : IReferenceReference;
