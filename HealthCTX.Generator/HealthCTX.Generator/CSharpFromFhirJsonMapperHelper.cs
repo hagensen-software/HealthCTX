@@ -14,7 +14,7 @@ internal class CSharpFromFhirJsonMapperHelper
             AddPropertiesForPrimitive(recordModel, sb);
         else
         {
-            AddOperationalOutcomeDeclaration(recordModel, sb);
+            AddOperationalOutcomeDeclaration(sb);
             AddPropertiesForElement(recordModel, sb);
             AddReturnResult(recordModel, sb);
         }
@@ -157,7 +157,7 @@ $$"""
         }
     }
 
-    private static void AddOperationalOutcomeDeclaration(RecordModel recordModel, StringBuilder sb)
+    private static void AddOperationalOutcomeDeclaration(StringBuilder sb)
     {
         sb.AppendLine(
 $$"""

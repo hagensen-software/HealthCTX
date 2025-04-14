@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCTX.Domain.Test.Organ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCTX.Domain.Core", "HealthCTX.Core\HealthCTX.Domain.Core.csproj", "{7BE03CBF-0B4E-4D80-909B-18DAC952F8A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCTX.Domain.Test.Practitioner", "HealthCTX.Domain.Test\HealthCTX.Domain.Test.Practitioner\HealthCTX.Domain.Test.Practitioner.csproj", "{597BF5E1-0C53-4F46-A91B-5CFB4B6AE336}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{7BE03CBF-0B4E-4D80-909B-18DAC952F8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BE03CBF-0B4E-4D80-909B-18DAC952F8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BE03CBF-0B4E-4D80-909B-18DAC952F8A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{597BF5E1-0C53-4F46-A91B-5CFB4B6AE336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{597BF5E1-0C53-4F46-A91B-5CFB4B6AE336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{597BF5E1-0C53-4F46-A91B-5CFB4B6AE336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{597BF5E1-0C53-4F46-A91B-5CFB4B6AE336}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A7CA21C1-71AA-414E-A681-5DD04B7C7E9C} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 		{5915418F-DF34-47FC-98A5-5D08C7BAAA0A} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
+		{597BF5E1-0C53-4F46-A91B-5CFB4B6AE336} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9A549BB-A6EF-4BFB-B91D-728144153299}

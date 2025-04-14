@@ -54,12 +54,17 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
                         .Where(p => p.Required)
                         .Select(p => p.ElementInterface));
         if (missingMandatoryInterfaces.Any())
-            diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX007(recordSymbol, missingMandatoryInterfaces));
+        {
+            if (missingMandatoryInterfaces.Any(i => elementNamesByInterface[i].FromVersion == FhirVersion.R4 && elementNamesByInterface[i].ToVersion == FhirVersion.R5))
+                diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX007(recordSymbol, missingMandatoryInterfaces));
+            else
+                diagnostics.Add(FhirGeneratorDiagnostic.CreateHCTX010(recordSymbol, missingMandatoryInterfaces));
+        }
 
         foreach (var (_, generatorDiagnostics) in props)
             diagnostics.AddRange(generatorDiagnostics);
 
-        return (new RecordModel(recordSymbol.Name, recordSymbol.ContainingNamespace.ToDisplayString(), recordSymbol.Name.ToLower(), fhirType.Value, properties.ToArray(), resourceName), diagnostics);
+        return (new RecordModel(recordSymbol.Name, recordSymbol.ContainingNamespace.ToDisplayString(), recordSymbol.Name.ToLower(), fhirType.Value, [.. properties], resourceName), diagnostics);
     }
 
     private static bool ImplementsIElementInterface(INamedTypeSymbol recordSymbol, List<FhirGeneratorDiagnostic> diagnostics)

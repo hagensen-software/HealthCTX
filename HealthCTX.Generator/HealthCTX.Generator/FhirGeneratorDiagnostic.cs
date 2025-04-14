@@ -69,6 +69,13 @@ public class FhirGeneratorDiagnostic(string id, string title, string message, st
         "FhirGenerator",
         DiagnosticSeverity.Error,
         recordSymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX010(INamedTypeSymbol recordSymbol, IEnumerable<string> missingMandatoryInterfaces) => new(
+        "HCTX010",
+        "Mandatory properties are missing",
+        $"FHIR record {recordSymbol.ToDisplayString()} does not implement all mandatory FHIR elements for some versions of HL7 Fhir. Add properties for the following interfaces: {string.Join(", ", missingMandatoryInterfaces)}",
+        "FhirGenerator",
+        DiagnosticSeverity.Warning,
+        recordSymbol.Locations.FirstOrDefault() ?? Location.None);
 
     public string Id { get; } = id;
     public string Title { get; } = title;
