@@ -27,10 +27,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="readme.md">
+    <None Include="README.md">
       <Pack>True</Pack>
-      <PackagePath>content\</PackagePath>
-    </Content>
+      <PackagePath>content/</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
