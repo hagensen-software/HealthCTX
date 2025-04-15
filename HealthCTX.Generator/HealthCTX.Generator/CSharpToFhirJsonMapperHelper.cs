@@ -160,9 +160,12 @@ $$"""
             {
                 sb.AppendLine(
 $$"""
-{{Indent(spaces)}}(var {{propertyModel.ElementName}}Node, var {{propertyModel.ElementName}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion);
-{{Indent(spaces)}}outcomes.AddRange({{propertyModel.ElementName}}Outcomes);
-{{Indent(spaces)}}{{propertyModel.ElementName}}Array.Add({{propertyModel.ElementName}}Node);
+{{Indent(spaces)}}if ({{recordInstanceName}}.{{propertyModel.Name}} is not null)
+{{Indent(spaces)}}{
+{{Indent(spaces)}}    (var {{propertyModel.ElementName}}Node, var {{propertyModel.ElementName}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion);
+{{Indent(spaces)}}    outcomes.AddRange({{propertyModel.ElementName}}Outcomes);
+{{Indent(spaces)}}    {{propertyModel.ElementName}}Array.Add({{propertyModel.ElementName}}Node);
+{{Indent(spaces)}}}
 
 """);
             }

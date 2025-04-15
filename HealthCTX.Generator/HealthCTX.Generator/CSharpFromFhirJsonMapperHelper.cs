@@ -130,6 +130,19 @@ $$"""
         return (new {{recordModel.RecordName}}(dateValue), []);
 """);
                     break;
+                case "System.TimeOnly":
+                    sb.AppendLine(
+$$"""
+        if (jsonElement.ValueKind is not JsonValueKind.String)
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected string value.")]);
+
+        var value = jsonElement.GetString();
+        if (!System.TimeOnly.TryParse(value, out var timeValue))
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected valid time value.")]);
+
+        return (new {{recordModel.RecordName}}(timeValue), []);
+""");
+                    break;
                 case "int":
                     sb.AppendLine(
 $$"""

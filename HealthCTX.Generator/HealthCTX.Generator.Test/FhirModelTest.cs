@@ -107,6 +107,33 @@ public class FhirModelTest
     }
 
     [Fact]
+    public void PropertyOfTimeType_ShouldCreateRecordModel()
+    {
+        var code =
+            """
+            namespace TestAssembly
+            {
+                using System;
+                using HealthCTX.Domain;
+
+                public interface ISomeTime : ITimePrimitive;
+            
+                public record SomeTime(TimeOnly Value) : ISomeTime;
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var timeSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeTime");
+        (var time, var timeDiagnostics) = RecordModel.Create(timeSymbol);
+
+        Assert.Empty(timeDiagnostics);
+        Assert.Equal(FhirType.Primitive, time?.FhirType);
+    }
+
+    [Fact]
     public void TypeSpecificReference_ShouldCreateRecordModel()
     {
         var code = 
