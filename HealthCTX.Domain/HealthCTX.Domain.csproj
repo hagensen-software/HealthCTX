@@ -29,7 +29,7 @@
   <ItemGroup>
     <None Include="README.md">
       <Pack>True</Pack>
-      <PackagePath>content/</PackagePath>
+      <PackagePath>content</PackagePath>
     </None>
   </ItemGroup>
 
