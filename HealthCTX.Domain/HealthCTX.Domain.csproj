@@ -11,7 +11,6 @@
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageReadmeFile>content\readme.md</PackageReadmeFile>
     <Version>0.0.1-alpha.40</Version>
     <Authors>Torben M. Hagensen</Authors>
     <Owners>Hagensen Software ApS</Owners>
