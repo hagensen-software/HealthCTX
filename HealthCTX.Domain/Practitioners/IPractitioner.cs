@@ -13,4 +13,4 @@ namespace HealthCTX.Domain.Practitioners;
 [FhirProperty("photo", typeof(IPractitionerPhoto), Cardinality.Multiple)]
 [FhirProperty("qualification", typeof(IPractitionerQualification), Cardinality.Multiple)]
 [FhirProperty("communication", typeof(IPractitionerCommunication), Cardinality.Multiple)]
-public interface IPractitioner : IResource;
+public interface IPractitioner : IResource
