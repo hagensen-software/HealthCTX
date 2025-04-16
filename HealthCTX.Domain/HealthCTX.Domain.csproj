@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoDefaultExcludes>true</NoDefaultExcludes>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <Version>0.0.1-alpha.40</Version>
+    <PackageId>Hagensen.HealthCTX.Domain</PackageId>
+    <Version>0.0.1-alpha.41</Version>
     <Authors>Torben M. Hagensen</Authors>
-    <Owners>Hagensen Software ApS</Owners>
     <Description>This package helps making your internal C# records based model compliant with HL7 FHIR and generates mappers for your internal model to and from HL7 FHIR resources. The package makes it easy to build FHIR clients and backends using your own FHIR compliant internal model.</Description>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
     <IncludeSymbols>True</IncludeSymbols>
     <Copyright>Copyright Hagensen Software ApS</Copyright>
     <Company>Hagensen Software ApS</Company>
@@ -22,16 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="HealthCTX.Domain.nuspec" />
+    <None Include="readme.md" Pack="true" PackagePath=""/>
+    <None Include="..\License.txt" Pack="true" PackagePath=""/>
   </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md">
-      <Pack>True</Pack>
-      <PackagePath>content</PackagePath>
-    </None>
-  </ItemGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="8.0.0" />
   </ItemGroup>
@@ -40,5 +34,4 @@
     <ProjectReference Include="..\HealthCTX.Core\HealthCTX.Domain.Core.csproj" />
     <ProjectReference Include="..\HealthCTX.Generator\HealthCTX.Generator\HealthCTX.Generator.csproj" ReferenceOutputAssembly="true" OutputItemType="Analyzer" />
   </ItemGroup>
-
 </Project>
