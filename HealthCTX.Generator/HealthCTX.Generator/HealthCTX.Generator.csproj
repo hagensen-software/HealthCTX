@@ -9,21 +9,24 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageId>Hagensen.HealthCTX.Generator</PackageId>
     <Version>0.0.1-alpha.11</Version>
     <Authors>Torben M. Hagensen</Authors>
-    <Owners>Hagensen Software ApS</Owners>
-    <Description>HealthCTX.Generator</Description>
-    <IncludeSymbols>True</IncludeSymbols>
+    <Description>This package contains the generator for Hagensen.HealthCTX.Domain, which generates serialization and deserialization in for HL7 Fhir resources. It is recommended to install the Hagensen.HealthCTX.Domain package, which also install this package.</Description>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
     <Copyright>Copyright Hagensen Software ApS</Copyright>
     <Company>Hagensen Software ApS</Company>
     <RepositoryUrl>https://github.com/hagensen-software/HealthCTX</RepositoryUrl>
-    <PackageTags>HealthCTX.Generator, analyzers</PackageTags>
-    <!--<PackageReleaseNotes>Generator for HealthCTX.Domain package</PackageReleaseNotes>-->
+    <PackageTags>analyzers</PackageTags>
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\License.txt" Pack="true" PackagePath=""/>
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
