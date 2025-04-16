@@ -9,17 +9,20 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoDefaultExcludes>true</NoDefaultExcludes>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageId>Hagensen.HealthCTX.Domain.Core</PackageId>
     <Version>0.0.1-alpha.1</Version>
     <Authors>Torben M. Hagensen</Authors>
-    <Owners>Hagensen Software ApS</Owners>
-    <Description>This package helps making your internal C# records based model compliant with HL7 FHIR and generates mappers for your internal model to and from HL7 FHIR resources. The package makes it easy to build FHIR clients and backends using your own FHIR compliant internal model.</Description>
-    <IncludeSymbols>True</IncludeSymbols>
+    <Description>This package contains the core elements for Hagensen.HealthCTX.Domain and Hagensen.HealthCTX.Generator. It is recommended to install the Hagensen.HealthCTX.Domain package, which also install this package.</Description>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>License.txt</PackageLicenseFile>
     <Copyright>Copyright Hagensen Software ApS</Copyright>
     <Company>Hagensen Software ApS</Company>
     <RepositoryUrl>https://github.com/hagensen-software/HealthCTX</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\License.txt" Pack="true" PackagePath=""/>
+  </ItemGroup>
 
 </Project>
