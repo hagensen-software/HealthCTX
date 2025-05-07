@@ -1,5 +1,5 @@
 # HealthCTX.Domain
-The HealthCTX.Domain project is a C# library available through the NuGet package Hagensen.HealthCTX on NuGet.org.
+The HealthCTX.Domain project is a C# library available through the NuGet package Hagensen.HealthCTX on nuget.org.
 
 ## Purpose
 The purpose of the HealthCTX.Domain project is to provide a set of interfaces and classes that represent HL7 FHIR compliant resources.

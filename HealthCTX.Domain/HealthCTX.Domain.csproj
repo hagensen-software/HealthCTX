@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>Hagensen.HealthCTX</PackageId>
-    <Version>1.0.0-alpha.1</Version>
+    <Version>1.0.0-alpha.2</Version>
     <Authors>Torben M. Hagensen</Authors>
     <Description>This package helps making your internal C# records based model compliant with HL7 FHIR and generates mappers for your internal model to and from HL7 FHIR resources. The package makes it easy to build FHIR clients and backends using your own FHIR compliant internal model.</Description>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
