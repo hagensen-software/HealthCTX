@@ -154,6 +154,17 @@ $$"""
         return (new {{recordModel.RecordName}}(value), []);
 """);
                     break;
+                case "uint":
+                    sb.AppendLine(
+$$"""
+        if (jsonElement.ValueKind is not JsonValueKind.Number)
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected unsigned integer value.")]);
+
+        var value = jsonElement.GetUInt32();
+
+        return (new {{recordModel.RecordName}}(value), []);
+""");
+                    break;
                 case "long":
                     sb.AppendLine(
 $$"""
@@ -165,8 +176,20 @@ $$"""
         return (new {{recordModel.RecordName}}(value), []);
 """);
                     break;
+                case "double":
+                    sb.AppendLine(
+$$"""
+        if (jsonElement.ValueKind is not JsonValueKind.Number)
+            return (null, [OutcomeIssue.CreateValueError($"Error parsing {elementName}. Expected double value.")]);
 
-            };
+        var value = jsonElement.GetDouble();
+
+        return (new {{recordModel.RecordName}}(value), []);
+""");
+                    break;
+
+            }
+            ;
         }
     }
 
@@ -185,7 +208,7 @@ $$"""
             sb.AppendLine(
 $$"""
 
-        {{propertyModel.Type}}? {{propertyModel.Name.ToLower()}} = null;
+        {{propertyModel.Type}}? {{GetInstanceName(propertyModel)}} = null;
 """);
             if (propertyModel.FhirArray)
             {
@@ -219,14 +242,14 @@ $$"""
                 {
                     sb.AppendLine(
 $$"""
-                    if ({{propertyModel.Name.ToLower()}} is not null)
+                    if ({{GetInstanceName(propertyModel)}} is not null)
                         outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Too many elements in array."));
 
 """);
                 }
                 sb.AppendLine(
 $$"""
-                    ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}", fhirVersion);
+                    ({{GetInstanceName(propertyModel)}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}", fhirVersion);
                     outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
 """);
                 if (propertyModel.Enumerable)
@@ -234,10 +257,10 @@ $$"""
                     sb.AppendLine(
 $$"""
 
-                    if ({{propertyModel.Name.ToLower()}} is null)
+                    if ({{GetInstanceName(propertyModel)}} is null)
                         continue;
 
-                    {{propertyModel.Type.Split('.').Last().ToLower()}}List.Add({{propertyModel.Name.ToLower()}});
+                    {{propertyModel.Type.Split('.').Last().ToLower()}}List.Add({{GetInstanceName(propertyModel)}});
 """);
                 }
                 sb.AppendLine(
@@ -282,7 +305,7 @@ $$"""
                 }
                 sb.AppendLine(
 $$"""
-            ({{propertyModel.Name.ToLower()}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}", fhirVersion);
+            ({{GetInstanceName(propertyModel)}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}", fhirVersion);
             outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
 """);
                 if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
@@ -311,7 +334,7 @@ $$"""
                 paramNames.Add($"[..{propertyModel.Type.Split('.').Last().ToLower()}List]");
             else
             {
-                paramNames.Add(propertyModel.Name.ToLower());
+                paramNames.Add(GetInstanceName(propertyModel));
                 if (propertyModel.Required)
                     nullCheckProperties.Add(propertyModel);
             }
@@ -328,7 +351,7 @@ $$"""
             {
                 sb.AppendLine(
     $$"""
-        if ({{property.Name.ToLower()}} is null)
+        if ({{GetInstanceName(property)}} is null)
         {
             outcomes.Add(OutcomeIssue.CreateRequiredError("Required element '{{property.ElementName}}' is missing"));
             requiredOk = false;
@@ -357,5 +380,10 @@ $$"""
 $$"""
     }
 """);
+    }
+
+    private static string GetInstanceName(PropertyModel model)
+    {
+        return model.Name.ToLower() + "Instance";
     }
 }

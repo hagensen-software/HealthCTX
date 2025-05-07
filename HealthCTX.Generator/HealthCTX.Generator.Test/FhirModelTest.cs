@@ -80,6 +80,33 @@ public class FhirModelTest
     }
 
     [Fact]
+    public void PropertyOfCanonical_ShouldCreateRecordModel()
+    {
+        var code =
+            """
+            namespace TestAssembly
+            {
+                using System;
+                using HealthCTX.Domain;
+
+                public interface ISomeCanonical : ICanonicalPrimitive;
+            
+                public record SomeCanonical(Uri Value) : ISomeCanonical;
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var canonicalSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeCanonical");
+        (var canonical, var canonicalDiagnostics) = RecordModel.Create(canonicalSymbol);
+
+        Assert.Empty(canonicalDiagnostics);
+        Assert.Equal(FhirType.Primitive, canonical?.FhirType);
+    }
+
+    [Fact]
     public void PropertyOfDateType_ShouldCreateRecordModel()
     {
         var code = 

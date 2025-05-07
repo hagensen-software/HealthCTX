@@ -1,0 +1,55 @@
+﻿using HealthCTX.Domain.Test.Observation.ObservationInstantiatesReference;
+using System.Text.Json;
+
+namespace HealthCTX.Domain.Test.Observation.ObservationPartOf;
+
+public class Test
+{
+    [Fact]
+    public void Observation_ToFhirJsonGeneratesJsonString()
+    {
+        var observation = new Observation(
+            new Status("final"),
+            new ObservationCode(new ObservationCodeCoding(
+                new Code("8310-5"),
+                new CodeSystem(new Uri("http://loinc.org")))),
+            [new PartOf(
+                new PartOfReference("Procedure/123"))]);
+
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+
+        using var document = JsonDocument.Parse(jsonString!);
+        JsonElement root = document.RootElement;
+
+        var partOf = root.GetProperty("partOf").EnumerateArray().First();
+        var reference = partOf.GetProperty("reference");
+
+        Assert.Equal("Procedure/123", reference.GetString());
+    }
+
+    [Fact]
+    public void Observation_FromFhirJsonGeneratesRecords()
+    {
+        var jsonString = """
+            {
+                "resourceType" : "Observation",
+                "status" : "final",
+                "partOf" : [{
+                    "reference" : "Procedure/123"
+                }],
+                "code" : {
+                    "coding" : [{
+                        "code" : "8310-5",
+                        "system" : "http://loinc.org"
+                    }],
+                    "text" : "Observation Code"
+                }
+            }
+            """;
+
+        (var observation, var outcomes) = ObservationFhirJsonMapper.ToObservation(jsonString);
+
+        Assert.Empty(outcomes.Issues);
+        Assert.Equal("Procedure/123", observation?.PartOf.First().Reference.Value);
+    }
+}

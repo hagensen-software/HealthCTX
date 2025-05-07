@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\build.yml = .github\workflows\build.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCTX.Domain.Test.Observation", "HealthCTX.Domain.Test\HealthCTX.Domain.Test.Observation\HealthCTX.Domain.Test.Observation.csproj", "{927C26C9-2F04-4AE6-99AA-90B10F78FE6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{776FA6EB-9815-48BF-AD13-CA6B09737718}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{776FA6EB-9815-48BF-AD13-CA6B09737718}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{776FA6EB-9815-48BF-AD13-CA6B09737718}.Release|Any CPU.Build.0 = Release|Any CPU
+		{927C26C9-2F04-4AE6-99AA-90B10F78FE6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{927C26C9-2F04-4AE6-99AA-90B10F78FE6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{927C26C9-2F04-4AE6-99AA-90B10F78FE6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{927C26C9-2F04-4AE6-99AA-90B10F78FE6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +82,7 @@ Global
 		{597BF5E1-0C53-4F46-A91B-5CFB4B6AE336} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 		{776FA6EB-9815-48BF-AD13-CA6B09737718} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 		{FDF17782-60CC-48AA-B33B-6A619529EF72} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{927C26C9-2F04-4AE6-99AA-90B10F78FE6C} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9A549BB-A6EF-4BFB-B91D-728144153299}
