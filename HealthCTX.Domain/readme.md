@@ -80,6 +80,7 @@ The following resources is currently defined by the package and is ready for use
 | PractitionerRole | IPractitionerRole | R4, R5       |
 | Observation      | IObservation      | R4, R5       |
 | OperationOutcome | IOperationOutcome | R4, R5       |
+| Location         | ILocation         | R4, R5       |
 
 ## Defining the Fhir Domain Model
 The Fhir domain model is defined by creating interfaces that represent the resources and elements in the Fhir standard.
