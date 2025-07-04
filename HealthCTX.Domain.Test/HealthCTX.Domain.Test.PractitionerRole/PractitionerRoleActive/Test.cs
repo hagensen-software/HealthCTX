@@ -10,7 +10,7 @@ public class Test
         var practitionerRole = new PractitionerRole(
             new PractitionerRoleActive(true));
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

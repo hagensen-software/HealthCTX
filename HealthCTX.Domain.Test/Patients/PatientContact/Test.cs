@@ -29,7 +29,7 @@ public class Test
                 new PatientContactOrganization(new PatientContactReference("some organization reference")),
                 new PatientContactPeriod(new PeriodStart(DateTimeOffset.MinValue), new PeriodEnd(DateTimeOffset.MaxValue)))]);
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

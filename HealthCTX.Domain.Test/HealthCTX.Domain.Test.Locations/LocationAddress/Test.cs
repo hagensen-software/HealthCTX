@@ -11,7 +11,7 @@ public class Test
             new LocationAddress(
                 new AddressText("some address")));
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

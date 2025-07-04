@@ -18,7 +18,7 @@ public class Test
                 new MaxParticipants(7),
                 new SessionKey("1234567890"))]);
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location, FhirVersion.R5);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

@@ -33,6 +33,94 @@ public class RecordModelTest
     }
 
     [Fact]
+    public void FindGenericRecord_ShouldNotReturnARecordModel()
+    {
+        var code = """
+            namespace TestAssembly
+            {
+                public class SomeClass
+                {
+                };
+
+                public record Code<SomeClass>(string Value) : HealthCTX.Domain.CodeableConcepts.ICodingCode;
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "Code");
+
+        (var recordModel, _) = RecordModel.Create(recordSymbol);
+
+        Assert.Null(recordModel);
+    }
+
+    [Fact]
+    public void FindRecordWithGenericBase_ShouldReturnARecordModel()
+    {
+        var code = """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain;
+                using HealthCTX.Domain.Attributes;
+            
+                [FhirPrimitive]
+                public interface ISomeString : IElement
+                {
+                    string Value { get; init;}
+                };
+
+                [FhirElement]
+                [FhirProperty("someString", typeof(ISomeString), Cardinality.Mandatory)]
+                public interface ISomeProperty : IElement
+                {
+                };
+            
+                [FhirResource("SomeResource")]
+                [FhirProperty("something", typeof(ISomeProperty), Cardinality.Mandatory)]
+                public interface ISomeResource : IResource
+                {
+                };
+
+                public class SomeClass {};
+            
+                public record SomeString(string Value) : ISomeString;
+
+                public record SomeGenericBase<T>(SomeString SomeString) : ISomeProperty {};
+
+                public record SomeProperty(SomeString SomeString) : SomeGenericBase<SomeClass>(SomeString);
+
+                public record SomeResource(SomeProperty? Resource) : ISomeResource;
+
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var elementRecordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeProperty");
+
+        (var elementRecordModel, _) = RecordModel.Create(elementRecordSymbol);
+
+        Assert.NotNull(elementRecordModel);
+        Assert.Equal("SomeProperty", elementRecordModel?.RecordName);
+        Assert.Equal(FhirType.Element, elementRecordModel?.FhirType);
+
+
+        var resourceRecordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeResource");
+
+        (var resourceRecordModel, _) = RecordModel.Create(resourceRecordSymbol);
+
+        Assert.NotNull(resourceRecordModel);
+        Assert.Equal("SomeResource", resourceRecordModel?.RecordName);
+        Assert.Equal(FhirType.Resource, resourceRecordModel?.FhirType);
+    }
+
+
+    [Fact]
     public void HandleIdentifierType()
     {
         // Arrange

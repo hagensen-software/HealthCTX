@@ -18,7 +18,7 @@ public class Test
                         new ComponentCode("8480-6"),
                         new ComponentCodeSystem(new Uri("http://loinc.org")))))]);
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

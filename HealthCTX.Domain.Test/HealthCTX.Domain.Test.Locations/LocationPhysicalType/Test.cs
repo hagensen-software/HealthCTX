@@ -13,7 +13,7 @@ public class Test
                     new PhysicalTypeSystem(new Uri("http://terminology.hl7.org/CodeSystem/location-physical-type")),
                     new PhysicalTypeCode("si"))]));
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

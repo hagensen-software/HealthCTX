@@ -12,7 +12,7 @@ public class Test
                 new IdentifierSystem(new Uri("http://some-observation-identifier-system")),
                 new IdentifierValue("12345678"))]);
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

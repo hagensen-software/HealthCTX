@@ -12,7 +12,7 @@ public class Test
                 new PractitionerRoleTelecomSystem("phone"),
                 new PractitionerRoleTelecomValue("+4555555555")));
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

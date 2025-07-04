@@ -14,7 +14,7 @@ public class Test
                     new FormSystem(new Uri("http://terminology.hl7.org/CodeSystem/location-physical-type")),
                     new FormCode("si"))]));
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location, FhirVersion.R5);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

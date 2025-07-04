@@ -13,7 +13,7 @@ public class Test
                     new RoleCode("admin"),
                     new RoleSystem(new Uri("http://some-role-system"))))]);
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

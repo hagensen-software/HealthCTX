@@ -13,7 +13,7 @@ public class Test
                 new Latutude(56.162939),
                 new Altitude(23.0)));
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

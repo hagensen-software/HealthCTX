@@ -11,7 +11,7 @@ public class Test
             new OrganizationEndpoint(
                 new OrganizationEndpointReference("Endpoint/123")));
 
-        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJsonString(organization);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

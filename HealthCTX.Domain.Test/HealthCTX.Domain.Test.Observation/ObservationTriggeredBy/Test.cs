@@ -20,7 +20,7 @@ public class Test
                 new TriggeredByType("re-run"),
                 new TriggeredByReason("Observation was indecisive"))]);
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation, FhirVersion.R5);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

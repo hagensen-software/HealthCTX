@@ -26,7 +26,7 @@ public class Test
                     new ContactDetailPeriod(
                         new ContactDetailPeriodStart(DateTimeOffset.Parse("2022-01-01T00:00:00Z")))));
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole, FhirVersion.R5);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

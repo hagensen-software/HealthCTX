@@ -17,7 +17,7 @@ public class Test
                     new BodySiteCode("344001"),
                     new BodySiteSystem(new Uri("http://snomed.info/sct")))));
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

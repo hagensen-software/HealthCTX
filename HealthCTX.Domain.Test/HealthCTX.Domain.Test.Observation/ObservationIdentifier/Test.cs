@@ -16,7 +16,7 @@ public class Test
                 new ObservationIdentifierSystem(new Uri("http://some-observation-identifier-system")),
                 new ObservationIdentifierValue("12345678"))]);
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

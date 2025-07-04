@@ -68,7 +68,7 @@ $$"""
 
             switch (propertyModel.Type)
             {
-                case "bool":
+                case "System.Boolean":
                     sb.AppendLine(
 $$"""
         if (jsonElement.ValueKind is not JsonValueKind.True and not JsonValueKind.False)
@@ -80,7 +80,7 @@ $$"""
 """);
                     break;
 
-                case "string":
+                case "System.String":
                     sb.AppendLine(
 $$"""
         if (jsonElement.ValueKind is not JsonValueKind.String)
@@ -143,7 +143,7 @@ $$"""
         return (new {{recordModel.RecordName}}(timeValue), []);
 """);
                     break;
-                case "int":
+                case "System.Int32":
                     sb.AppendLine(
 $$"""
         if (jsonElement.ValueKind is not JsonValueKind.Number)
@@ -154,7 +154,7 @@ $$"""
         return (new {{recordModel.RecordName}}(value), []);
 """);
                     break;
-                case "uint":
+                case "System.UInt32":
                     sb.AppendLine(
 $$"""
         if (jsonElement.ValueKind is not JsonValueKind.Number)
@@ -165,7 +165,7 @@ $$"""
         return (new {{recordModel.RecordName}}(value), []);
 """);
                     break;
-                case "long":
+                case "System.Int64":
                     sb.AppendLine(
 $$"""
         if (jsonElement.ValueKind is not JsonValueKind.Number)
@@ -176,7 +176,7 @@ $$"""
         return (new {{recordModel.RecordName}}(value), []);
 """);
                     break;
-                case "double":
+                case "System.Double":
                     sb.AppendLine(
 $$"""
         if (jsonElement.ValueKind is not JsonValueKind.Number)
@@ -208,7 +208,7 @@ $$"""
             sb.AppendLine(
 $$"""
 
-        {{propertyModel.Type}}? {{GetInstanceName(propertyModel)}} = null;
+        {{propertyModel.Type}}{{propertyModel.TypeArguments}}? {{GetInstanceName(propertyModel)}} = null;
 """);
             if (propertyModel.FhirArray)
             {
@@ -249,7 +249,7 @@ $$"""
                 }
                 sb.AppendLine(
 $$"""
-                    ({{GetInstanceName(propertyModel)}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}", fhirVersion);
+                    ({{GetInstanceName(propertyModel)}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper{{propertyModel.TypeArguments}}.To{{propertyModel.Type.Split('.').Last()}}(arrayElement, "{{propertyModel.ElementName}}", fhirVersion);
                     outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
 """);
                 if (propertyModel.Enumerable)
@@ -303,11 +303,23 @@ $$"""
             {
 """);
                 }
-                sb.AppendLine(
-$$"""
-            ({{GetInstanceName(propertyModel)}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.To{{propertyModel.Type.Split('.').Last()}}({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}", fhirVersion);
+                if (propertyModel.HasDefaultConstructor)
+                {
+                    sb.AppendLine(
+    $$"""
+            {{GetInstanceName(propertyModel)}} = new();
+            var {{propertyModel.Name.ToLower()}}Outcomes = {{GetInstanceName(propertyModel)}}.ToResource({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}", fhirVersion);
             outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
 """);
+                }
+                else
+                {
+                    sb.AppendLine(
+    $$"""
+            ({{GetInstanceName(propertyModel)}}, var {{propertyModel.Name.ToLower()}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper{{propertyModel.TypeArguments}}.To{{propertyModel.Type.Split('.').Last()}}({{propertyModel.Name.ToLower()}}Object, "{{propertyModel.ElementName}}", fhirVersion);
+            outcomes.AddRange({{propertyModel.Name.ToLower()}}Outcomes);
+""");
+                }
                 if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
                 {
                     sb.AppendLine(

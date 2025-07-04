@@ -10,7 +10,7 @@ public class Test
         var patientMultipleBirthInteger = new PatientMultipleBirthInteger(1);
         var patient = new Patient(patientMultipleBirthInteger);
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         int multipleBirthInteger = 0;
         using (var document = JsonDocument.Parse(jsonString!))

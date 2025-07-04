@@ -17,7 +17,7 @@ public class Test
                     new InterpretationCode("B"),
                     new InterpretationSystem(new Uri("http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"))))]);
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

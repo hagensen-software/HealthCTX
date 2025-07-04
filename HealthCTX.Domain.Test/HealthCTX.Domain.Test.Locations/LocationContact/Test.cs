@@ -13,7 +13,7 @@ public class Test
                 new ContactDetailName(
                     new ContactDetailFamilyName("Hagensen")))]);
 
-        (var jsonString, var _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, var _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
@@ -30,7 +30,7 @@ public class Test
                     new ContactDetailFamilyName("Hagensen")))]);
 
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location, FhirVersion.R5);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

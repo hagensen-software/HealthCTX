@@ -11,7 +11,7 @@ public class Test
             new PatientManagingOrganization(
                 new PatientManagingOrganizationReference("Organization/123")));
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

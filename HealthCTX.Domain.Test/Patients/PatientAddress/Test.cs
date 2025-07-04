@@ -28,7 +28,7 @@ public class Test
                     new PeriodEnd(periodEndDate))
                 )]);
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

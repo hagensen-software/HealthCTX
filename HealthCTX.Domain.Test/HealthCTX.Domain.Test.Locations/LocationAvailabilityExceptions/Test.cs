@@ -10,7 +10,7 @@ public class Test
         var location = new Location(
             new LocationAvailabilityExceptions("Not always available"));
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

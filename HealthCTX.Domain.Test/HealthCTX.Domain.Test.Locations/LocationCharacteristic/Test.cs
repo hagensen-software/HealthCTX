@@ -15,7 +15,7 @@ public class Test
                     new CharacteristicSystem(new Uri("http://hl7.org/fhir/location-characteristic")),
                     new CharacteristicCode("wheelchair"))])]);
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location, FhirVersion.R5);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

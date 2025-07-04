@@ -26,7 +26,7 @@ public class Test
                     new PeriodStart(periodStartDate),
                     new PeriodEnd(periodEndDate)))]);
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

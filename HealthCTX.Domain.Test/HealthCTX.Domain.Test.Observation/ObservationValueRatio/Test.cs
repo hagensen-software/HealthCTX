@@ -16,7 +16,7 @@ public class Test
                 new RatioNumerator(new Numerator(2.0)),
                 new RatioDenominator(new Denominator(3.0))));
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

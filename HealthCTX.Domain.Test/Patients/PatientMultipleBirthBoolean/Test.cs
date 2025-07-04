@@ -10,7 +10,7 @@ public class Test
         var patientMultipleBirthBoolean = new PatientMultipleBirthBoolean(true);
         var patient = new Patient(patientMultipleBirthBoolean);
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         bool multipleBirth = false;
         using (var document = JsonDocument.Parse(jsonString!))

@@ -4,11 +4,12 @@ using System.Linq;
 
 namespace HealthCTX.Generator;
 
-public struct RecordModel(string recordName, string recordNamespace, string recordInstanceName, FhirType fhirType, PropertyModel[] properties, string? resourceName)
+public struct RecordModel(string recordName, string recordTypeName, string recordNamespace, string recordInstanceName, FhirType fhirType, PropertyModel[] properties, string? resourceName)
 {
     private const string iElementInterface = "HealthCTX.Domain.IElement";
 
     public string RecordName { get; } = recordName;
+    public string RecordTypeName { get; } = recordTypeName;
     public string RecordNamespace { get; } = recordNamespace;
     public string RecordInstanceName { get; } = recordInstanceName;
     public FhirType FhirType { get; } = fhirType;
@@ -22,6 +23,13 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
         if (recordSymbol is null)
             return (null, []);
 
+        var recordTypeName = recordSymbol.Name;
+        if (recordSymbol.IsGenericType)
+        {
+            // If the record is generic, we do not generate serialization code for it
+            return (null, []);
+        }
+
         var implementsIElement = ImplementsIElementInterface(recordSymbol, diagnostics);
         var fhirType = FhirAttributeHelper.GetFhirType(recordSymbol, diagnostics, out var resourceName);
 
@@ -30,10 +38,7 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
 
         var elementNamesByInterface = FhirAttributeHelper.GetApplicableProperties(recordSymbol.AllInterfaces, diagnostics);
 
-        var members = recordSymbol.GetMembers()
-            .Where(m => m.Kind == SymbolKind.Property)
-            .Where(m => ((IPropertySymbol)m).Name != "EqualityContract")
-            .Select(m => (IPropertySymbol)m);
+        IEnumerable<IPropertySymbol> members = GetProperties(recordSymbol);
         var props = members.Select(m => PropertyModel.Create(m, elementNamesByInterface));
 
         var properties = props.Select(p => p.propertyModel).OfType<PropertyModel>();
@@ -64,7 +69,27 @@ public struct RecordModel(string recordName, string recordNamespace, string reco
         foreach (var (_, generatorDiagnostics) in props)
             diagnostics.AddRange(generatorDiagnostics);
 
-        return (new RecordModel(recordSymbol.Name, recordSymbol.ContainingNamespace.ToDisplayString(), recordSymbol.Name.ToLower(), fhirType.Value, [.. properties], resourceName), diagnostics);
+        return (new RecordModel(recordSymbol.Name, recordTypeName, recordSymbol.ContainingNamespace.ToDisplayString(), recordSymbol.Name.ToLower(), fhirType.Value, [.. properties], resourceName), diagnostics);
+    }
+
+    private static IEnumerable<IPropertySymbol> GetProperties(INamedTypeSymbol recordSymbol)
+    {
+        var current = recordSymbol;
+        List<IPropertySymbol> result = new();
+
+        while (current is not null)
+        {
+            var props = current.GetMembers()
+                .Where(m => m.Kind == SymbolKind.Property)
+                .Where(m => ((IPropertySymbol)m).Name != "EqualityContract")
+                .Select(m => (IPropertySymbol)m);
+
+            result.AddRange(props);
+
+            current = current.BaseType;
+        }
+
+        return result;
     }
 
     private static bool ImplementsIElementInterface(INamedTypeSymbol recordSymbol, List<FhirGeneratorDiagnostic> diagnostics)
