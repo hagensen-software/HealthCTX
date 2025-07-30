@@ -143,7 +143,7 @@ public class FhirAttributeHelper
         if (baseInterfaceSymbol == null)
             return [];
 
-        var interfaces = typeSymbol.Interfaces;
+        var interfaces = typeSymbol.AllInterfaces;
         return interfaces.Where(i => InheritsFrom(i, baseInterfaceSymbol));
     }
 
@@ -170,7 +170,7 @@ public class FhirAttributeHelper
 
     public static FhirType? GetFhirType(INamedTypeSymbol recordSymbol, List<FhirGeneratorDiagnostic> diagnostics, out string? resourceName)
     {
-        List<FhirType> fhirTypes = [];
+        List<FhirType?> fhirTypes = [];
 
         resourceName = null;
 
@@ -180,7 +180,8 @@ public class FhirAttributeHelper
                 .FirstOrDefault(attr =>
                     (attr.AttributeClass?.ToDisplayString() == fhirPrimitiveAttribute)
                     || (attr.AttributeClass?.ToDisplayString() == fhirElementAttribute)
-                    || (attr.AttributeClass?.ToDisplayString() == fhirResourceAttribute));
+                    || (attr.AttributeClass?.ToDisplayString() == fhirResourceAttribute)
+                    || (attr.AttributeClass?.ToDisplayString() == fhirIgnoreAttribute));
             if (attributeData == null)
                 continue;
 
@@ -196,9 +197,8 @@ public class FhirAttributeHelper
             {
                 if (fhirType.Value == FhirType.Resource)
                     resourceName = attributeData.ConstructorArguments[0].Value as string;
-
-                fhirTypes.Add(fhirType.Value);
             }
+            fhirTypes.Add(fhirType);
         }
 
         var fhirTypesCount = fhirTypes.Count;

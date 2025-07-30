@@ -15,7 +15,7 @@ public class Test
                     new CharacteristicCode("telephone"),
                     new CharacteristicSystem(new Uri("http://hl7.org/fhir/service-mode"))))]);
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole, FhirVersion.R5);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

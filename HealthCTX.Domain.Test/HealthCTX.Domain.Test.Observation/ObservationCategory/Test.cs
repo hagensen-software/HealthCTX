@@ -17,7 +17,7 @@ public class Test
                     new ObservationCategoryCode("vital-signs"),
                     new ObservationCategorySystem(new Uri("http://terminology.hl7.org/CodeSystem/observation-category"))))]);
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

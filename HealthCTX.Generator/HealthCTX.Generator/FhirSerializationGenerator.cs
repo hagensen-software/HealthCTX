@@ -1,9 +1,9 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 
 namespace HealthCTX.Generator;
 
@@ -17,7 +17,7 @@ public class FhirSerializationGenerator : IIncrementalGenerator
                 transform: static (context, _) =>
                 {
                     var symbol = context.SemanticModel.GetDeclaredSymbol((RecordDeclarationSyntax)context.Node);
-                    if (symbol == null)
+                    if (symbol is null)
                         return (null, []);
                     else
                         return RecordModel.Create(symbol);

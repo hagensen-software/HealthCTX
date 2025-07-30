@@ -18,7 +18,7 @@ public class Test
                 new OperationOpeningTime(startTime),
                 new OperationClosingTime(endTime))]);
 
-        (var jsonString, _) = LocationR4FhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationR4FhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
@@ -70,7 +70,7 @@ public class Test
                 new LocationNotAvailable(
                     new NotAvailableDescription("Not available")))]);
 
-        (var jsonString, _) = LocationR5FhirJsonMapper.ToFhirJson(location, FhirVersion.R5);
+        (var jsonString, _) = LocationR5FhirJsonMapper.ToFhirJsonString(location, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

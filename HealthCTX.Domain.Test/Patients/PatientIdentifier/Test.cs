@@ -12,7 +12,7 @@ public class Test
                     new PatientIdentifierSystem(new Uri("http://hl7.org/fhir/sid/us-ssn")),
                     new PatientIdentifierValue("123456789")));
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

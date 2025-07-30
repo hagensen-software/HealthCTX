@@ -22,7 +22,7 @@ public class Test
                 new Dimensions(7),
                 new Data("8,9,10")));
 
-        (var jsonString, _) = ObservationR4FhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationR4FhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
@@ -98,7 +98,7 @@ public class Test
                 new Offsets("1,2,3"),
                 new Data("8,9,10")));
 
-        (var jsonString, _) = ObservationR5FhirJsonMapper.ToFhirJson(observation, FhirVersion.R5);
+        (var jsonString, _) = ObservationR5FhirJsonMapper.ToFhirJsonString(observation, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

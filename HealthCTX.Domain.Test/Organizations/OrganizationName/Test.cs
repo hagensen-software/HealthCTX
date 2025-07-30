@@ -10,7 +10,7 @@ public class Test
         var organization = new Organization(
             new OrganizationName("My Clinic"));
 
-        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJsonString(organization);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

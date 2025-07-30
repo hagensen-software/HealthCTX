@@ -10,17 +10,19 @@ public enum FhirVersion
     R5
 }
 
-public struct PropertyModel(string name, string type, string elementName, bool enumerable, bool required, bool fhirArray, string elementInterface, FhirVersion fromVersion, FhirVersion toVersion)
+public struct PropertyModel(string name, string type, string typeArguments, string elementName, bool enumerable, bool required, bool fhirArray, string elementInterface, bool hasDefaultConstructor, FhirVersion fromVersion, FhirVersion toVersion)
 {
     private const string iEnumerableStart = "System.Collections.Generic.IEnumerable<";
 
     public string Name { get; } = name;
     public string Type { get; } = type;
+    public string TypeArguments { get; } = typeArguments;
     public string ElementName { get; } = elementName;
     public bool Enumerable { get; } = enumerable;
     public bool Required { get; } = required;
     public bool FhirArray { get; } = fhirArray;
     public string ElementInterface { get; } = elementInterface;
+    public bool HasDefaultConstructor { get; } = hasDefaultConstructor;
     public FhirVersion FromVersion { get; } = fromVersion;
     public FhirVersion ToVersion { get; } = toVersion;
 
@@ -82,15 +84,27 @@ public struct PropertyModel(string name, string type, string elementName, bool e
             return (null, diagnostics);
         }
 
+        var typeName = type.ToDisplayString(
+            new SymbolDisplayFormat(
+                typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
+                genericsOptions: SymbolDisplayGenericsOptions.None));
+
+        var TypeArguments = type is INamedTypeSymbol namedType && namedType.IsGenericType ?
+            $"<{string.Join(",", namedType.TypeArguments.Select(t => t.ToDisplayString()))}>" : string.Empty;
+
+        var hasDefaultConstructor = type is INamedTypeSymbol namedTypeSymbol && namedTypeSymbol.Constructors.Any(c => c.Parameters.Length == 0);
+
         return
             (new PropertyModel(
                 propertySymbol.Name,
-                type.ToDisplayString(),
+                typeName,
+                TypeArguments,
                 propertyInfo?.ElementName ?? string.Empty,
                 enumerable,
                 required,
                 fhirArray,
                 propertyInfo?.ElementInterface ?? string.Empty,
+                hasDefaultConstructor,
                 propertyInfo?.FromVersion ?? FhirVersion.R4,
                 propertyInfo?.ToVersion ?? FhirVersion.R5),
             []);

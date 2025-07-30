@@ -5,12 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>HealthCTX.Domain</RootNamespace>
-    <!--<GeneratePackageOnBuild>True</GeneratePackageOnBuild>-->
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Hagensen.HealthCTX.Domain.Core</PackageId>
-    <Version>1.0.0-alpha.1</Version>
+    <Version>1.0.0-alpha.2</Version>
     <Authors>Torben M. Hagensen</Authors>
     <Description>This package contains the core elements for Hagensen.HealthCTX.Domain and Hagensen.HealthCTX.Generator. It is recommended to install the Hagensen.HealthCTX.Domain package, which also install this package.</Description>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\License.txt" Pack="true" PackagePath=""/>
+    <None Include="..\License.txt" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

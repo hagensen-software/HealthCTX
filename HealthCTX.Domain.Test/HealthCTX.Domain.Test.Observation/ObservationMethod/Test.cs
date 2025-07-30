@@ -18,7 +18,7 @@ public class Test
                     new MethodCode("258083009"),
                     new MethodSystem(new Uri("http://snomed.info/sct")))));
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

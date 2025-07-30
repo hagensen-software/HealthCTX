@@ -13,7 +13,7 @@ public class Test
                     new TypeSystem(new Uri("http://terminology.hl7.org/CodeSystem/v3-RoleCode")),
                     new TypeCode("HOSP"))])]);
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

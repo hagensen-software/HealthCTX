@@ -12,7 +12,7 @@ public class Test
                 new OperationalStatusSystem(new Uri("http://terminology.hl7.org/CodeSystem/v2-0116")),
                 new OperationalStatusCode("O")));
 
-        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJson(location);
+        (var jsonString, _) = LocationFhirJsonMapper.ToFhirJsonString(location);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

@@ -16,7 +16,7 @@ public class Test
                 new ObservationRangeLow(new LowValue(10.0)),
                 new ObservationRangeHigh(new HighValue(15.0))));
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

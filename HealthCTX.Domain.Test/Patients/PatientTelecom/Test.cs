@@ -12,7 +12,7 @@ public class Test
                 new PatientTelecomSystem("phone"),
                 new PatientTelecomValue("+4555555555")));
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

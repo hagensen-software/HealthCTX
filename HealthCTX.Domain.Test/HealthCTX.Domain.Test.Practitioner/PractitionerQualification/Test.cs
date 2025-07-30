@@ -25,7 +25,7 @@ public class Test
                     new PractitionerQualificationIssuerReference("Organization/123")))]);
 
 
-        (var jsonString, _) = PractitionerFhirJsonMapper.ToFhirJson(practitioner);
+        (var jsonString, _) = PractitionerFhirJsonMapper.ToFhirJsonString(practitioner);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

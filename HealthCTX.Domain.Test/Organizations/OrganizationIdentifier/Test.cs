@@ -12,7 +12,7 @@ public class Test
                     new OrganizationIdentifierSystem(new Uri("http://cvr.dk")),
                     new OrganizationIdentifierValue("12345678")));
 
-        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJsonString(organization);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

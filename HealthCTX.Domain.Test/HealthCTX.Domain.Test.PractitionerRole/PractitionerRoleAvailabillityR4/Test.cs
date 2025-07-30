@@ -27,7 +27,7 @@ public class Test
                     new NotAvailableEndTime(endDateTime)))],
             new PractitionerRoleAvailabilityExceptions("Not available"));
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
@@ -90,7 +90,7 @@ public class Test
             [],
             new PractitionerRoleAvailabilityExceptions("Not available"));
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

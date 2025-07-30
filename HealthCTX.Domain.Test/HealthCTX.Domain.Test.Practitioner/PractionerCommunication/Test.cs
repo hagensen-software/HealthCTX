@@ -12,7 +12,7 @@ public class Test
                 new PractitionerCommunicationLanguageCoding(
                     new PractitionerCommunicationLanguageCode("da-DK")))]);
 
-        (var jsonString, _) = PractitionerR4FhirJsonMapper.ToFhirJson(practitioner, Attributes.FhirVersion.R4);
+        (var jsonString, _) = PractitionerR4FhirJsonMapper.ToFhirJsonString(practitioner, Attributes.FhirVersion.R4);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
@@ -35,7 +35,7 @@ public class Test
                         new PractitionerCommunicationLanguageCode("da-DK"))),
                 new PractitionerCommunicationPreferred(true))]);
 
-        (var jsonString, _) = PractitionerFhirJsonMapper.ToFhirJson(practitioner, Attributes.FhirVersion.R5);
+        (var jsonString, _) = PractitionerFhirJsonMapper.ToFhirJsonString(practitioner, Attributes.FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

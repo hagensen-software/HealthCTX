@@ -13,7 +13,7 @@ public class Test
                     new PatientLinkOtherReference("Patient/123")),
                 new PatientLinkType("seealso")));
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

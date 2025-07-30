@@ -15,7 +15,7 @@ public class Test
                 new CodeSystem(new Uri("http://loinc.org")))),
             new ValueInteger(42));
 
-        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJson(observation);
+        (var jsonString, _) = ObservationFhirJsonMapper.ToFhirJsonString(observation);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

@@ -11,7 +11,7 @@ public class Test
         var organization = new Organization(
             new OrganizationDescription("some description"));
 
-        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R5);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJsonString(organization, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
@@ -27,7 +27,7 @@ public class Test
         var organization = new Organization(
             new OrganizationDescription("some description"));
 
-        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization, FhirVersion.R4);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJsonString(organization, FhirVersion.R4);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

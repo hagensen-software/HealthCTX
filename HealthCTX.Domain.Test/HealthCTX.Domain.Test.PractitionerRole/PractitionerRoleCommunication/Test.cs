@@ -14,7 +14,7 @@ public class Test
                     new CommunicationCode("da-DK"),
                     new CommunicationSystem(new Uri("urn:ietf:bcp:47"))))]);
 
-        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJson(practitionerRole, FhirVersion.R5);
+        (var jsonString, _) = PractitionerRoleFhirJsonMapper.ToFhirJsonString(practitionerRole, FhirVersion.R5);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

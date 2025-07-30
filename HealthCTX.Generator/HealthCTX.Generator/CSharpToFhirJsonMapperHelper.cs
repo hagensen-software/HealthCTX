@@ -8,7 +8,7 @@ internal class CSharpToFhirJsonMapperHelper
     {
         var spaces = StartToFhirJsonMethod(recordModel, sb);
         if (recordModel.FhirType == FhirType.Primitive)
-            spaces = AddPropertiesForPrimitive(recordModel, sb, spaces);
+            _ = AddPropertiesForPrimitive(recordModel, sb, spaces);
         else
         {
             if (recordModel.FhirType == FhirType.Resource)
@@ -16,12 +16,8 @@ internal class CSharpToFhirJsonMapperHelper
             else
                 spaces = AddNewJsonObjectForElement(recordModel, sb, spaces);
 
-            spaces = AddPropertiesForElement(recordModel, sb, spaces);
-            if (recordModel.FhirType != FhirType.Resource)
-                AddJsonObjectToParentObject(recordModel, sb);
-
-            if (recordModel.FhirType == FhirType.Resource)
-                ReturnJsonObjectForElement(recordModel, sb, spaces);
+            _ = AddPropertiesForElement(recordModel, sb, spaces);
+            AddJsonObjectToParentObject(recordModel, sb);
         }
 
         EndMethod(sb);
@@ -33,24 +29,29 @@ internal class CSharpToFhirJsonMapperHelper
         {
             sb.AppendLine(
 $$"""
-    public static (string?, OperationOutcome) ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
+    public static (string?, OperationOutcome) ToFhirJsonString(this {{recordModel.RecordTypeName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
     {
         try
         {
-""");
-            return 12;
+            (var jsonNode, var outcomes) = ToFhirJson({{recordModel.RecordInstanceName}}, fhirVersion);
+
+            return (jsonNode.ToJsonString(), new OperationOutcome([..outcomes]));
         }
-        else
+        catch (Exception ex)
         {
-            sb.AppendLine(
+            return (null, new OperationOutcome([OutcomeIssue.CreateStructureError(ex.Message)]));
+        }
+    }
+""");
+        }
+        sb.AppendLine(
 $$"""
-    public static (JsonNode, List<OutcomeIssue>) ToFhirJson({{recordModel.RecordName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
+    public static (JsonNode, List<OutcomeIssue>) ToFhirJson(this {{recordModel.RecordTypeName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
     {
         List<OutcomeIssue> outcomes = [];
 
 """);
-            return 8;
-        }
+        return 8;
     }
 
     private static int AddPropertiesForPrimitive(RecordModel recordModel, StringBuilder sb, int spaces)
@@ -73,8 +74,6 @@ $$"""
 {{Indent(spaces)}}{
 {{Indent(spaces)}}    { "resourceType", "{{recordModel.ResourceName}}" }
 {{Indent(spaces)}}};
-
-{{Indent(spaces)}}List<OutcomeIssue> outcomes = [];
 
 """);
         return spaces;
@@ -148,7 +147,7 @@ $$"""
 $$"""
 {{Indent(spaces)}}{{recordInstanceName}}.{{propertyModel.Name}}.ForEach(p =>
 {{Indent(spaces)}}{
-{{Indent(spaces)}}    (var elementNode, var elementOutcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson(p, fhirVersion);
+{{Indent(spaces)}}    (var elementNode, var elementOutcomes) = {{propertyModel.Type}}FhirJsonMapper{{propertyModel.TypeArguments}}.ToFhirJson(p, fhirVersion);
 {{Indent(spaces)}}    outcomes.AddRange(elementOutcomes);
 {{Indent(spaces)}}    {{propertyModel.ElementName}}Array.Add(elementNode);
 {{Indent(spaces)}}});
@@ -162,7 +161,7 @@ $$"""
 $$"""
 {{Indent(spaces)}}if ({{recordInstanceName}}.{{propertyModel.Name}} is not null)
 {{Indent(spaces)}}{
-{{Indent(spaces)}}    (var {{propertyModel.ElementName}}Node, var {{propertyModel.ElementName}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion);
+{{Indent(spaces)}}    (var {{propertyModel.ElementName}}Node, var {{propertyModel.ElementName}}Outcomes) = {{recordInstanceName}}.{{propertyModel.Name}}.ToFhirJson(fhirVersion);
 {{Indent(spaces)}}    outcomes.AddRange({{propertyModel.ElementName}}Outcomes);
 {{Indent(spaces)}}    {{propertyModel.ElementName}}Array.Add({{propertyModel.ElementName}}Node);
 {{Indent(spaces)}}}
@@ -183,7 +182,7 @@ $$"""
                 var instanceName = propertyModel.Name.ToLower();
                 sb.AppendLine(
 $$"""
-{{Indent(spaces)}}(var {{instanceName}}Node, var {{instanceName}}Outcomes) = {{propertyModel.Type}}FhirJsonMapper.ToFhirJson({{recordInstanceName}}.{{propertyModel.Name}}, fhirVersion);
+{{Indent(spaces)}}(var {{instanceName}}Node, var {{instanceName}}Outcomes) = {{recordInstanceName}}.{{propertyModel.Name}}.ToFhirJson(fhirVersion);
 {{Indent(spaces)}}outcomes.AddRange({{instanceName}}Outcomes);
 {{Indent(spaces)}}{{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{instanceName}}Node);
 """);
@@ -239,21 +238,6 @@ $$"""
         }
     }
 
-    private static void ReturnJsonObjectForElement(RecordModel recordModel, StringBuilder sb, int spaces)
-    {
-        spaces = spaces - 4;
-        sb.AppendLine(
-$$"""
-
-{{Indent(spaces)}}    return ({{recordModel.RecordInstanceName}}Object.ToJsonString(), new OperationOutcome([..outcomes]));
-{{Indent(spaces)}}}
-{{Indent(spaces)}}catch (Exception ex)
-{{Indent(spaces)}}{
-{{Indent(spaces)}}    return (null, new OperationOutcome([OutcomeIssue.CreateStructureError(ex.Message)]));
-{{Indent(spaces)}}}
-""");
-    }
-
     private static void EndMethod(StringBuilder sb)
     {
         sb.AppendLine(
@@ -263,5 +247,5 @@ $$"""
 """);
     }
 
-    private static string Indent(int spaces) => new string(' ', spaces);
+    private static string Indent(int spaces) => new(' ', spaces);
 }

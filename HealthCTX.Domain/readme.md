@@ -18,7 +18,7 @@ To get started with the HealthCTX.Domain project, follow these steps:
 
 2. **Create a new project**: Create a new .NET project or use an existing one.
 
-3. **Add HealthCTX.Domain NuGet package**: Add the HealthCTX.Domain package to your project.
+3. **Add NuGet package**: Add the Hagensen.HealthCTX package to your project.
 
 ## Your First Resource
 Resources are created by implementing the interface of the resource type.
@@ -48,20 +48,22 @@ public record Patient(PatientId Id, PatientHumanName Name) : IPatient;
 This automatically generates the following mapper functions for the Patient resource to map it to and from Fhir Json representation.
 
 ```csharp
+using HealthCTX.Domain.Attributes;
+
 // Create a new instance of the Patient resource.
 var patient = new Patient(
     new PatientId("123"),
     new PatientHumanName(
         new PatientFamilyName("Doe"),
-        [new PatientGivenName("John")]);
+        [new PatientGivenName("John")]));
 
 // Convert the Patient resource to a Fhir Json representation using the geerated ToFhirJson method.
-var jsonFhirR4 = PatientFhirJsonMapper.ToFhirJson(patient); // Defaults to release 4 of the Fhir standard.
-var jsonFhirR5 = PatientFhirJsonMapper.ToFhirJson(patient, FhirVersion.R5); // Specify the Fhir release version.
+(var jsonFhirR4, var operationOutcomeToR4) = patient.ToFhirJsonString(); // Defaults to release 4 of the Fhir standard.
+(var jsonFhirR5, var operationOutcomeToR5) = patient.ToFhirJsonString(FhirVersion.R5); // Specify the Fhir release version.
 
 // Convert the Fhir Json representation back to a Patient resource using the generated FromFhirJson method.
-(var patientFromJsonR4, var operationOutcomeR4) = PatientFhirJsonMapper.FromFhirJson(jsonFhirR4); // Defaults to release 4 of the Fhir standard.
-(var patientFromJsonR4, var operationOutcomeR5) = PatientFhirJsonMapper.FromFhirJson(jsonFhirR5, FhirVersion.R5); // Specify the Fhir release version.
+(var patientFromJsonR4, var operationOutcomeFromR4) = PatientFhirJsonMapper.ToPatient(jsonFhirR4); // Defaults to release 4 of the Fhir standard.
+(var patientFromJsonR5, var operationOutcomeFromR5) = PatientFhirJsonMapper.ToPatient(jsonFhirR5, FhirVersion.R5); // Specify the Fhir release version.
 ```
 
 The ToFhirJson method converts the Patient resource to a Fhir Json representation, while the FromFhirJson method converts the Fhir Json representation back to a Patient resource.
@@ -69,7 +71,83 @@ Properties not implemented by the patient record is ignored by these methods. Er
 
 If you want to inspect the generated code, you can find it in your project under Dependencies - Analyzers - HealthCTX - HealthCTX.Generator.
 
-## Currently Defined Resources
+## A Bundle Resource
+Another example of a resource is a Bundle resource, which differs from the other resources in that it is a collection of other resources.
+This makes the Bundle resource a bit more complex, but it is still easy to use.
+
+Assuming you have a list of patients as defined above, you can create a Bundle resource like this:
+
+```csharp
+public record BundleType(string Value) : IBundleType;
+
+public record EntryResource : ResourceContent<EntryResource>, IBundleEntryResource
+{
+    public override (JsonNode, List<OutcomeIssue>) ToFhirJson(FhirVersion fhirVersion)
+    {
+        return Value switch
+        {
+            Patient p => p.ToFhirJson(fhirVersion),
+            _ => ResourceTypeNotSupported(Value)
+        };
+    }
+
+    public override List<OutcomeIssue> ToResource(JsonElement jsonElement, string elementName, FhirVersion fhirVersion)
+    {
+        string? resourceType = GetResourceType(jsonElement);
+        if (resourceType is null)
+            return ResourceTypeMissing(elementName);
+
+        (var resource, var outcomes) = resourceType switch
+        {
+            "Patient" => PatientFhirJsonMapper.ToPatient(jsonElement, elementName, fhirVersion),
+            _ => ResourceTypeNotSupported(elementName, resourceType)
+        };
+
+        if (resource is not null)
+            Value = resource;
+
+        return outcomes;
+    }
+}
+
+public record BundleEntry(
+    EntryResource? Resource) : IBundleEntry;
+
+public record Bundle(BundleType Type, ImmutableList<BundleEntry> Entries) : IBundle;
+```
+
+The record for the resources contained as entries in a bundle (here EntryResource) must implement the IBundleEntryResource interface, as this represents the entry element in the Bundle resource (defined by IBundle).
+
+In addition to this, it must define how to convert the resource to and from Fhir Json representation.
+This is done by inheriting from the abstract ResourceContent\<T\> record, which should be self-referencing to be able to Create resource entries of the correct record type.
+It requires overriding the ToFhirJson and ToResource methods that are used to convert the resource to and from Fhir Json representation.
+As seen from the example, the ToFhirJson can simpy switch on the resource type and call the ToFhirJson method of the record.
+The ToResource method checks the resource type and call the appropriate FromFhirJson method for the resource type.
+More complex rules may apply, e.g. if the bundle should support multiple profiles of the same type.
+
+The use of a bundle record is as follows:
+
+```csharp
+var bundle = new Bundle(
+    new BundleType("document"),
+    [new BundleEntry(
+                EntryResource.Create(
+                    new Patient(
+                        new PatientId("Patient/123"),
+                        new PatientHumanName(
+                            new PatientFamilyName("Doe"),
+                            [new PatientGivenName("John")]))))]);
+
+(var jsonString, _) = bundle.ToFhirJsonString();
+(var bundleFromJson, _) = BundleFhirJsonMapper.ToBundle(jsonString);
+
+var patientFromBundle = bundleFromJson?.Entries.First().Resource?.Value as Patient;
+```
+
+Note, that the resource in the entry is created using the Create method, that the EntryResource record inherits from ResourceContent\<T\>.
+This ensures that the record entry wrapping the resource is of the correct type.
+
+## Currently Defined Resource Types
 The following resources is currently defined by the package and is ready for use as described above:
 
 | Resource Name    | Interface         | Fhir Version |
@@ -81,6 +159,7 @@ The following resources is currently defined by the package and is ready for use
 | Observation      | IObservation      | R4, R5       |
 | OperationOutcome | IOperationOutcome | R4, R5       |
 | Location         | ILocation         | R4, R5       |
+| Bundle           | IBundle           | R4, R5       |
 
 ## Defining the Fhir Domain Model
 The Fhir domain model is defined by creating interfaces that represent the resources and elements in the Fhir standard.

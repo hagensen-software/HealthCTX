@@ -13,7 +13,7 @@ public class Test
                     new OrganizationTypeCode("prov"),
                     new OrganizationTypeSystem(new Uri("http://terminology.hl7.org/CodeSystem/organization-type")))));
 
-        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJson(organization);
+        (var jsonString, _) = OrganizationFhirJsonMapper.ToFhirJsonString(organization);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;

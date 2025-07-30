@@ -12,7 +12,7 @@ public class Test
                     new PatientFamilyName("Doe"),
                     [new PatientGivenName("John"), new PatientGivenName("D")]));
 
-        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJson(patient);
+        (var jsonString, _) = PatientFhirJsonMapper.ToFhirJsonString(patient);
 
         using var document = JsonDocument.Parse(jsonString!);
         JsonElement root = document.RootElement;
