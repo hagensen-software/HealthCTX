@@ -1,5 +1,4 @@
 ﻿using HealthCTX.Domain.Attributes;
-using HealthCTX.Domain.ResourceContents;
 
 namespace HealthCTX.Domain.Bundle;
 
