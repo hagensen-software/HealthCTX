@@ -129,14 +129,14 @@ The use of a bundle record is as follows:
 
 ```csharp
 var bundle = new Bundle(
-    new BundleType("document"),
+    new BundleType("collection"),
     [new BundleEntry(
-                EntryResource.Create(
-                    new Patient(
-                        new PatientId("Patient/123"),
-                        new PatientHumanName(
-                            new PatientFamilyName("Doe"),
-                            [new PatientGivenName("John")]))))]);
+        EntryResource.Create(
+            new Patient(
+                new PatientId("Patient/123"),
+                new PatientHumanName(
+                    new PatientFamilyName("Doe"),
+                    [new PatientGivenName("John")]))))]);
 
 (var jsonString, _) = bundle.ToFhirJsonString();
 (var bundleFromJson, _) = BundleFhirJsonMapper.ToBundle(jsonString);
