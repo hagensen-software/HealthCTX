@@ -22,7 +22,7 @@ namespace HealthCTX.Domain.Encounters;
 [FhirProperty("serviceProvider", typeof(IEncounterServiceProvider), Cardinality.Optional)]
 [FhirProperty("participant", typeof(IEncounterParticipant), Cardinality.Multiple)]
 [FhirProperty("appointment", typeof(IEncounterAppointment), Cardinality.Multiple)]
-[FhirProperty("virtualService", typeof(IEncounterVirtualService), Cardinality.Optional, FromVersion: FhirVersion.R5)]
+[FhirProperty("virtualService", typeof(IEncounterVirtualService), Cardinality.Multiple, FromVersion: FhirVersion.R5)]
 [FhirProperty("period", typeof(IEncounterPeriod), Cardinality.Optional, ToVersion: FhirVersion.R4)]
 [FhirProperty("actualPeriod", typeof(IEncounterActualPeriod), Cardinality.Optional, FromVersion: FhirVersion.R5)]
 [FhirProperty("plannedStartDate", typeof(IEncounterPlannedStartDate), Cardinality.Optional, FromVersion: FhirVersion.R5)]

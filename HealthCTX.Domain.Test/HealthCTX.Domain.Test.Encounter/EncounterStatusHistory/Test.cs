@@ -54,7 +54,7 @@ public class Test
 
         Assert.Empty(outcomes.Issues);
         Assert.Equal("planned", encounter?.StatusHistories.First().Status?.Value);
-        Assert.Equal(periodStartDate, encounter?.StatusHistories.First().Period?.Start.Value);
-        Assert.Equal(periodEndDate, encounter?.StatusHistories.First().Period?.End.Value);
+        Assert.Equal(periodStartDate, encounter?.StatusHistories.First().Period?.Start?.Value);
+        Assert.Equal(periodEndDate, encounter?.StatusHistories.First().Period?.End?.Value);
     }
 }
