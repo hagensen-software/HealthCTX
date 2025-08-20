@@ -2,6 +2,44 @@
 
 namespace HealthCTX.Domain.Bundle;
 
+/// <summary>
+///     <para>Interface for the HL7 FHIR Bundle resource.</para>
+///     <para>The following elements are supported and may be added as (a colletion of) a property implementing the corresponding interface as listed below.</para>
+///     <list type="table">
+///         <item>
+///             <term>identifier</term>
+///             <description><see cref="IBundleIdentifier"/> (HL7 FHIR R4/R5)</description>
+///         </item>
+///         <item>
+///             <term>type</term>
+///             <description><see cref="IBundleType"/> (HL7 FHIR R4/R5)</description>
+///         </item>
+///         <item>
+///             <term>timestamp</term>
+///             <description><see cref="IBundleTimestamp"/> (HL7 FHIR R4/R5)</description>
+///         </item>
+///         <item>
+///             <term>total</term>
+///             <description><see cref="IBundleTotal"/> (HL7 FHIR R4/R5)</description>
+///         </item>
+///         <item>
+///             <term>link</term>
+///             <description><see cref="IBundleLink"/> (HL7 FHIR R4/R5)</description>
+///         </item>
+///         <item>
+///             <term>entry</term>
+///             <description><see cref="IBundleEntry"/> (HL7 FHIR R4/R5)</description>
+///         </item>
+///         <item>
+///             <term>signature</term>
+///             <description><see cref="IBundleSignature"/> (HL7 FHIR R4/R5)</description>
+///         </item>
+///         <item>
+///             <term>issues</term>
+///             <description><see cref="IBundleIssues"/> (HL7 FHIR R5 only)</description>
+///         </item>
+///     </list>
+/// </summary>
 [FhirResource("Bundle")]
 [FhirProperty("identifier", typeof(IBundleIdentifier), Cardinality.Optional)]
 [FhirProperty("type", typeof(IBundleType), Cardinality.Mandatory)]
