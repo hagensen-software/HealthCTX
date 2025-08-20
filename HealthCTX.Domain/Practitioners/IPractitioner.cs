@@ -48,6 +48,7 @@ namespace HealthCTX.Domain.Practitioners;
 ///     </item>
 /// </list>
 /// </summary>
+[FhirResource("Practitioner")]
 [FhirProperty("identifier",typeof(IPractitionerIdentifier), Cardinality.Multiple)]
 [FhirProperty("active", typeof(IPractitionerActive), Cardinality.Optional)]
 [FhirProperty("name", typeof(IPractitionerHumanName), Cardinality.Multiple)]

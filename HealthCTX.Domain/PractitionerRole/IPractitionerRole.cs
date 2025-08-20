@@ -80,6 +80,7 @@ namespace HealthCTX.Domain.PractitionerRole;
 ///     </item>
 /// </list>
 /// </summary>
+[FhirResource("PractitionerRole")]
 [FhirProperty("identifier", typeof(IPractitionerRoleIdentifier), Cardinality.Multiple)]
 [FhirProperty("active", typeof(IPractitionerRoleActive), Cardinality.Optional)]
 [FhirProperty("period", typeof(IPractitionerRolePeriod), Cardinality.Optional)]

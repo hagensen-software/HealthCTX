@@ -56,6 +56,7 @@ namespace HealthCTX.Domain.Organizations;
 ///     </item>
 /// </list>
 /// </summary>
+[FhirResource("Organization")]
 [FhirProperty("identifier", typeof(IOrganizationIdentifier), Cardinality.Multiple)]
 [FhirProperty("active", typeof(IOrganizationActive), Cardinality.Optional)]
 [FhirProperty("type", typeof(IOrganizationType), Cardinality.Multiple)]
