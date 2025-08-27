@@ -5,7 +5,7 @@ namespace HealthCTX.Domain.Locations;
 
 /// <summary>
 ///     <para>Interface for the HL7 FHIR Location resource.</para>
-///     <para>The following elements are supported and may be added as (a colletion of) a property implementing the corresponding interface as listed below.</para>
+///     <para>The following elements are supported and may be added as (a collection of) a property implementing the corresponding interface as listed below.</para>
 ///     <list type="table">
 ///         <item>
 ///             <term>identifier</term>
