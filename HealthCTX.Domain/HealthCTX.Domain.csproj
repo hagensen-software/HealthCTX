@@ -19,6 +19,8 @@
     <Copyright>Copyright Hagensen Software ApS</Copyright>
     <Company>Hagensen Software ApS</Company>
     <RepositoryUrl>https://github.com/hagensen-software/HealthCTX</RepositoryUrl>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
