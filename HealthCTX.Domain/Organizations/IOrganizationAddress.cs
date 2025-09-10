@@ -4,6 +4,6 @@ namespace HealthCTX.Domain.Organizations;
 
 /// <summary>
 /// <para>Interface for HL7 FHIR Organization address.</para>
-/// <para>The primitive element <see cref="IAddress"/> is supported.</para>
+/// <para>The elements from <see cref="IAddress"/> are supported and may be added as (a collection of) a property implementing the corresponding interfaces.</para>
 /// </summary>
 public interface IOrganizationAddress : IAddress;

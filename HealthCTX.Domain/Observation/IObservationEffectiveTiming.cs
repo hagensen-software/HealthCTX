@@ -4,6 +4,6 @@ namespace HealthCTX.Domain.Observation;
 
 /// <summary>
 /// <para>Interface for HL7 FHIR Observation effektive[Timing].</para>
-/// <para>The primitive element <see cref="ITiming"/> is supported.</para>
+/// <para>The elements from <see cref="ITiming"/> are supported and may be added as (a collection of) a property implementing the corresponding interfaces.</para>
 /// </summary>
 public interface IObservationEffectiveTiming : ITiming;

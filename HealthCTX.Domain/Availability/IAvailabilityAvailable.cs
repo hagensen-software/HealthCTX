@@ -3,7 +3,7 @@
 namespace HealthCTX.Domain.Availability;
 
 /// <summary>
-/// <para>Interface for the HL7 FHIR Location hoursOfOperation and Availability element.</para>
+/// <para>Interface for the HL7 FHIR Location hoursOfOperation and Availability.availableTime element.</para>
 /// <para>The following elements are supported and may be added as (a collection of) a property implementing the corresponding interface as listed below.</para>
 /// <list type="table">
 ///     <item>
