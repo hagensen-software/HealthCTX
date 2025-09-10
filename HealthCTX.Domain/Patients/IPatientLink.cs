@@ -1,10 +1,9 @@
 ﻿using HealthCTX.Domain.Attributes;
-using HealthCTX.Domain.Identifiers;
 
 namespace HealthCTX.Domain.Patients;
 
 /// <summary>
-/// <para>Interface for the HL7 FHIR Identifier element.</para>
+/// <para>Interface for the HL7 FHIR Patient link element.</para>
 /// <para>The following elements are supported and may be added as (a collection of) a property implementing the corresponding interface as listed below.</para>
 /// <list type="table">
 ///     <item>

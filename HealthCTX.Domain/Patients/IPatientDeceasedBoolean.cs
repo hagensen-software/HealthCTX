@@ -1,6 +1,4 @@
-﻿using HealthCTX.Domain.CodeableConcepts;
-
-namespace HealthCTX.Domain.Patients;
+﻿namespace HealthCTX.Domain.Patients;
 
 /// <summary>
 /// <para>Interface for HL7 FHIR Patient deceased[Boolean].</para>
