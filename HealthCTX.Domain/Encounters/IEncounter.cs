@@ -16,15 +16,15 @@ namespace HealthCTX.Domain.Encounters;
 ///     </item>
 ///     <item>
 ///         <term>statusHistory</term>
-///         <description><see cref="IEncounterStatusHistory"/> (HL7 FHIR R4)</description>
+///         <description><see cref="IEncounterStatusHistory"/> (HL7 FHIR R4 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>class</term>
-///         <description><see cref="IEncounterClassCoding"/> (HL7 FHIR R4) or <see cref="IEncounterClass"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterClassCoding"/> (HL7 FHIR R4 Only) or <see cref="IEncounterClass"/> (HL7 FHIR R5)</description>
 ///     </item>
 ///     <item>
 ///         <term>classHistory</term>
-///         <description><see cref="IEncounterClassHistory"/> (HL7 FHIR R4)</description>
+///         <description><see cref="IEncounterClassHistory"/> (HL7 FHIR R4 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>priority</term>
@@ -36,7 +36,7 @@ namespace HealthCTX.Domain.Encounters;
 ///     </item>
 ///     <item>
 ///         <term>serviceType</term>
-///         <description><see cref="IEncounterServiceTypeConcept"/> (HL7 FHIR R4) or <see cref="IEncounterServiceType"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterServiceTypeConcept"/> (HL7 FHIR R4 Only) or <see cref="IEncounterServiceType"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>subject</term>
@@ -44,7 +44,7 @@ namespace HealthCTX.Domain.Encounters;
 ///     </item>
 ///     <item>
 ///         <term>subjectStatus</term>
-///         <description><see cref="IEncounterSubjectStatus"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterSubjectStatus"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>episodeOfCare</term>
@@ -76,23 +76,23 @@ namespace HealthCTX.Domain.Encounters;
 ///     </item>
 ///     <item>
 ///         <term>virtualService</term>
-///         <description><see cref="IEncounterVirtualService"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterVirtualService"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>period</term>
-///         <description><see cref="IEncounterPeriod"/> (HL7 FHIR R4)</description>
+///         <description><see cref="IEncounterPeriod"/> (HL7 FHIR R4 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>actualPeriod</term>
-///         <description><see cref="IEncounterActualPeriod"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterActualPeriod"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>plannedStartDate</term>
-///         <description><see cref="IEncounterPlannedStartDate"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterPlannedStartDate"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>plannedEndDate</term>
-///         <description><see cref="IEncounterPlannedEndDate"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterPlannedEndDate"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>length</term>
@@ -100,15 +100,15 @@ namespace HealthCTX.Domain.Encounters;
 ///     </item>
 ///     <item>
 ///         <term>reasonCode</term>
-///         <description><see cref="IEncounterReasonCode"/> (HL7 FHIR R4)</description>
+///         <description><see cref="IEncounterReasonCode"/> (HL7 FHIR R4 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>reasonReference</term>
-///         <description><see cref="IEncounterReasonReference"/> (HL7 FHIR R4)</description>
+///         <description><see cref="IEncounterReasonReference"/> (HL7 FHIR R4 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>reason</term>
-///         <description><see cref="IEncounterReason"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterReason"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>diagnosis</term>
@@ -124,19 +124,19 @@ namespace HealthCTX.Domain.Encounters;
 ///     </item>
 ///     <item>
 ///         <term>specialArrangement</term>
-///         <description><see cref="IEncounterSpecialArrangement"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterSpecialArrangement"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>specialCourtesy</term>
-///         <description><see cref="IEncounterSpecialCourtesy"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterSpecialCourtesy"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>hospitalization</term>
-///         <description><see cref="IEncounterHospitalization"/> (HL7 FHIR R4)</description>
+///         <description><see cref="IEncounterHospitalization"/> (HL7 FHIR R4 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>admission</term>
-///         <description><see cref="IEncounterAdmission"/> (HL7 FHIR R5)</description>
+///         <description><see cref="IEncounterAdmission"/> (HL7 FHIR R5 Only)</description>
 ///     </item>
 ///     <item>
 ///         <term>location</term>
