@@ -41,11 +41,11 @@ namespace HealthCTX.Domain.Locations;
 ///         </item>
 ///         <item>
 ///             <term>telecom</term>
-///             <description><see cref="ILocationTelecom"/> (HL7 FHIR R4)</description>
+///             <description><see cref="ILocationTelecom"/> (HL7 FHIR R4 Only)</description>
 ///         </item>
 ///         <item>
 ///             <term>contact</term>
-///             <description><see cref="ILocationContact"/> (HL7 FHIR R5)</description>
+///             <description><see cref="ILocationContact"/> (HL7 FHIR R5 Only)</description>
 ///         </item>
 ///         <item>
 ///             <term>address</term>
@@ -53,11 +53,11 @@ namespace HealthCTX.Domain.Locations;
 ///         </item>
 ///         <item>
 ///             <term>physicalType</term>
-///             <description><see cref="ILocationPhysicalType"/> (HL7 FHIR R4)</description>
+///             <description><see cref="ILocationPhysicalType"/> (HL7 FHIR R4 Only)</description>
 ///         </item>
 ///         <item>
 ///             <term>form</term>
-///             <description><see cref="ILocationForm"/> (HL7 FHIR R5)</description>
+///             <description><see cref="ILocationForm"/> (HL7 FHIR R5 Only)</description>
 ///         </item>
 ///         <item>
 ///             <term>position</term>
@@ -73,7 +73,7 @@ namespace HealthCTX.Domain.Locations;
 ///         </item>
 ///         <item>
 ///             <term>characteristic</term>
-///             <description><see cref="ILocationCharacteristic"/> (HL7 FHIR R5)</description>
+///             <description><see cref="ILocationCharacteristic"/> (HL7 FHIR R5 Only)</description>
 ///         </item>
 ///         <item>
 ///             <term>hoursOfOperation</term>
@@ -81,11 +81,11 @@ namespace HealthCTX.Domain.Locations;
 ///         </item>
 ///         <item>
 ///             <term>availabilityExceptions</term>
-///             <description><see cref="ILocationAvailabilityExceptions"/> (HL7 FHIR R4)</description>
+///             <description><see cref="ILocationAvailabilityExceptions"/> (HL7 FHIR R4 Only)</description>
 ///         </item>
 ///         <item>
 ///             <term>virtualService</term>
-///             <description><see cref="IVirtualServiceDetail"/> (HL7 FHIR R5)</description>
+///             <description><see cref="IVirtualServiceDetail"/> (HL7 FHIR R5 Only)</description>
 ///         </item>
 ///         <item>
 ///             <term>endpoint</term>
