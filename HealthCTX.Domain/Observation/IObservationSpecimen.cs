@@ -2,4 +2,8 @@
 
 namespace HealthCTX.Domain.Observation;
 
+/// <summary>
+/// <para>Interface for HL7 FHIR Observation specimen.</para>
+/// <para>The primitive element <see cref="IReference"/> is supported.</para>
+/// </summary>
 public interface IObservationSpecimen : IReference;

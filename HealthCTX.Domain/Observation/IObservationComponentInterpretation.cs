@@ -2,4 +2,8 @@
 
 namespace HealthCTX.Domain.Observation;
 
+/// <summary>
+/// <para>Interface for HL7 FHIR Observation component.interpretation.</para>
+/// <para>The primitive element <see cref="ICodeableConcept"/> is supported.</para>
+/// </summary>
 public interface IObservationComponentInterpretation : ICodeableConcept;
