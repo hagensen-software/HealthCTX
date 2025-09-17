@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IDatePrimitive : IElement
 {
+    /// <summary>
+    /// Gets the date value associated with this instance.
+    /// </summary>
     [FhirIgnore]
     DateOnly Value { get; init; }
 }

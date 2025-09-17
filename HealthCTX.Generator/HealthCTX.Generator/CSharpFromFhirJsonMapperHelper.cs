@@ -28,6 +28,9 @@ internal class CSharpFromFhirJsonMapperHelper
         {
             sb.AppendLine(
 $$"""
+    /// <summary>
+    /// Converts a JSON string to a {{recordModel.RecordName}} resource.
+    /// </summary>
     public static ({{recordModel.RecordName}}?, OperationOutcome) To{{recordModel.RecordName}}(string jsonString, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
     {
         try
@@ -47,6 +50,9 @@ $$"""
         }
         sb.AppendLine(
 $$"""
+    /// <summary>
+    /// Converts a JsonElement to a {{recordModel.RecordName}} element.
+    /// </summary>
     public static ({{recordModel.RecordName}}?, List<OutcomeIssue>) To{{recordModel.RecordName}}(JsonElement jsonElement, string elementName, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
     {
 """);

@@ -15,6 +15,9 @@ using System.Text.Json.Nodes;
 
 namespace {{recordModel.RecordNamespace}};
 
+/// <summary>
+/// Mapper class to convert {{recordModel.RecordName}} to and from FHIR JSON representation.
+/// </summary>
 public static class {{recordModel.RecordName}}FhirJsonMapper
 {
 """);

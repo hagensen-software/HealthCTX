@@ -9,6 +9,9 @@ namespace HealthCTX.Domain.References;
 [FhirPrimitive]
 public interface IReferenceReference : IElement
 {
+    /// <summary>
+    /// Gets the reference value of this instance as a <see cref="string"/>
+    /// </summary>
     [FhirIgnore]
     string Value { get; init; }
 }

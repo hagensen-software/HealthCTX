@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IUnsignedIntegerPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the unsignedInt value represented by this instance as an <see cref="uint"/>.
+    /// </summary>
     [FhirIgnore]
     uint Value { get; init; }
 }

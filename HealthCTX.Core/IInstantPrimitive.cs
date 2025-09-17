@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IInstantPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the instant value assouciated with this instance as a <see cref="DateTimeOffset"/>.
+    /// </summary>
     [FhirIgnore]
     DateTimeOffset Value { get; init; }
 }

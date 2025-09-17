@@ -29,6 +29,9 @@ internal class CSharpToFhirJsonMapperHelper
         {
             sb.AppendLine(
 $$"""
+    /// <summary>
+    /// Converts the {{recordModel.RecordName}} to a FHIR JSON string representation.
+    /// </summary>
     public static (string?, OperationOutcome) ToFhirJsonString(this {{recordModel.RecordTypeName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion = HealthCTX.Domain.Attributes.FhirVersion.R4)
     {
         try
@@ -46,6 +49,9 @@ $$"""
         }
         sb.AppendLine(
 $$"""
+    /// <summary>
+    /// Converts the {{recordModel.RecordName}} to a FHIR JSON representation.
+    /// </summary>
     public static (JsonNode, List<OutcomeIssue>) ToFhirJson(this {{recordModel.RecordTypeName}} {{recordModel.RecordInstanceName}}, HealthCTX.Domain.Attributes.FhirVersion fhirVersion)
     {
         List<OutcomeIssue> outcomes = [];

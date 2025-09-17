@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IStringPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the string value associated with this instance.
+    /// </summary>
     [FhirIgnore]
     string Value { get; init; }
 }

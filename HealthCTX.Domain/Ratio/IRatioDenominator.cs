@@ -2,4 +2,8 @@
 
 namespace HealthCTX.Domain.Ratio;
 
+/// <summary>
+/// <para>Interface for HL7 FHIR Ration denominator.</para>
+/// <para>The elements from <see cref="ISimpleQuantity"/> are supported and may be added as (a collection of) a property implementing the corresponding interfaces.</para>
+/// </summary>
 public interface IRatioDenominator : ISimpleQuantity;

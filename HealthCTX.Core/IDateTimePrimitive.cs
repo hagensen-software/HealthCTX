@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IDateTimePrimitive : IElement
 {
+    /// <summary>
+    /// Gets the date and time value represented by this instance.
+    /// </summary>
     [FhirIgnore]
     DateTimeOffset Value { get; init; }
 }

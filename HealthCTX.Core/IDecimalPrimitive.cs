@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IDecimalPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the decimal value associated with this instance as a <see cref="double"/>.
+    /// </summary>
     [FhirIgnore]
     double Value { get; init; }
 }

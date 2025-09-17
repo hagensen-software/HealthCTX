@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IMarkdownPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the markdown value of the FHIR element as a <see cref="string"/>.
+    /// </summary>
     [FhirIgnore]
     string Value { get; init; }
 }

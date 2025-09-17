@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IUrlPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the url value of this instance as a <see cref="Uri"/>.
+    /// </summary>
     [FhirIgnore]
     Uri Value { get; init;  }
 }

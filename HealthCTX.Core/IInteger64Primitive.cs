@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IInteger64Primitive : IElement
 {
+    /// <summary>
+    /// Gets the value associated with this instance as a <see cref="long"/>.
+    /// </summary>
     [FhirIgnore]
     long Value { get; init; }
 }

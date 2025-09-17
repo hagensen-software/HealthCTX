@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IIntegerPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the integer value associated with this instance.
+    /// </summary>
     [FhirIgnore]
     int Value { get; init; }
 }

@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IBooleanPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the boolean value associated with this instance.
+    /// </summary>
     [FhirIgnore]
     bool Value { get; init; }
 }

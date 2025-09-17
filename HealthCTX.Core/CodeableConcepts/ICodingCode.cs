@@ -9,6 +9,9 @@ namespace HealthCTX.Domain.CodeableConcepts;
 [FhirPrimitive]
 public interface ICodingCode : IElement
 {
+    /// <summary>
+    /// Gets the code value of this instance as a <see cref="string"/>.
+    /// </summary>
     [FhirIgnore]
     string Value { get; init; }
 }

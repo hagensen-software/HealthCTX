@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface ICanonicalPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the canonical value associated with this instance as a <see cref="Uri"/>.
+    /// </summary>
     [FhirIgnore]
     Uri Value { get; init; }
 }

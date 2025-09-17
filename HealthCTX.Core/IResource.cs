@@ -1,5 +1,6 @@
 ﻿namespace HealthCTX.Domain;
 
-public interface IResource : IElement
-{
-}
+/// <summary>
+/// Base interface for all FHIR resources.
+/// </summary>
+public interface IResource : IElement;

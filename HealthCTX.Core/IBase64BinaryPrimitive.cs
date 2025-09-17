@@ -9,6 +9,9 @@ namespace HealthCTX.Domain;
 [FhirPrimitive]
 public interface IBase64BinaryPrimitive : IElement
 {
+    /// <summary>
+    /// Gets the base64Binary value associated with this instance as a <see cref="string"/>.
+    /// </summary>
     [FhirIgnore]
     string Value { get; init; }
 }
