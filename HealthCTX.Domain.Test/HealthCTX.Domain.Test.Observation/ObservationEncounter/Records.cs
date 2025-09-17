@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.Observation;
+using HealthCTX.Domain.Observations;
 using HealthCTX.Domain.References;
 
 namespace HealthCTX.Domain.Test.Observation.ObservationEncounter;

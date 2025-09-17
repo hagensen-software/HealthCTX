@@ -1,6 +1,6 @@
-﻿using HealthCTX.Domain.Address;
+﻿using HealthCTX.Domain.Addresses;
 using HealthCTX.Domain.Patients;
-using HealthCTX.Domain.Period;
+using HealthCTX.Domain.Periods;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Patients.PatientAddress;

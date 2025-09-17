@@ -1,6 +1,6 @@
-﻿using HealthCTX.Domain.Availability;
-using HealthCTX.Domain.Period;
-using HealthCTX.Domain.PractitionerRole;
+﻿using HealthCTX.Domain.Availabilities;
+using HealthCTX.Domain.Periods;
+using HealthCTX.Domain.PractitionerRoles;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.PractitionerRole.PractitionerRoleAvailabillityR4;

@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Bundle;
+﻿using HealthCTX.Domain.Bundles;
 
 namespace HealthCTX.Domain.Test.Bundle.BundleType;
 

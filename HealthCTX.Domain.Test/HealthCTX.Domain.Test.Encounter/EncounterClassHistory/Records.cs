@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
 using HealthCTX.Domain.Encounters;
-using HealthCTX.Domain.Period;
+using HealthCTX.Domain.Periods;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Encounter.EncounterClassHistory;

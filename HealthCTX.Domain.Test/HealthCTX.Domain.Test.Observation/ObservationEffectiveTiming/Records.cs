@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.Observation;
-using HealthCTX.Domain.Timing;
+using HealthCTX.Domain.Observations;
+using HealthCTX.Domain.Timings;
 
 namespace HealthCTX.Domain.Test.Observation.ObservationEffectiveTiming;
 

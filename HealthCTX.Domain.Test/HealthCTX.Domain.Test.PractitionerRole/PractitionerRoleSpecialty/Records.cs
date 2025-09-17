@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.PractitionerRole;
+using HealthCTX.Domain.PractitionerRoles;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.PractitionerRole.PractitionerRoleSpecialty;

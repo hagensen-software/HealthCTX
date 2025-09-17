@@ -1,6 +1,5 @@
-﻿using HealthCTX.Domain.Address;
+﻿using HealthCTX.Domain.Addresses;
 using HealthCTX.Domain.Locations;
-using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Locations.LocationAddress;
 

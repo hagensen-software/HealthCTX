@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Availability;
+﻿using HealthCTX.Domain.Availabilities;
 using HealthCTX.Domain.Locations;
 using System.Collections.Immutable;
 

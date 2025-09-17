@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.HumanName;
+﻿using HealthCTX.Domain.HumanNames;
 using HealthCTX.Domain.Practitioners;
 using System.Collections.Immutable;
 

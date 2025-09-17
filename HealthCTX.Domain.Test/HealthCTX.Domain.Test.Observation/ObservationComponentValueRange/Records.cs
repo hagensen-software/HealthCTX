@@ -1,7 +1,7 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.Observation;
-using HealthCTX.Domain.Quantity;
-using HealthCTX.Domain.Range;
+using HealthCTX.Domain.Observations;
+using HealthCTX.Domain.Quantities;
+using HealthCTX.Domain.Ranges;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Observation.ObservationComponentValueRange;

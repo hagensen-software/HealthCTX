@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.Encounters;
-using HealthCTX.Domain.Period;
+using HealthCTX.Domain.Periods;
 
 namespace HealthCTX.Domain.Test.Encounter.EncounterPeriod;
 

@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.PractitionerRole;
+﻿using HealthCTX.Domain.PractitionerRoles;
 using HealthCTX.Domain.References;
 using System.Collections.Immutable;
 

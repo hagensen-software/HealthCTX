@@ -10,7 +10,7 @@
 
   <PropertyGroup>
     <PackageId>Hagensen.HealthCTX.Domain.Core</PackageId>
-    <Version>1.0.0-alpha.5</Version>
+    <Version>1.0.0-alpha.6</Version>
     <Authors>Torben M. Hagensen</Authors>
     <Description>This package contains the core elements for Hagensen.HealthCTX.Domain and Hagensen.HealthCTX.Generator. It is recommended to install the Hagensen.HealthCTX.Domain package, which also install this package.</Description>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -19,6 +19,7 @@
     <Copyright>Copyright Hagensen Software ApS</Copyright>
     <Company>Hagensen Software ApS</Company>
     <RepositoryUrl>https://github.com/hagensen-software/HealthCTX</RepositoryUrl>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

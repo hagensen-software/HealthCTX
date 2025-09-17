@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.Observation;
-using HealthCTX.Domain.Period;
+using HealthCTX.Domain.Observations;
+using HealthCTX.Domain.Periods;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Observation.ObservationComponentValuePeriod;

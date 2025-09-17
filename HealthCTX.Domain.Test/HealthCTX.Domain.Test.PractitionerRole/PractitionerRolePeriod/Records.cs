@@ -1,5 +1,5 @@
-﻿using HealthCTX.Domain.Period;
-using HealthCTX.Domain.PractitionerRole;
+﻿using HealthCTX.Domain.Periods;
+using HealthCTX.Domain.PractitionerRoles;
 
 namespace HealthCTX.Domain.Test.PractitionerRole.PractitionerRolePeriod;
 

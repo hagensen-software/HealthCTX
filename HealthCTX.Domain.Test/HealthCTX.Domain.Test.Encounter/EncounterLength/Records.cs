@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.Encounters;
-using HealthCTX.Domain.Quantity;
+using HealthCTX.Domain.Quantities;
 
 namespace HealthCTX.Domain.Test.Encounter.EncounterLength;
 

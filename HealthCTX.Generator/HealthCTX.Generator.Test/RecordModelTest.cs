@@ -130,7 +130,7 @@ public class RecordModelTest
                 using System;
                 using HealthCTX.Domain.CodeableConcepts;
                 using HealthCTX.Domain.Identifiers;
-                using HealthCTX.Domain.Period;
+                using HealthCTX.Domain.Periods;
 
                 public record IdentifierUse(string Value) : IIdentifierUse;
                 public record IdentifierCode(string Value) : ICodingCode;

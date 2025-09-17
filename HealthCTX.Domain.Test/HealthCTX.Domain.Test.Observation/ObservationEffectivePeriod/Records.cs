@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.Observation;
-using HealthCTX.Domain.Period;
+using HealthCTX.Domain.Observations;
+using HealthCTX.Domain.Periods;
 
 namespace HealthCTX.Domain.Test.Observation.ObservationEffectivePeriod;
 

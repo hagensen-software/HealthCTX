@@ -1,3 +1,7 @@
 ﻿namespace HealthCTX.Domain.Organizations;
 
-public interface IOrganizationDescription : IStringPrimitive;
+/// <summary>
+/// <para>Interface for HL7 FHIR Organization description.</para>
+/// <para>The primitive element <see cref="IMarkdownPrimitive"/> is supported.</para>
+/// </summary>
+public interface IOrganizationDescription : IMarkdownPrimitive;

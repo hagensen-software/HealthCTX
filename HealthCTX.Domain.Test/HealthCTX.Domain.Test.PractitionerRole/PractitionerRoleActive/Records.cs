@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.PractitionerRole;
+﻿using HealthCTX.Domain.PractitionerRoles;
 
 namespace HealthCTX.Domain.Test.PractitionerRole.PractitionerRoleActive;
 

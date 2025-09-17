@@ -1,6 +1,6 @@
-﻿using HealthCTX.Domain.Annotation;
+﻿using HealthCTX.Domain.Annotations;
 using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.Observation;
+using HealthCTX.Domain.Observations;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Observation.ObservationNote;
