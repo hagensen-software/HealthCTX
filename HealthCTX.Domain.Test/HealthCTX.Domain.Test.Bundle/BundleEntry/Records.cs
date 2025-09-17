@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.Attributes;
-using HealthCTX.Domain.Bundle;
+using HealthCTX.Domain.Bundles;
 using HealthCTX.Domain.OperationOutcomes;
 using HealthCTX.Domain.Patients;
 using HealthCTX.Domain.ResourceContents;

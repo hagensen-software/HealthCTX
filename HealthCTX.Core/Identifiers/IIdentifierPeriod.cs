@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Period;
+﻿using HealthCTX.Domain.Periods;
 
 namespace HealthCTX.Domain.Identifiers;
 

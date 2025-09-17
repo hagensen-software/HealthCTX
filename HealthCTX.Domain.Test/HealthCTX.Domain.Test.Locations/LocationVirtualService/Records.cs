@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
 using HealthCTX.Domain.Locations;
-using HealthCTX.Domain.VirtualServiceDetail;
+using HealthCTX.Domain.VirtualServiceDetails;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Locations.LocationVirtualService;

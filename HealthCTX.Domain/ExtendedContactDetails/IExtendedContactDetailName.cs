@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.HumanName;
+﻿using HealthCTX.Domain.HumanNames;
 
 namespace HealthCTX.Domain.ExtendedContactDetails;
 

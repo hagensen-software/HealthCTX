@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Attachment;
+﻿using HealthCTX.Domain.Attachments;
 using HealthCTX.Domain.Identifiers;
 
 namespace HealthCTX.Domain.Patients;

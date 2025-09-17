@@ -1,6 +1,6 @@
-﻿using HealthCTX.Domain.Attachment;
+﻿using HealthCTX.Domain.Attachments;
 using HealthCTX.Domain.CodeableConcepts;
-using HealthCTX.Domain.Observation;
+using HealthCTX.Domain.Observations;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Observation.ObservationComponentValueAttachment;

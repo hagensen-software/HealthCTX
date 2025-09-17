@@ -1,9 +1,9 @@
-﻿using HealthCTX.Domain.Address;
+﻿using HealthCTX.Domain.Addresses;
 using HealthCTX.Domain.CodeableConcepts;
 using HealthCTX.Domain.ContactPoints;
-using HealthCTX.Domain.HumanName;
+using HealthCTX.Domain.HumanNames;
 using HealthCTX.Domain.Patients;
-using HealthCTX.Domain.Period;
+using HealthCTX.Domain.Periods;
 using HealthCTX.Domain.References;
 using System.Collections.Immutable;
 

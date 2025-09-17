@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Bundle;
+﻿using HealthCTX.Domain.Bundles;
 using System.Collections.Immutable;
 
 namespace HealthCTX.Domain.Test.Bundle.BundleLink;

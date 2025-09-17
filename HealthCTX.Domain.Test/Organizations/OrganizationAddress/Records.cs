@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.Address;
+﻿using HealthCTX.Domain.Addresses;
 using HealthCTX.Domain.Organizations;
 using System.Collections.Immutable;
 

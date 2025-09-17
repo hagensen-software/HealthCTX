@@ -1,6 +1,6 @@
 ﻿using HealthCTX.Domain.CodeableConcepts;
 using HealthCTX.Domain.Identifiers;
-using HealthCTX.Domain.Period;
+using HealthCTX.Domain.Periods;
 using HealthCTX.Domain.Practitioners;
 using HealthCTX.Domain.References;
 using System.Collections.Immutable;

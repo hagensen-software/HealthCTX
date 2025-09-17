@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.Attributes;
-using HealthCTX.Domain.VirtualServiceDetail;
+using HealthCTX.Domain.VirtualServiceDetails;
 
 namespace HealthCTX.Domain.Locations;
 

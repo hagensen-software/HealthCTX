@@ -1,5 +1,5 @@
-﻿using HealthCTX.Domain.Address;
-using HealthCTX.Domain.Period;
+﻿using HealthCTX.Domain.Addresses;
+using HealthCTX.Domain.Periods;
 using HealthCTX.Domain.Practitioners;
 using System.Collections.Immutable;
 

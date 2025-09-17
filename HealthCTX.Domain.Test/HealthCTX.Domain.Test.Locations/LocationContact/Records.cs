@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.ExtendedContactDetails;
-using HealthCTX.Domain.HumanName;
+using HealthCTX.Domain.HumanNames;
 using HealthCTX.Domain.Locations;
 using System.Collections.Immutable;
 

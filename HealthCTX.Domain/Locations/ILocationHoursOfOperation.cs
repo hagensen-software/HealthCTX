@@ -1,5 +1,5 @@
 ﻿using HealthCTX.Domain.Attributes;
-using HealthCTX.Domain.Availability;
+using HealthCTX.Domain.Availabilities;
 
 namespace HealthCTX.Domain.Locations;
 

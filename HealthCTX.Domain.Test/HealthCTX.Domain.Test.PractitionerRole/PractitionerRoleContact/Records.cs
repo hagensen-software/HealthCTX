@@ -1,10 +1,10 @@
-﻿using HealthCTX.Domain.Address;
+﻿using HealthCTX.Domain.Addresses;
 using HealthCTX.Domain.CodeableConcepts;
 using HealthCTX.Domain.ContactPoints;
 using HealthCTX.Domain.ExtendedContactDetails;
-using HealthCTX.Domain.HumanName;
-using HealthCTX.Domain.Period;
-using HealthCTX.Domain.PractitionerRole;
+using HealthCTX.Domain.HumanNames;
+using HealthCTX.Domain.Periods;
+using HealthCTX.Domain.PractitionerRoles;
 using HealthCTX.Domain.References;
 
 namespace HealthCTX.Domain.Test.PractitionerRole.PractitionerRoleContact;

@@ -1,4 +1,4 @@
-﻿using HealthCTX.Domain.VirtualServiceDetail;
+﻿using HealthCTX.Domain.VirtualServiceDetails;
 
 namespace HealthCTX.Domain.Encounters;
 

@@ -26,7 +26,7 @@ The following snippet shows how to create a Patient resource with an id and a na
 
 ```csharp
 using HealthCTX.Domain;
-using HealthCTX.Domain.HumanName;
+using HealthCTX.Domain.HumanNames;
 using HealthCTX.Domain.Patients;
 using System.Collections.Immutable;
 
@@ -278,7 +278,7 @@ Elements are created by implementing the interface of the element type.
 using HealthCTX.Domain.Attributes;
 using HealthCTX.Domain;
 
-namespace HealthCTX.Domain.HumanName;
+namespace HealthCTX.Domain.HumanNames;
 
 [FhirElement]
 [FhirProperty("use", typeof(IHumanNameUse), Cardinality.Optional)]
@@ -305,7 +305,7 @@ The interface extends the IStringPrimitive interface, which means that it is a s
 ```csharp
 using HealthCTX.Domain;
 
-namespace HealthCTX.Domain.HumanName;
+namespace HealthCTX.Domain.HumanNames;
 
 public interface IHumanNameText : IStringPrimitive;
 ```
