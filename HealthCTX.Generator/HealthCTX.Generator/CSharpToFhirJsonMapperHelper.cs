@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace HealthCTX.Generator;
 
@@ -106,12 +107,31 @@ $$"""
 
     private static int AddPropertiesForElement(RecordModel recordModel, StringBuilder sb, int spaces)
     {
+        var alreadyDeclared = new HashSet<string>();
         foreach (var propertyModel in recordModel.Properties)
+        {
+            if (alreadyDeclared.Contains(propertyModel.ElementName))
+                continue;
+
             AppendAddToJsonDeclaration(sb, propertyModel, spaces);
+
+            alreadyDeclared.Add(propertyModel.ElementName);
+        }
+
         foreach (var propertyModel in recordModel.Properties)
             AppendAddToJsonBody(sb, recordModel.RecordInstanceName, propertyModel, spaces);
+
+        alreadyDeclared.Clear();
         foreach (var propertyModel in recordModel.Properties)
+        {
+            if (alreadyDeclared.Contains(propertyModel.ElementName))
+                continue;
+
             AppendAddToJsonAssignmentOfDeclared(sb, recordModel.RecordInstanceName, propertyModel, spaces);
+
+            alreadyDeclared.Add(propertyModel.ElementName);
+        }
+
 
         return spaces;
     }
@@ -185,13 +205,23 @@ $$"""
 """);
                     spaces += 4;
                 }
-                var instanceName = propertyModel.Name.ToLower();
-                sb.AppendLine(
+                if (propertyModel.FixedValue is null)
+                {
+                    var instanceName = propertyModel.Name.ToLower();
+                    sb.AppendLine(
 $$"""
 {{Indent(spaces)}}(var {{instanceName}}Node, var {{instanceName}}Outcomes) = {{recordInstanceName}}.{{propertyModel.Name}}.ToFhirJson(fhirVersion);
 {{Indent(spaces)}}outcomes.AddRange({{instanceName}}Outcomes);
 {{Indent(spaces)}}{{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{instanceName}}Node);
 """);
+                }
+                else
+                {
+                    sb.AppendLine(
+                    $$"""
+{{Indent(spaces)}}{{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", "{{propertyModel.FixedValue}}");
+""");
+                }
 
                 if (!propertyModel.Required)
                 {

@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\HealthCTX.Core\HealthCTX.Domain.Core.csproj" />
+    <ProjectReference Include="..\..\HealthCTX.Domain\HealthCTX.Domain.csproj" />
     <ProjectReference Include="..\HealthCTX.Generator\HealthCTX.Generator.csproj" />
   </ItemGroup>
 

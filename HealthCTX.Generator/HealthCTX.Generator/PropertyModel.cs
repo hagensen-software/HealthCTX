@@ -10,7 +10,13 @@ public enum FhirVersion
     R5
 }
 
-public struct PropertyModel(string name, string type, string typeArguments, string elementName, bool enumerable, bool required, bool fhirArray, string elementInterface, bool hasDefaultConstructor, FhirVersion fromVersion, FhirVersion toVersion)
+public readonly struct Discriminator(string elementName, string value)
+{
+    public string ElementName { get; } = elementName;
+    public string Value { get; } = value;
+}
+
+public struct PropertyModel(string name, string type, string typeArguments, string elementName, bool enumerable, bool required, bool fhirArray, string elementInterface, bool hasDefaultConstructor, string? fixedValue, Discriminator? discriminator, FhirVersion fromVersion, FhirVersion toVersion)
 {
     private const string iEnumerableStart = "System.Collections.Generic.IEnumerable<";
 
@@ -23,6 +29,8 @@ public struct PropertyModel(string name, string type, string typeArguments, stri
     public bool FhirArray { get; } = fhirArray;
     public string ElementInterface { get; } = elementInterface;
     public bool HasDefaultConstructor { get; } = hasDefaultConstructor;
+    public string? FixedValue { get; } = fixedValue;
+    public Discriminator? Discriminator { get; } = discriminator;
     public FhirVersion FromVersion { get; } = fromVersion;
     public FhirVersion ToVersion { get; } = toVersion;
 
@@ -64,7 +72,7 @@ public struct PropertyModel(string name, string type, string typeArguments, stri
         bool enumerable = enumerableType is not null;
 
         var propertyInfo = FhirAttributeHelper.FindElementName(type, elementNamesByInterface);
-        var fhirArray = propertyInfo?.Cardinality == FhirCardinality.Multiple;
+        var fhirArray = (propertyInfo?.Cardinality == FhirCardinality.Multiple) || (propertyInfo?.DiscriminatorElement is not null);
         var mandatory = propertyInfo?.Cardinality == FhirCardinality.Mandatory;
 
         List<FhirGeneratorDiagnostic> diagnostics = [];
@@ -103,11 +111,33 @@ public struct PropertyModel(string name, string type, string typeArguments, stri
                 enumerable,
                 required,
                 fhirArray,
-                propertyInfo?.ElementInterface ?? string.Empty,
+                propertyInfo?.ElementInterfaceName ?? string.Empty,
                 hasDefaultConstructor,
+                null,
+                (propertyInfo?.DiscriminatorElement is not null) && (propertyInfo?.DiscriminatorValue is not null) ?
+                    new Discriminator(propertyInfo?.DiscriminatorElement!, propertyInfo?.DiscriminatorValue!) : null,
                 propertyInfo?.FromVersion ?? FhirVersion.R4,
                 propertyInfo?.ToVersion ?? FhirVersion.R5),
             []);
+    }
+
+    internal static (PropertyModel PropertyModel, IEnumerable<FhirGeneratorDiagnostic> Diagnostics) Create(PropertyInfo propertyInfo)
+    {
+        var propertyModel = new PropertyModel(
+            "fixedValue",
+            "fixedValueType",
+            string.Empty,
+            propertyInfo.ElementName,
+            false,
+            true,
+            false,
+            propertyInfo.ElementInterfaceName,
+            true,
+            propertyInfo.FixedValue,
+            null,
+            propertyInfo.FromVersion,
+            propertyInfo.ToVersion);
+        return (propertyModel, []);
     }
 }
 

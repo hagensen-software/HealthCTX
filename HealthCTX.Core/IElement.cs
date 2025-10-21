@@ -1,4 +1,5 @@
 ﻿using HealthCTX.Domain.Attributes;
+using HealthCTX.Domain.Extensions;
 
 namespace HealthCTX.Domain;
 
@@ -10,9 +11,12 @@ namespace HealthCTX.Domain;
 ///         <term>id</term>
 ///         <description><see cref="IId"/> (HL7 FHIR R4/R5)</description>
 ///     </item>
+///     <item>
+///         <term>extension</term>
+///         <description><see cref="IExtension"/> (HL7 FHIR R4/R5)</description>
+///     </item>
 /// </list>
 /// </summary>
 [FhirProperty("id", typeof(IId), Cardinality.Optional)]
-public interface IElement
-{
-}
+[FhirProperty("extension", typeof(IExtension), Cardinality.Multiple)]
+public interface IElement;
