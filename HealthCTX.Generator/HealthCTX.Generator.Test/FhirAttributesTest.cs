@@ -29,8 +29,9 @@ public class FhirAttributesTest
 
         var propertiesByElementName = FhirAttributeHelper.GetApplicableProperties(interfaceSymbols, []);
 
-        Assert.Single(propertiesByElementName);
+        Assert.Equal(2, propertiesByElementName.Count);
         Assert.Equal("id", propertiesByElementName["HealthCTX.Domain.IId"].ElementName);
+        Assert.Equal("extension", propertiesByElementName["HealthCTX.Domain.Extensions.IExtension"].ElementName);
     }
 
     [Fact]

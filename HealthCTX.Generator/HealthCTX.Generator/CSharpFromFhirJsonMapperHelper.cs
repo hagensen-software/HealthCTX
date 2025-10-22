@@ -211,17 +211,21 @@ $$"""
     {
         foreach (var propertyModel in recordModel.Properties)
         {
-            sb.AppendLine(
+            if (propertyModel.FixedValue is null)
+            {
+                sb.AppendLine(
 $$"""
 
         {{propertyModel.Type}}{{propertyModel.TypeArguments}}? {{GetInstanceName(propertyModel)}} = null;
 """);
+            }
+
             if (propertyModel.FhirArray)
             {
                 sb.AppendLine(
 $$"""
         List<{{propertyModel.Type}}>? {{propertyModel.Type.Split('.').Last().ToLower()}}List = [];
-        if (jsonElement.TryGetProperty("{{propertyModel.ElementName}}", out JsonElement {{propertyModel.ElementName}}Array))
+        if (jsonElement.TryGetProperty("{{propertyModel.ElementName}}", out JsonElement {{propertyModel.Name.ToLower()}}Array))
         {
 """);
                 if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
@@ -237,19 +241,30 @@ $$"""
 """);
                 }
 
-                    sb.AppendLine(
+                sb.AppendLine(
 $$"""
-            if ({{propertyModel.ElementName}}Array.ValueKind == JsonValueKind.Array)
+            if ({{propertyModel.Name.ToLower()}}Array.ValueKind == JsonValueKind.Array)
             {
-                foreach (var arrayElement in {{propertyModel.ElementName}}Array.EnumerateArray())
+                foreach (var arrayElement in {{propertyModel.Name.ToLower()}}Array.EnumerateArray())
                 {
 """);
+                if (propertyModel.Discriminator is not null)
+                {
+                    sb.AppendLine(
+$$"""
+                    var discriminatorElement = arrayElement.GetProperty("{{propertyModel.Discriminator.Value.ElementName}}").GetString();
+                    if (discriminatorElement != "{{propertyModel.Discriminator.Value.Value}}")
+                        continue;
+
+""");
+                }
+
                 if (!propertyModel.Enumerable)
                 {
                     sb.AppendLine(
 $$"""
                     if ({{GetInstanceName(propertyModel)}} is not null)
-                        outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Too many elements in array."));
+                        outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Too many elements matching in array."));
 
 """);
                 }
@@ -276,7 +291,7 @@ $$"""
             else
                 outcomes.Add(OutcomeIssue.CreateStructureError($"Error parsing {elementName}. Expected an array."));
 """);
-                    sb.AppendLine(
+                sb.AppendLine(
 """
             }
 """);
@@ -290,7 +305,7 @@ $$"""
                 }
 
             }
-            else
+            else if (propertyModel.FixedValue is null)
             {
                 sb.AppendLine(
 $$"""
@@ -339,6 +354,9 @@ $$"""
 """);
 
             }
+            else
+            {
+            }
         }
     }
 
@@ -350,7 +368,7 @@ $$"""
         {
             if (propertyModel.Enumerable)
                 paramNames.Add($"[..{propertyModel.Type.Split('.').Last().ToLower()}List]");
-            else
+            else if (propertyModel.FixedValue is null)
             {
                 paramNames.Add(GetInstanceName(propertyModel));
                 if (propertyModel.Required)

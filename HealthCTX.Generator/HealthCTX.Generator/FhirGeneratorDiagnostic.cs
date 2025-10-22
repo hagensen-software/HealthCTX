@@ -76,6 +76,48 @@ public class FhirGeneratorDiagnostic(string id, string title, string message, st
         "FhirGenerator",
         DiagnosticSeverity.Warning,
         recordSymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX011(INamedTypeSymbol interfaceSymbol, string elementName) => new(
+        "HCTX011",
+        "Slicing on nonexistent element",
+        $"FHIR interface {interfaceSymbol.ToDisplayString()} contains a slice with a nonexisting element name '{elementName}'.",
+        "FhirGenerator",
+        DiagnosticSeverity.Error,
+        interfaceSymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX012(INamedTypeSymbol interfaceSymbol, string elementName) => new(
+        "HCTX012",
+        "Slicing on nonmatching interface",
+        $"FHIR interface {interfaceSymbol.ToDisplayString()} contains a slice with an interface not matching the given element '{elementName}'.",
+        "FhirGenerator",
+        DiagnosticSeverity.Error,
+        interfaceSymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX013(INamedTypeSymbol interfaceSymbol, string elementName, string discriminatorElement) => new(
+        "HCTX013",
+        "Slicing with nonexistent discriminator element",
+        $"FHIR interface {interfaceSymbol.ToDisplayString()} contains a slice on an element '{elementName}' with a nonexistent discriminator '{discriminatorElement}'.",
+        "FhirGenerator",
+        DiagnosticSeverity.Error,
+        interfaceSymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX014(INamedTypeSymbol interfaceSymbol, string elementName, string discriminatorElement) => new(
+        "HCTX014",
+        "Slicing with unsupported discriminator element type",
+        $"FHIR interface {interfaceSymbol.ToDisplayString()} contains a slice on an element '{elementName}' with a discriminator '{discriminatorElement}', which is not a string, uri or url.",
+        "FhirGenerator",
+        DiagnosticSeverity.Error,
+        interfaceSymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX015(INamedTypeSymbol interfaceSymbol, string elementName, string discriminatorElement) => new(
+        "HCTX015",
+        "Slicing with discriminator without fixed value",
+        $"FHIR interface {interfaceSymbol.ToDisplayString()} contains a slice on an element '{elementName}' with a discriminator '{discriminatorElement}', which does not have a fixed value.",
+        "FhirGenerator",
+        DiagnosticSeverity.Error,
+        interfaceSymbol.Locations.FirstOrDefault() ?? Location.None);
+    internal static FhirGeneratorDiagnostic CreateHCTX016(INamedTypeSymbol interfaceSymbol, string elementName) => new(
+        "HCTX016",
+        "Fixed value set on nonexistent element",
+        $"FHIR interface {interfaceSymbol.ToDisplayString()} contains a fixed value on a nonexisting element name '{elementName}'.",
+        "FhirGenerator",
+        DiagnosticSeverity.Error,
+        interfaceSymbol.Locations.FirstOrDefault() ?? Location.None);
 
     public string Id { get; } = id;
     public string Title { get; } = title;

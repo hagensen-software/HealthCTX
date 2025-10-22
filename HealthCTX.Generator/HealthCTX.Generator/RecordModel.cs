@@ -38,10 +38,15 @@ public struct RecordModel(string recordName, string recordTypeName, string recor
 
         var elementNamesByInterface = FhirAttributeHelper.GetApplicableProperties(recordSymbol.AllInterfaces, diagnostics);
 
+        var fixedValues = elementNamesByInterface.Values
+            .Where(p => p.FixedValue is not null)
+            .Select(p => PropertyModel.Create(p).PropertyModel);
+
         IEnumerable<IPropertySymbol> members = GetProperties(recordSymbol);
         var props = members.Select(m => PropertyModel.Create(m, elementNamesByInterface));
 
         var properties = props.Select(p => p.propertyModel).OfType<PropertyModel>();
+        properties = [.. properties, .. fixedValues];
 
         // Check if same interface has been implemented multiple times
         var duplicateInterfaces = properties
@@ -53,8 +58,8 @@ public struct RecordModel(string recordName, string recordTypeName, string recor
 
         // Check if all mandatory interfaces are implemented
         IEnumerable<string> missingMandatoryInterfaces = elementNamesByInterface.Values
-                    .Where(p => p.Cardinality is FhirCardinality.Mandatory)
-                    .Select(p => p.ElementInterface)
+                    .Where(p => p.Cardinality is FhirCardinality.Mandatory && p.FixedValue is null)
+                    .Select(p => p.ElementInterfaceName)
                     .Except(properties
                         .Where(p => p.Required)
                         .Select(p => p.ElementInterface));
@@ -75,7 +80,7 @@ public struct RecordModel(string recordName, string recordTypeName, string recor
     private static IEnumerable<IPropertySymbol> GetProperties(INamedTypeSymbol recordSymbol)
     {
         var current = recordSymbol;
-        List<IPropertySymbol> result = new();
+        List<IPropertySymbol> result = [];
 
         while (current is not null)
         {

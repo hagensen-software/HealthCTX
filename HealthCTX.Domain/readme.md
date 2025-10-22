@@ -71,6 +71,85 @@ Properties not implemented by the patient record is ignored by these methods. Er
 
 If you want to inspect the generated code, you can find it in your project under Dependencies - Analyzers - HealthCTX - HealthCTX.Generator.
 
+## Slicing
+Slicing of enumerable properties is supported by defining an interface that specifies the slicing rules using the FhirValueSlicing attribute.
+A slicing splits an enumerable into multiple properties based on a discriminator and a discriminator value.
+The support is limited to slicing based on a fixed value of a discriminator.
+
+Below is an example of slicing the extension property to support slicing the names of patient resource into seperate properties for the official name and a nickname.
+
+```csharp
+using HealthCTX.Domain.Attributes;
+using HealthCTX.Domain.HumanNames;
+using HealthCTX.Domain.Patients;
+
+// Define interfaces for the official name slice where use must be 'official'
+[FhirFixedValue("use", "official")]
+public interface IOfficialName : IPatientHumanName;
+
+// Define interfaces for the nickname slice where use must be 'nickname'
+[FhirFixedValue("use", "nickname")]
+public interface INickname : IPatientHumanName;
+
+// Define a Patient interface that slices the name property into an official name and an optional nickname
+// based on the use property of the IHumanName element.
+[FhirValueSlicing("name", "use", typeof(IOfficialName), Cardinality.Mandatory)]
+[FhirValueSlicing("name", "use", typeof(INickname), Cardinality.Optional)]
+public interface IMyPatient : IPatient;
+
+// Define records for the official name components
+public record FamilyName(string Value) : IHumanNameFamily;
+public record GivenName(string Value) : IHumanNameGiven;
+public record OfficialName(FamilyName FamilyName, GivenName GivenName) : IOfficialName;
+
+// Define records for the nickname component
+public record NameText(string Value) : IHumanNameText;
+public record Nickname(NameText Text) : INickname;
+
+// Define the Patient record with the sliced components
+public record Patient(OfficialName Name, Nickname? Nickname) : IMyPatient;
+```
+
+The IPatient interface defines a property called 'name', which is an enumerable type.
+The IMyPatient interface defines two slices of the 'name' property using the FhirValueSlicing attribute and states that the slicing must happen on the 'use' property of each of the IOfficialName and INickname.
+
+Each of these interfaces has define a fixed value for the 'use' property using the FhirFixedValue attribute.
+The serialization will use these fixed values to set the 'use' value to the correct value, and the deserialization uses it to determine which slice the name belongs to.
+
+## Extending a Resource
+Extending a resource is done by slicing the 'extension' element of a resource or an element of it.
+
+Below is an example of extending the Patient resource with a custom extension that adds a middle name property to the name of the patient.
+
+```csharp
+// Define interfaces for the extensionslice where url must be 'http://example.org/fhir/StructureDefinition/humanname-family'
+[FhirFixedValue("url", "http://example.org/fhir/StructureDefinition/humanname-middle")]
+public interface IHumanNameMiddle : IExtension;
+
+// Define an interface that slices the extension property of the IPatientHumanName element
+[FhirValueSlicing("extension", "url", typeof(IHumanNameMiddle), Cardinality.Optional)]
+public interface IOfficialName : IPatientHumanName;
+
+// Define a Patient interface
+public interface IMyPatient : IPatient;
+
+// Define records for the official name components
+public record FamilyName(string Value) : IHumanNameFamily;
+public record GivenName(string Value) : IHumanNameGiven;
+
+// Define records for the middle name extension component
+public record MiddleNameText(string Value) : IStringPrimitive;
+public record MiddleName(MiddleNameText Text) : IHumanNameMiddle;
+
+// Define the OfficialName record with the sliced components
+public record OfficialName(FamilyName FamilyName, MiddleName MiddleName, GivenName GivenName) : IOfficialName;
+
+// Define the extended Patient record
+public record Patient(OfficialName Name) : IMyPatient;
+```
+
+The extension is defined as a slicing of the 'extension' property of the IPatientHumanName element using the FhirValueSlicing attribute and a fixed value of the extension url.
+
 ## A Bundle Resource
 Another example of a resource is a Bundle resource, which differs from the other resources in that it is a collection of other resources.
 This makes the Bundle resource a bit more complex, but it is still easy to use.
