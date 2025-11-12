@@ -1,9 +1,9 @@
 ﻿using HealthCTX.Domain.ContactPoints;
 
-namespace HealthCTX.Domain.Patients;
+namespace HealthCTX.Domain.Persons;
 
 /// <summary>
-/// <para>Interface for HL7 FHIR Patient contact.telecom.</para>
+/// <para>Interface for HL7 FHIR Person telecom.</para>
 /// <para>The elements from <see cref="IContactPoint"/> are supported and may be added as (a collection of) a property implementing the corresponding interfaces.</para>
 /// </summary>
-public interface IPatientContactPoint : IContactPoint;
+public interface IPersonContactPoint : IContactPoint;

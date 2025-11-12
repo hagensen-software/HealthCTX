@@ -238,6 +238,7 @@ The following resources is currently defined by the package and is ready for use
 | OperationOutcome | IOperationOutcome | R4, R5       |
 | Organization     | IOrganization     | R4, R5       |
 | Patient          | IPatient          | R4, R5       |
+| Person           | IPerson           | R4, R5       |
 | Practitioner     | IPractitioner     | R4, R5       |
 | PractitionerRole | IPractitionerRole | R4, R5       |
 
