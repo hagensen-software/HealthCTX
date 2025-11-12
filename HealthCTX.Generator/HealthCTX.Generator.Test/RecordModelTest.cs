@@ -425,6 +425,28 @@ public class RecordModelTest
         Assert.Equal("TestAssembly.OutcomeCode", recordModel?.Properties[0].Type);
     }
 
+    [Fact]
+    public void FindNonFhirRecord_ShoudReturnNoErrors()
+    {
+        var code = """
+            namespace TestAssembly
+            {
+                public record SomeRecord(string Value);
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var recordSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeRecord");
+
+        (var recordModel, var diagnosistics) = RecordModel.Create(recordSymbol);
+
+        Assert.Null(recordModel);
+        Assert.Empty(diagnosistics);
+    }
+
     #region Helpers 
     private static void Compile(SyntaxTree syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors)
     {
