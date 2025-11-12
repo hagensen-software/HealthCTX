@@ -33,6 +33,9 @@ public struct RecordModel(string recordName, string recordTypeName, string recor
         var implementsIElement = ImplementsIElementInterface(recordSymbol, diagnostics);
         var fhirType = FhirAttributeHelper.GetFhirType(recordSymbol, diagnostics, out var resourceName);
 
+        if (!fhirType.HasValue && !implementsIElement)
+            return (null, []);
+
         if (!fhirType.HasValue || !implementsIElement)
             return (null, diagnostics);
 
