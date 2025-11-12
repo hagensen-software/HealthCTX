@@ -10,7 +10,7 @@
 
   <PropertyGroup>
     <PackageId>Hagensen.HealthCTX.Generator</PackageId>
-    <Version>1.0.0-alpha.8</Version>
+    <Version>1.0.0-alpha.9</Version>
     <Authors>Torben M. Hagensen</Authors>
     <Description>This package contains the generator for Hagensen.HealthCTX.Domain, which generates serialization and deserialization in for HL7 Fhir resources. It is recommended to install the Hagensen.HealthCTX.Domain package, which also install this package.</Description>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
