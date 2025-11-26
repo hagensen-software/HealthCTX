@@ -260,7 +260,8 @@ $$"""
 
             sb.AppendLine(
 $$"""
-{{Indent(spaces)}}{{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{propertyModel.ElementName}}Array);
+{{Indent(spaces)}}if ({{propertyModel.ElementName}}Array.Count > 0)
+{{Indent(spaces)}}    {{recordInstanceName}}Object.Add("{{propertyModel.ElementName}}", {{propertyModel.ElementName}}Array);
 """);
 
             if (propertyModel.FromVersion > FhirVersion.R4 || propertyModel.ToVersion < FhirVersion.R5)
