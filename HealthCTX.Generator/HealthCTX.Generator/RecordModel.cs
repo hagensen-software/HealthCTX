@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HealthCTX.Generator;
 
-public struct RecordModel(string recordName, string recordTypeName, string recordNamespace, string recordInstanceName, FhirType fhirType, PropertyModel[] properties, string? resourceName)
+public struct RecordModel(string recordName, string recordTypeName, string recordNamespace, string recordInstanceName, FhirType fhirType, PropertyModel[] properties, string? resourceName, HashSet<string> propertyNamespaces)
 {
     private const string iElementInterface = "HealthCTX.Domain.IElement";
 
@@ -15,6 +15,7 @@ public struct RecordModel(string recordName, string recordTypeName, string recor
     public FhirType FhirType { get; } = fhirType;
     public PropertyModel[] Properties { get; } = properties;
     public string? ResourceName { get; } = resourceName;
+    public HashSet<string> PropertyNamespaces { get; } = propertyNamespaces;
 
     public static (RecordModel?, IEnumerable<FhirGeneratorDiagnostic>) Create(INamedTypeSymbol recordSymbol)
     {
@@ -66,6 +67,7 @@ public struct RecordModel(string recordName, string recordTypeName, string recor
                     .Except(properties
                         .Where(p => p.Required)
                         .Select(p => p.ElementInterface));
+
         if (missingMandatoryInterfaces.Any())
         {
             if (missingMandatoryInterfaces.Any(i => elementNamesByInterface[i].FromVersion == FhirVersion.R4 && elementNamesByInterface[i].ToVersion == FhirVersion.R5))
@@ -77,7 +79,17 @@ public struct RecordModel(string recordName, string recordTypeName, string recor
         foreach (var (_, generatorDiagnostics) in props)
             diagnostics.AddRange(generatorDiagnostics);
 
-        return (new RecordModel(recordSymbol.Name, recordTypeName, recordSymbol.ContainingNamespace.ToDisplayString(), recordSymbol.Name.ToLower(), fhirType.Value, [.. properties], resourceName), diagnostics);
+        var recordNamespace = recordSymbol.ContainingNamespace.ToDisplayString();
+        var propertyNamespaces = new HashSet<string>();
+        foreach (var member in members)
+        {
+            var namespaceString = member.Type.ContainingNamespace.ToDisplayString();
+
+            if (namespaceString != recordNamespace)
+                propertyNamespaces.Add(namespaceString);
+        }
+
+        return (new RecordModel(recordSymbol.Name, recordTypeName, recordNamespace, recordSymbol.Name.ToLower(), fhirType.Value, [.. properties], resourceName, propertyNamespaces), diagnostics);
     }
 
     private static IEnumerable<IPropertySymbol> GetProperties(INamedTypeSymbol recordSymbol)
