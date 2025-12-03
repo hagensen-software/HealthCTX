@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.11.35303.130
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11222.16 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthCTX.Domain", "HealthCTX.Domain\HealthCTX.Domain.csproj", "{8E7963C9-3CE3-4F2B-A244-7A270DC2F091}"
 EndProject
@@ -49,6 +49,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCTX.Domain.Test.Slicing", "HealthCTX.Domain.Test\HealthCTX.Domain.Test.Slicing\HealthCTX.Domain.Test.Slicing.csproj", "{CD507B5C-FC13-4D22-9E0B-2372A709ED7A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCTX.Domain.Test.Persons", "HealthCTX.Domain.Test\HealthCTX.Domain.Test.Persons\HealthCTX.Domain.Test.Persons.csproj", "{50774E79-D1EB-41C2-B82B-37B64821754B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCTX.Domain.Test.Model", "HealthCTX.Domain.Test\HealthCTX.Domain.Test.Model\HealthCTX.Domain.Test.Model.csproj", "{18267FB7-7C70-4A04-9BAB-2B74831308FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +114,10 @@ Global
 		{50774E79-D1EB-41C2-B82B-37B64821754B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50774E79-D1EB-41C2-B82B-37B64821754B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50774E79-D1EB-41C2-B82B-37B64821754B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18267FB7-7C70-4A04-9BAB-2B74831308FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18267FB7-7C70-4A04-9BAB-2B74831308FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18267FB7-7C70-4A04-9BAB-2B74831308FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18267FB7-7C70-4A04-9BAB-2B74831308FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,6 +134,7 @@ Global
 		{F5B19A2F-31C9-4ADC-AD34-3A86B047BD3F} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 		{CD507B5C-FC13-4D22-9E0B-2372A709ED7A} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 		{50774E79-D1EB-41C2-B82B-37B64821754B} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
+		{18267FB7-7C70-4A04-9BAB-2B74831308FA} = {35EA1D69-5D3E-4CB8-BCBB-401990C4AC4F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9A549BB-A6EF-4BFB-B91D-728144153299}

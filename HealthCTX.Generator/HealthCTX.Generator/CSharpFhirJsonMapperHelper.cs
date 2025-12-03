@@ -12,6 +12,14 @@ using HealthCTX.Domain.OperationOutcomes;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+""");
+        foreach (var ns in recordModel.PropertyNamespaces)
+        {
+            sb.AppendLine($"using {ns};");
+        }
+
+        sb.AppendLine(
+$$"""
 
 namespace {{recordModel.RecordNamespace}};
 
