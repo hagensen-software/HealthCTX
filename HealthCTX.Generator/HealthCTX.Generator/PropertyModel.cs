@@ -7,7 +7,8 @@ namespace HealthCTX.Generator;
 public enum FhirVersion
 {
     R4,
-    R5
+    R5,
+    R6
 }
 
 public readonly struct Discriminator(string elementName, string value)

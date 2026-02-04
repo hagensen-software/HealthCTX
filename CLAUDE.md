@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-HealthCTX is a C# library and Roslyn source generator for HL7 FHIR serialization/deserialization. It generates mapper code that converts between custom C# record-based domain models and FHIR JSON (R4 and R5).
+HealthCTX is a C# library and Roslyn source generator for HL7 FHIR serialization/deserialization. It generates mapper code that converts between custom C# record-based domain models and FHIR JSON (R4, R5, and R6).
 
 **Current version**: 1.0.0-alpha (breaking changes expected until stable release)
 

@@ -229,18 +229,18 @@ This ensures that the record entry wrapping the resource is of the correct type.
 ## Currently Defined Resource Types
 The following resources is currently defined by the package and is ready for use as described above:
 
-| Resource Name    | Interface         | Fhir Version |
-| ---------------- | ----------------- | ------------ |
-| Bundle           | IBundle           | R4, R5       |
-| Encounter        | IEncounter        | R4, R5       |
-| Location         | ILocation         | R4, R5       |
-| Observation      | IObservation      | R4, R5       |
-| OperationOutcome | IOperationOutcome | R4, R5       |
-| Organization     | IOrganization     | R4, R5       |
-| Patient          | IPatient          | R4, R5       |
-| Person           | IPerson           | R4, R5       |
-| Practitioner     | IPractitioner     | R4, R5       |
-| PractitionerRole | IPractitionerRole | R4, R5       |
+| Resource Name    | Interface         | Fhir Version  |
+| ---------------- | ----------------- | ------------- |
+| Bundle           | IBundle           | R4, R5, R6    |
+| Encounter        | IEncounter        | R4, R5, R6    |
+| Location         | ILocation         | R4, R5, R6    |
+| Observation      | IObservation      | R4, R5, R6    |
+| OperationOutcome | IOperationOutcome | R4, R5, R6    |
+| Organization     | IOrganization     | R4, R5, R6    |
+| Patient          | IPatient          | R4, R5, R6    |
+| Person           | IPerson           | R4, R5, R6    |
+| Practitioner     | IPractitioner     | R4, R5, R6    |
+| PractitionerRole | IPractitionerRole | R4, R5, R6    |
 
 ## Defining the Fhir Domain Model
 The Fhir domain model is defined by creating interfaces that represent the resources and elements in the Fhir standard.

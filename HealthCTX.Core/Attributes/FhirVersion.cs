@@ -12,5 +12,9 @@ public enum FhirVersion
     /// <summary>
     /// Represents the Release 5 version of the FHIR standard.
     /// </summary>
-    R5
+    R5,
+    /// <summary>
+    /// Represents the Release 6 version of the FHIR standard (ballot phase).
+    /// </summary>
+    R6
 }

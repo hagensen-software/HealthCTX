@@ -44,4 +44,7 @@ namespace HealthCTX.Domain.Patients;
 [FhirProperty("gender", typeof(IPatientContactGender), Cardinality.Optional)]
 [FhirProperty("organization", typeof(IPatientContactOrganization), Cardinality.Optional)]
 [FhirProperty("period", typeof(IPatientContactPeriod), Cardinality.Optional)]
+[FhirProperty("role", typeof(IPatientContactRole), Cardinality.Multiple, FromVersion: FhirVersion.R6)]
+[FhirProperty("additionalName", typeof(IPatientContactAdditionalName), Cardinality.Multiple, FromVersion: FhirVersion.R6)]
+[FhirProperty("additionalAddress", typeof(IPatientContactAdditionalAddress), Cardinality.Multiple, FromVersion: FhirVersion.R6)]
 public interface IPatientContact : IElement;

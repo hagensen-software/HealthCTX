@@ -10,7 +10,7 @@ namespace HealthCTX.Generator.Test;
 public class FhirVersionTest
 {
     [Fact]
-    public void PropertyWithNoVersions_ShouldHaveVersionFromR4ToR5()
+    public void PropertyWithNoVersions_ShouldHaveVersionFromR4ToR6()
     {
         var code =
             """
@@ -20,7 +20,7 @@ public class FhirVersionTest
                 using HealthCTX.Domain;
 
                 public interface ISomeBoolean : IBooleanPrimitive;
-            
+
                 [FhirElement]
                 [FhirProperty("IsSomething", typeof(ISomeBoolean), Cardinality.Optional)]
                 public interface ISomeElement : IElement;
@@ -38,11 +38,11 @@ public class FhirVersionTest
         (var element, var diagnostics) = RecordModel.Create(elementSymbol);
 
         Assert.Equal(FhirVersion.R4, element.Value.Properties.First().FromVersion);
-        Assert.Equal(FhirVersion.R5, element.Value.Properties.First().ToVersion);
+        Assert.Equal(FhirVersion.R6, element.Value.Properties.First().ToVersion);
     }
 
     [Fact]
-    public void PropertyWithR5FromVersion_ShouldHaveVersionFromR5ToR5()
+    public void PropertyWithR5FromVersion_ShouldHaveVersionFromR5ToR6()
     {
         var code =
             """
@@ -52,7 +52,7 @@ public class FhirVersionTest
                 using HealthCTX.Domain;
 
                 public interface ISomeBoolean : IBooleanPrimitive;
-            
+
                 [FhirElement]
                 [FhirProperty("IsSomething", typeof(ISomeBoolean), Cardinality.Optional, FhirVersion.R5)]
                 public interface ISomeElement : IElement;
@@ -70,7 +70,7 @@ public class FhirVersionTest
         (var element, var diagnostics) = RecordModel.Create(elementSymbol);
 
         Assert.Equal(FhirVersion.R5, element.Value.Properties.First().FromVersion);
-        Assert.Equal(FhirVersion.R5, element.Value.Properties.First().ToVersion);
+        Assert.Equal(FhirVersion.R6, element.Value.Properties.First().ToVersion);
     }
 
     [Fact]
@@ -103,6 +103,70 @@ public class FhirVersionTest
 
         Assert.Equal(FhirVersion.R4, element.Value.Properties.First().FromVersion);
         Assert.Equal(FhirVersion.R4, element.Value.Properties.First().ToVersion);
+    }
+
+    [Fact]
+    public void PropertyWithR6FromVersion_ShouldHaveVersionFromR6ToR6()
+    {
+        var code =
+            """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
+
+                public interface ISomeBoolean : IBooleanPrimitive;
+
+                [FhirElement]
+                [FhirProperty("IsSomething", typeof(ISomeBoolean), Cardinality.Optional, FhirVersion.R6)]
+                public interface ISomeElement : IElement;
+
+                public record SomeBoolean(bool Value) : ISomeBoolean;
+                public record SomeElement(SomeBoolean Bool) : ISomeElement;
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var elementSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeElement");
+        (var element, var diagnostics) = RecordModel.Create(elementSymbol);
+
+        Assert.Equal(FhirVersion.R6, element.Value.Properties.First().FromVersion);
+        Assert.Equal(FhirVersion.R6, element.Value.Properties.First().ToVersion);
+    }
+
+    [Fact]
+    public void PropertyWithR5FromVersionAndR5ToVersion_ShouldHaveVersionFromR5ToR5()
+    {
+        var code =
+            """
+            namespace TestAssembly
+            {
+                using HealthCTX.Domain.Attributes;
+                using HealthCTX.Domain;
+
+                public interface ISomeBoolean : IBooleanPrimitive;
+
+                [FhirElement]
+                [FhirProperty("IsSomething", typeof(ISomeBoolean), Cardinality.Optional, FhirVersion.R5, FhirVersion.R5)]
+                public interface ISomeElement : IElement;
+
+                public record SomeBoolean(bool Value) : ISomeBoolean;
+                public record SomeElement(SomeBoolean Bool) : ISomeElement;
+            }
+            """;
+
+        var syntaxTree = CSharpSyntaxTree.ParseText(code);
+        Compile(syntaxTree, out CSharpCompilation compilation, out IEnumerable<Diagnostic> compileErrors);
+        Assert.Empty(compileErrors);
+
+        var elementSymbol = GetRecordSymbol(syntaxTree, compilation, "SomeElement");
+        (var element, var diagnostics) = RecordModel.Create(elementSymbol);
+
+        Assert.Equal(FhirVersion.R5, element.Value.Properties.First().FromVersion);
+        Assert.Equal(FhirVersion.R5, element.Value.Properties.First().ToVersion);
     }
 
     #region Helpers 

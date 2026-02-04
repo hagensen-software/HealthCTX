@@ -181,4 +181,5 @@ namespace HealthCTX.Domain.Encounters;
 [FhirProperty("hospitalization", typeof(IEncounterHospitalization), Cardinality.Optional, ToVersion: FhirVersion.R4)]
 [FhirProperty("admission", typeof(IEncounterAdmission), Cardinality.Optional, FromVersion: FhirVersion.R5)]
 [FhirProperty("location", typeof(IEncounterLocation), Cardinality.Multiple)]
+[FhirProperty("businessStatus", typeof(IEncounterBusinessStatus), Cardinality.Multiple, FromVersion: FhirVersion.R6)]
 public interface IEncounter : IResource;

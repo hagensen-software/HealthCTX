@@ -184,8 +184,8 @@ namespace HealthCTX.Domain.Observations;
 /// </remarks>
 [FhirResource("Observation")]
 [FhirProperty("identifier", typeof(IObservationIdentifier), Cardinality.Multiple)]
-[FhirProperty("instantiates[Canonical]", typeof(IObservationInstantiatesCanonical), Cardinality.Optional, FromVersion: FhirVersion.R5)]
-[FhirProperty("instantiates[Reference]", typeof(IObservationInstantiatesReference), Cardinality.Optional, FromVersion: FhirVersion.R5)]
+[FhirProperty("instantiates[Canonical]", typeof(IObservationInstantiatesCanonical), Cardinality.Optional, FromVersion: FhirVersion.R5, ToVersion: FhirVersion.R5)]
+[FhirProperty("instantiates[Reference]", typeof(IObservationInstantiatesReference), Cardinality.Optional, FromVersion: FhirVersion.R5, ToVersion: FhirVersion.R5)]
 [FhirProperty("basedOn", typeof(IObservationBasedOn), Cardinality.Multiple)]
 [FhirProperty("triggeredBy", typeof(IObservationTriggeredBy), Cardinality.Multiple, FromVersion: FhirVersion.R5)]
 [FhirProperty("partOf", typeof(IObservationPartOf), Cardinality.Multiple)]
@@ -218,7 +218,8 @@ namespace HealthCTX.Domain.Observations;
 [FhirProperty("interpretation", typeof(IObservationInterpretation), Cardinality.Multiple)]
 [FhirProperty("note", typeof(IObservationNote), Cardinality.Multiple)]
 [FhirProperty("bodySite", typeof(IObservationBodySite), Cardinality.Optional)]
-[FhirProperty("bodyStructure", typeof(IObservationBodyStructure), Cardinality.Optional, FromVersion: FhirVersion.R5)]
+[FhirProperty("bodyStructure", typeof(IObservationBodyStructure), Cardinality.Optional, FromVersion: FhirVersion.R5, ToVersion: FhirVersion.R5)]
+[FhirProperty("bodyStructure", typeof(IObservationBodyStructureR6), Cardinality.Optional, FromVersion: FhirVersion.R6)]
 [FhirProperty("method", typeof(IObservationMethod), Cardinality.Optional)]
 [FhirProperty("specimen", typeof(IObservationSpecimen), Cardinality.Optional)]
 [FhirProperty("device", typeof(IObservationDevice), Cardinality.Optional)]
@@ -226,4 +227,6 @@ namespace HealthCTX.Domain.Observations;
 [FhirProperty("hasMember", typeof(IObservationHasMember), Cardinality.Multiple)]
 [FhirProperty("derivedFrom", typeof(IObservationDerivedFrom), Cardinality.Multiple)]
 [FhirProperty("component", typeof(IObservationComponent), Cardinality.Multiple)]
+[FhirProperty("organizer", typeof(IObservationOrganizer), Cardinality.Optional, FromVersion: FhirVersion.R6)]
+[FhirProperty("interpretationContext", typeof(IObservationInterpretationContext), Cardinality.Multiple, FromVersion: FhirVersion.R6)]
 public interface IObservation : IResource;

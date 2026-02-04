@@ -5,5 +5,5 @@
 /// </summary>
 [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = true)]
 #pragma warning disable CS9113 // Parameter is unread.
-public class FhirValueSlicingAttribute(string ElementName, string DiscriminatorElement, Type InterfaceType, Cardinality Cardinality, FhirVersion FromVersion = FhirVersion.R4, FhirVersion ToVersion = FhirVersion.R5) : Attribute;
+public class FhirValueSlicingAttribute(string ElementName, string DiscriminatorElement, Type InterfaceType, Cardinality Cardinality, FhirVersion FromVersion = FhirVersion.R4, FhirVersion ToVersion = FhirVersion.R6) : Attribute;
 #pragma warning restore CS9113 // Parameter is unread.
