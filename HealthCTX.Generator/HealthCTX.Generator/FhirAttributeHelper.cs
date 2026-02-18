@@ -61,6 +61,7 @@ public class FhirAttributeHelper
 
     private const int fhirR4 = 0;
     private const int fhirR5 = 1;
+    private const int fhirR6 = 2;
 
     public static Dictionary<string, PropertyInfo> GetApplicableProperties(IEnumerable<INamedTypeSymbol> namedTypeSymbols, List<FhirGeneratorDiagnostic> diagnostics)
     {
@@ -281,6 +282,7 @@ public class FhirAttributeHelper
             {
                 fhirR4 => FhirVersion.R4,
                 fhirR5 => FhirVersion.R5,
+                fhirR6 => FhirVersion.R6,
                 _ => FhirVersion.R4
             };
         }

@@ -111,8 +111,10 @@ namespace HealthCTX.Domain.Locations;
 [FhirProperty("managingOrganization", typeof(ILocationManagingOrganization), Cardinality.Optional)]
 [FhirProperty("partOf", typeof(ILocationPartOf), Cardinality.Optional)]
 [FhirProperty("characteristic", typeof(ILocationCharacteristic), Cardinality.Multiple, FromVersion: FhirVersion.R5)]
-[FhirProperty("hoursOfOperation", typeof(ILocationHoursOfOperation), Cardinality.Multiple)]
+[FhirProperty("hoursOfOperation", typeof(ILocationHoursOfOperation), Cardinality.Multiple, ToVersion: FhirVersion.R5)]
+[FhirProperty("hoursOfOperation", typeof(ILocationHoursOfOperationR6), Cardinality.Optional, FromVersion: FhirVersion.R6)]
 [FhirProperty("availabilityExceptions", typeof(ILocationAvailabilityExceptions), Cardinality.Optional, ToVersion: FhirVersion.R4)]
 [FhirProperty("virtualService", typeof(IVirtualServiceDetail), Cardinality.Multiple, FromVersion: FhirVersion.R5)]
 [FhirProperty("endpoint", typeof(ILocationEndpoint), Cardinality.Multiple)]
+[FhirProperty("code", typeof(ILocationCode), Cardinality.Optional, FromVersion: FhirVersion.R6)]
 public interface ILocation : IResource;

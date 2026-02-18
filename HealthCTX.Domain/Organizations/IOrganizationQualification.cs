@@ -29,4 +29,5 @@ namespace HealthCTX.Domain.Organizations;
 [FhirProperty("code", typeof(IOrganizationQualificationCode), Cardinality.Mandatory)]
 [FhirProperty("period", typeof(IOrganizationQualificationPeriod), Cardinality.Optional)]
 [FhirProperty("issuer", typeof(IOrganizationQualificationIssuer), Cardinality.Optional)]
+[FhirProperty("status", typeof(IOrganizationQualificationStatus), Cardinality.Optional, FromVersion: FhirVersion.R6)]
 public interface IOrganizationQualification : IElement;
